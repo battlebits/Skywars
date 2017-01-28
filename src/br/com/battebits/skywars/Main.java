@@ -9,14 +9,18 @@ import java.io.StringWriter;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import br.com.battebits.skywars.data.PlayerData;
 import br.com.battebits.skywars.game.Engine;
 import br.com.battebits.skywars.game.EngineMap;
 import br.com.battebits.skywars.game.GameListener;
@@ -64,6 +68,7 @@ public class Main extends JavaPlugin {
 								engine.setMap(map);
 							} catch (Exception e1) {
 								logError("Erro ao criar instancia:", e1);
+								getServer().shutdown();
 							}
 						}
 					}
@@ -127,7 +132,7 @@ public class Main extends JavaPlugin {
 		logError(writer.toString());
 	}
 
-	public JsonElement readJson(String name) throws IOException {
+	private JsonElement readJson(String name) throws IOException {
 		File file = new File(getDataFolder(), name);
 
 		logInfo("Lendo o arquivo §e\"" + file.getName() + "\" §b...");
@@ -168,5 +173,9 @@ public class Main extends JavaPlugin {
 		}
 		
 		return null;
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(new PlayerData(UUID.randomUUID(), "MrLuangamer")));
 	}
 }
