@@ -169,4 +169,9 @@ public class EngineMap {
 			return parser.parse(reader);
 		}
 	}
+	
+	public Location getSpawn(String name)
+	{
+		return spawns.get(name);
+	}
 }

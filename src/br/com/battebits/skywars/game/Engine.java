@@ -32,6 +32,10 @@ public abstract class Engine {
 	@Getter
 	@Setter
 	private boolean insane;
+	
+	@Getter
+	@Setter
+	private long started;
 
 	public Engine(GameType type) {
 		this.type = type;

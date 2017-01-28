@@ -14,19 +14,19 @@ import java.util.UUID;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import br.com.battebits.skywars.data.PlayerData;
+import br.com.battebits.skywars.data.PlayerManager;
 import br.com.battebits.skywars.game.Engine;
 import br.com.battebits.skywars.game.EngineMap;
+import br.com.battebits.skywars.game.EngineMap.Callback;
 import br.com.battebits.skywars.game.GameListener;
 import br.com.battebits.skywars.game.GameSchedule;
 import br.com.battebits.skywars.game.GameType;
-import br.com.battebits.skywars.game.EngineMap.Callback;
 import br.com.battebits.skywars.utils.Utils;
 import lombok.Getter;
 
@@ -36,13 +36,16 @@ public class Main extends JavaPlugin {
 	private Engine engine;
 	
 	@Getter
+	private PlayerManager playerManager;
+	
+	@Getter
 	private static Main instance;
+	
 
 	@Override
 	public void onLoad() {
 		try {
 			instance = this;
-
 			JsonObject config = (JsonObject) readJson("config.json");
 			JsonObject items = (JsonObject) readJson("items.json");
 			
@@ -87,11 +90,10 @@ public class Main extends JavaPlugin {
 	public void onEnable() {
 		try {
 			engine.getMap().enable();
+			playerManager = new PlayerManager();
 			
 			getServer().getScheduler().runTaskTimer(this, new GameSchedule(engine), 20L, 20L);
-			getServer().getPluginManager().registerEvents(new GameListener(engine), this);
-			
-			
+			getServer().getPluginManager().registerEvents(new GameListener(engine), this);		
 		} catch (Exception e) {
 			logError("Erro ao habilitar:", e);
 		}

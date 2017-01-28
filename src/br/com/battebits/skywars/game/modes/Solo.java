@@ -50,6 +50,8 @@ public class Solo extends Engine
 				i++;
 			}
 		}
+		
+		setStarted(System.currentTimeMillis());
 	}
 	
 	@Override

@@ -69,6 +69,8 @@ public class Team extends Engine
 				i++;
 			}
 		}
+		
+		setStarted(System.currentTimeMillis());
 	}
 	
 	@Override
