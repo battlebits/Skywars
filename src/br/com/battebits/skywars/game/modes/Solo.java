@@ -3,6 +3,7 @@ package br.com.battebits.skywars.game.modes;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -95,10 +96,7 @@ public class Solo extends Engine
 	@Override
 	public int getIsland(Player player)
 	{
-		int index = -1;
-		if (playerMap.containsKey(player))
-			index = playerMap.get(player);
-		return index;
+		return Optional.ofNullable(playerMap.get(player)).orElse(-1);
 	}
 	
 	@Override

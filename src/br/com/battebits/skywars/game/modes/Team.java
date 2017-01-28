@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -115,10 +116,7 @@ public class Team extends Engine
 	@Override
 	public int getIsland(Player player)
 	{
-		int index = -1;
-		if (playerMap.containsKey(player))
-			index = playerMap.get(player);
-		return index;
+		return Optional.ofNullable(playerMap.get(player)).orElse(-1);
 	}
 	
 	@Override

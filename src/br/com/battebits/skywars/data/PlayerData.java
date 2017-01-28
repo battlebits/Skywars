@@ -27,7 +27,7 @@ public class PlayerData
 	private int assists = 0;
 	private int timePlayed = 0;
 	
-	private transient Combat combat;
+	private transient Combat combat = new Combat();
 	
 	public PlayerData(UUID uuid, String name)
 	{
@@ -42,7 +42,7 @@ public class PlayerData
 	
 	public void addKill()
 	{
-		kills += 1;
+		kills++;
 	}
 	
 	public void addDeath()
@@ -88,11 +88,6 @@ public class PlayerData
 	
 	public Combat getCombat()
 	{
-		if (combat == null)
-		{
-			combat = new Combat();
-		}
-		
 		return combat;
 	}
 }

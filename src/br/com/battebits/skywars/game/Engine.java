@@ -6,35 +6,27 @@ import org.bukkit.entity.Player;
 
 import com.google.gson.JsonObject;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter
+@Setter
 public abstract class Engine {
-	@Getter
+	
+	@Setter(AccessLevel.PRIVATE)
 	private GameType type;
 
-	@Getter
-	@Setter
 	private GameStage stage;
 
-	@Getter
-	@Setter
 	private GameSchedule schedule;
 
-	@Getter
-	@Setter
 	private EngineMap map;
-
-	@Getter
-	@Setter
+	
 	private JsonObject items;
 	
-	@Getter
-	@Setter
 	private boolean insane;
 	
-	@Getter
-	@Setter
 	private long started;
 
 	public Engine(GameType type) {
