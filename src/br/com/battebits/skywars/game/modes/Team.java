@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import br.com.battebits.skywars.game.Engine;
+import br.com.battebits.skywars.game.GameStage;
 import br.com.battebits.skywars.game.GameType;
 
 public class Team extends Engine
@@ -71,6 +72,9 @@ public class Team extends Engine
 			}
 		}
 		
+		setStage(GameStage.PREPARING);
+		getSchedule().setTime(10);
+
 		setStarted(System.currentTimeMillis());
 	}
 	

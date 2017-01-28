@@ -19,6 +19,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import br.com.battebits.skywars.data.MongoBackend;
 import br.com.battebits.skywars.data.PlayerData;
 import br.com.battebits.skywars.data.PlayerManager;
 import br.com.battebits.skywars.game.Engine;
@@ -39,8 +40,10 @@ public class Main extends JavaPlugin {
 	private PlayerManager playerManager;
 	
 	@Getter
-	private static Main instance;
+	private MongoBackend mongoBackend;
 	
+	@Getter
+	private static Main instance;
 
 	@Override
 	public void onLoad() {
@@ -91,9 +94,10 @@ public class Main extends JavaPlugin {
 		try {
 			engine.getMap().enable();
 			playerManager = new PlayerManager();
+			mongoBackend = new MongoBackend();
 			
 			getServer().getScheduler().runTaskTimer(this, new GameSchedule(engine), 20L, 20L);
-			getServer().getPluginManager().registerEvents(new GameListener(engine), this);		
+			getServer().getPluginManager().registerEvents(new GameListener(engine), this);
 		} catch (Exception e) {
 			logError("Erro ao habilitar:", e);
 		}

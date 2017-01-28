@@ -52,6 +52,9 @@ public class Solo extends Engine
 			}
 		}
 		
+		setStage(GameStage.PREPARING);
+		getSchedule().setTime(10);
+		
 		setStarted(System.currentTimeMillis());
 	}
 	

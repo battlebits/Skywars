@@ -1,7 +1,16 @@
 package br.com.battebits.skywars.game;
 
-import org.bukkit.Bukkit;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
+import br.com.battebits.skywars.Main;
+import br.com.battebits.skywars.data.PlayerData;
+import br.com.battebits.skywars.utils.Utils;
+import br.com.battlebits.commons.bukkit.scoreboard.BattleBoard;
+import br.com.battlebits.commons.core.translate.Language;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -79,6 +88,52 @@ public class GameSchedule implements Runnable {
 
 			break;
 		}
+		}
+		
+		updateScoreboard();
+	}
+	
+	public void updateScoreboard()
+	{
+		Map<Integer, String> rows = new HashMap<>();
+		
+		for (Player player : Bukkit.getOnlinePlayers())
+		{
+			Language language = Utils.getLanguage(player);
+			
+			PlayerData data = Main.getInstance().getPlayerManager().get(player);
+			
+			if (data != null)
+			{
+				BattleBoard battleBoard = data.getBattleBoard();
+				
+				if (battleBoard != null)
+				{
+					switch (engine.getStage()) 
+					{
+					    case PREGAME:
+					    {
+					    	break;
+					    }
+						
+					    case PREPARING:
+					    {
+					    	break;
+					    }
+					    
+					    default:
+					    {
+					    	break;
+					    }
+					}
+					
+					rows.put(15 - rows.size(), " ");
+					rows.put(15 - rows.size(), "§ebattlebits.com.br");
+					
+					battleBoard.setRows(rows);
+					rows.clear();
+				}
+			}
 		}
 	}
 }

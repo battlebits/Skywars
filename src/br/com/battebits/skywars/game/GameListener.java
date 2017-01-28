@@ -43,6 +43,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 
 import br.com.battebits.skywars.Main;
+import br.com.battebits.skywars.data.MongoBackend;
 import br.com.battebits.skywars.data.PlayerData;
 import br.com.battebits.skywars.data.PlayerManager;
 import br.com.battebits.skywars.utils.Combat;
@@ -68,8 +69,10 @@ public class GameListener implements Listener {
 		PlayerData data = null;		
 		Gson gson = BattlebitsAPI.getGson();
 		
-		MongoDatabase database = BattlebitsAPI.getMongo().getClient().getDatabase("skywars");
+		MongoBackend backend = Main.getInstance().getMongoBackend();
+		MongoDatabase database = backend.getClient().getDatabase("skywars");
 		MongoCollection<Document> collection = database.getCollection("data");
+		
 		Document document = collection.find(Filters.eq("uuid", event.getUniqueId().toString())).first();
 		
 		if (document != null)
@@ -91,6 +94,9 @@ public class GameListener implements Listener {
 	{
 		Player player = event.getPlayer();
 	
+		PlayerData data = Main.getInstance().getPlayerManager().get(player);
+		if (data != null) data.onJoin(player);
+		
 		switch (engine.getStage())
 		{
 		    case PREGAME:
