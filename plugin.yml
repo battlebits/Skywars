@@ -1,0 +1,5 @@
+name: SkyWars
+main: br.com.battebits.skywars.Main
+version: 1.0.0
+depend: [yCommon]
+author: Luan Pereira
