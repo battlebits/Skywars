@@ -1,5 +1,5 @@
 name: SkyWars
-main: br.com.battebits.skywars.Main
+main: br.com.battlebits.skywars.Main
 version: 1.0.0
 depend: [Commons]
 author: Luan Pereira

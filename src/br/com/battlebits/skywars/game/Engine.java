@@ -1,6 +1,7 @@
 package br.com.battlebits.skywars.game;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -9,6 +10,7 @@ import org.bukkit.entity.Player;
 
 import com.google.gson.JsonObject;
 
+import br.com.battlebits.skywars.game.task.CageTask;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,21 +21,18 @@ public abstract class Engine {
 	
 	@Setter(AccessLevel.PRIVATE)
 	private GameType type;
-
 	private GameStage stage = GameStage.PREGAME;
-
 	private GameSchedule schedule;
-
-	private EngineMap map;
 	
+	private EngineMap map;
 	private JsonObject items;
 	
 	private boolean insane;
-	
 	private long started;
 	
+	private HashSet<CageTask> cages = new HashSet<>();
 	private Map<Player, Integer> killsMap = new HashMap<>();
-
+	
 	public Engine(GameType type) {
 		this.type = type;
 	}
@@ -54,6 +53,11 @@ public abstract class Engine {
 
 	public abstract Set<Player> getPlayers();
 
+	public void addCage(CageTask cageTask)
+	{
+		cages.add(cageTask);
+	}
+	
 	public void addKill(Player player)
 	{
 		killsMap.put(player, getKills(player) + 1);

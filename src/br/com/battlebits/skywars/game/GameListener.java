@@ -44,6 +44,7 @@ import com.mongodb.client.model.Filters;
 
 import br.com.battlebits.commons.BattlebitsAPI;
 import br.com.battlebits.commons.api.actionbar.ActionBarAPI;
+import br.com.battlebits.commons.api.tablist.TabListAPI;
 import br.com.battlebits.commons.bukkit.BukkitMain;
 import br.com.battlebits.commons.core.translate.Language;
 import br.com.battlebits.commons.core.translate.T;
@@ -95,6 +96,8 @@ public class GameListener implements Listener {
 		event.setJoinMessage(null);
 		
 		Player player = event.getPlayer();
+		
+		TabListAPI.setHeaderAndFooter(player, "§%tab_header%§", "§%tab_footer%§");
 	
 		PlayerData data = Main.getInstance().getPlayerManager().get(player);
 		if (data != null) data.onJoin(player);
@@ -181,7 +184,7 @@ public class GameListener implements Listener {
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event)
 	{
-		Player player = event.getPlayer();
+//		/Player player = event.getPlayer();
 
 	}
 	

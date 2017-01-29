@@ -13,9 +13,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import br.com.battlebits.commons.bukkit.BukkitMain;
+import br.com.battlebits.skywars.Main;
+import br.com.battlebits.skywars.data.PlayerData;
 import br.com.battlebits.skywars.game.Engine;
 import br.com.battlebits.skywars.game.GameStage;
 import br.com.battlebits.skywars.game.GameType;
+import br.com.battlebits.skywars.game.task.CageTask;
 
 public class Team extends Engine
 {
@@ -57,6 +61,8 @@ public class Team extends Engine
 					if (iterator.hasNext())
 						players[k] = iterator.next();
 				
+				addCage(new CageTask(this, getMap().getSpawn("is-" + i), players));				
+
 				for (Player player : players)
 				{
 					if (player != null)
@@ -72,11 +78,12 @@ public class Team extends Engine
 				i++;
 			}
 		}
-		
+	
 		setStage(GameStage.PREPARING);
 		getSchedule().setTime(10);
 
 		setStarted(System.currentTimeMillis());
+		BukkitMain.getPlugin().setTagControl(false);
 	}
 	
 	@Override
@@ -86,7 +93,13 @@ public class Team extends Engine
 		{
 			if (playerMap.containsKey(player))
 			{
+				PlayerData data = Main.getInstance().getPlayerManager().get(player);
 				
+				if (data != null)
+				{
+					data.addWin();
+					data.update();
+				}
 			}
 		}
 	}

@@ -10,6 +10,7 @@ import br.com.battlebits.commons.bukkit.scoreboard.BattleBoard;
 import br.com.battlebits.commons.core.translate.Language;
 import br.com.battlebits.skywars.Main;
 import br.com.battlebits.skywars.data.PlayerData;
+import br.com.battlebits.skywars.utils.NameTag;
 import br.com.battlebits.skywars.utils.Utils;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,8 +23,8 @@ public class GameSchedule implements Runnable {
 	@Setter
 	private int time = 30, shutdown = 15;
 
-	private static final int REFIL_1 = 10;
-	private static final int REFIL_2 = 20;
+	//private static final int REFIL_1 = 10;
+	//private static final int REFIL_2 = 20;
 
 	public GameSchedule(Engine engine) {
 		engine.setSchedule(this);
@@ -64,8 +65,10 @@ public class GameSchedule implements Runnable {
 		case PREPARING: {
 			if (time > 0) {
 				time--;
+				engine.getCages().forEach(v -> v.run(time));
 			} else {
 				engine.setStage(GameStage.INGAME);
+				engine.getCages().clear();
 			}
 
 			break;
@@ -109,7 +112,6 @@ public class GameSchedule implements Runnable {
 				
 				if (battleBoard != null)
 				{
-					
 					switch (engine.getStage()) 
 					{
 					    case PREGAME:
@@ -135,6 +137,10 @@ public class GameSchedule implements Runnable {
 					battleBoard.setRows(rows);
 					rows.clear();
 				}
+				
+				NameTag nameTag = data.getNameTag();
+				
+				if (nameTag != null) nameTag.update();
 			}
 		}
 	}

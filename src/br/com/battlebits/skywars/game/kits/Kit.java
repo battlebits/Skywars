@@ -7,6 +7,7 @@ import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -32,6 +33,60 @@ public class Kit implements Listener
 	{
 		return players.contains(player);
 	}
+	
+	public void applyItems(Player player)
+    {
+        PlayerInventory inventory = player.getInventory();
+
+        for (ItemStack item : items)
+        {
+            String type = item.getType().name();
+
+            if (type.contains("_"))
+            {
+                String[] split = type.split("_");
+
+                switch (split[1])
+                {
+                    case "HELMET":
+                    {
+                        inventory.setHelmet(item.clone());
+                        break;
+                    }
+
+                    case "CHESTPLATE":
+                    {
+                        inventory.setChestplate(item.clone());
+                        break;
+                    }
+
+                    case "LEGGINGS":
+                    {
+                        inventory.setLeggings(item.clone());
+                        break;
+                    }
+
+                    case "BOOTS":
+                    {
+                        inventory.setBoots(item.clone());
+                        break;
+                    }
+
+                    default:
+                    {
+                        inventory.addItem(item.clone());
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                inventory.addItem(item.clone());
+            }
+        }
+
+        player.updateInventory();
+    }
 	
 	public void addItem(ItemStack item, boolean undroppable)
 	{

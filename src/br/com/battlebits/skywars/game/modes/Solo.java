@@ -12,9 +12,13 @@ import org.bukkit.inventory.ItemStack;
 
 import com.google.common.collect.Iterables;
 
+import br.com.battlebits.commons.bukkit.BukkitMain;
+import br.com.battlebits.skywars.Main;
+import br.com.battlebits.skywars.data.PlayerData;
 import br.com.battlebits.skywars.game.Engine;
 import br.com.battlebits.skywars.game.GameStage;
 import br.com.battlebits.skywars.game.GameType;
+import br.com.battlebits.skywars.game.task.CageTask;
 
 public class Solo extends Engine
 {
@@ -46,7 +50,8 @@ public class Solo extends Engine
 			}
 			else
 			{
-				player.teleport(getMap().getSpawn("is-" + i));
+				playerMap.put(player, i);
+				addCage(new CageTask(this, getMap().getSpawn("is-" + i), player));				
 				i++;
 			}
 		}
@@ -55,6 +60,7 @@ public class Solo extends Engine
 		getSchedule().setTime(10);
 		
 		setStarted(System.currentTimeMillis());
+		BukkitMain.getPlugin().setTagControl(false);
 	}
 	
 	@Override
@@ -65,6 +71,14 @@ public class Solo extends Engine
 			setStage(GameStage.ENDING);
 			
 			Player winner = Iterables.getFirst(playerMap.keySet(), null);
+			
+			PlayerData data = Main.getInstance().getPlayerManager().get(winner);
+			
+			if (data != null)
+			{
+				data.addWin();
+				data.update();
+			}
 			
 			for (Player other : Bukkit.getOnlinePlayers())
 			{

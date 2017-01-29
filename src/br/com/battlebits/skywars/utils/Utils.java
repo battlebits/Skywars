@@ -9,8 +9,10 @@ import br.com.battlebits.commons.core.account.BattlePlayer;
 import br.com.battlebits.commons.core.translate.Language;
 
 public class Utils {
-	public static final Random RANDOM = new Random();
 	
+	public static final Random RANDOM = new Random();
+    public static final char[] CHARS = new char[] {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+
 	public static Language getLanguage(Player player) {
 		BattlePlayer bp = BattlebitsAPI.getAccountCommon().getBattlePlayer(player);
 		return bp != null ? bp.getLanguage() : BattlebitsAPI.getDefaultLanguage();

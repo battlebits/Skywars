@@ -14,6 +14,7 @@ import br.com.battlebits.commons.bukkit.scoreboard.BattleBoard;
 import br.com.battlebits.skywars.Main;
 import br.com.battlebits.skywars.game.Engine;
 import br.com.battlebits.skywars.utils.Combat;
+import br.com.battlebits.skywars.utils.NameTag;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,8 +31,9 @@ public class PlayerData
 	private int timePlayed = 0;
 	
 	@Setter
+	private transient NameTag nameTag;
 	private transient BattleBoard battleBoard;
-	private transient Combat combat = new Combat();
+	private transient Combat combat;
 	
 	public PlayerData(UUID uuid, String name)
 	{
@@ -93,12 +95,16 @@ public class PlayerData
 	
 	public Combat getCombat()
 	{
+		if (combat == null)
+			combat = new Combat();
 		return combat;
 	}
 	
 	public void onJoin(Player player)
 	{
 		battleBoard = new BattleBoard(player);
+		
+		nameTag = new NameTag(player);
 		
 		if (!getName().equals(player.getName()))
 		{
