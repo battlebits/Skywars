@@ -99,5 +99,22 @@ public class PlayerData
 	public void onJoin(Player player)
 	{
 		battleBoard = new BattleBoard(player);
+		
+		if (!getName().equals(player.getName()))
+		{
+			Thread thread = new Thread(new Runnable() 
+			{
+				@Override
+				public void run() 
+				{
+					MongoBackend backend = Main.getInstance().getMongoBackend();
+					MongoDatabase database = backend.getClient().getDatabase("skywars");
+					MongoCollection<Document> collection = database.getCollection("data");
+					collection.updateOne(Filters.eq("uuid", uuid.toString()), new Document("$set", new Document("name", player.getName())));
+				}
+			});
+			
+			thread.start();
+		}
 	}
 }

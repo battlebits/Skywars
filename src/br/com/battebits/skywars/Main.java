@@ -30,8 +30,6 @@ import br.com.battebits.skywars.game.GameListener;
 import br.com.battebits.skywars.game.GameSchedule;
 import br.com.battebits.skywars.game.GameType;
 import br.com.battebits.skywars.utils.Utils;
-import br.com.battlebits.commons.bukkit.command.BukkitCommandFramework;
-import br.com.battlebits.commons.core.command.CommandLoader;
 import lombok.Getter;
 
 public class Main extends JavaPlugin {

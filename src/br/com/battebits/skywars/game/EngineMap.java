@@ -110,8 +110,6 @@ public class EngineMap {
 
 				float yaw = spawn.get("yaw").getAsFloat();
 				float pitch = spawn.get("pitch").getAsFloat();
-
-				Main.getInstance().logWarn(entry.getKey());
 				
 				spawns.put(entry.getKey(), new Location(world, x, y, z, yaw, pitch));
 			}

@@ -157,6 +157,11 @@ public class GameListener implements Listener {
 			    	{
 			    		player.setHealth(0D);
 			    	}
+			    	else
+			    	{
+			    		data.addTimePlayed();
+				    	data.update();
+			    	}
 		    	}
 		    	
 		    	engine.removePlayer(player);
@@ -177,8 +182,7 @@ public class GameListener implements Listener {
 	public void onPlayerInteract(PlayerInteractEvent event)
 	{
 		Player player = event.getPlayer();
-		
-		
+
 	}
 	
 	@EventHandler
