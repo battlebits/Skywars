@@ -3,6 +3,3 @@ main: br.com.battebits.skywars.Main
 version: 1.0.0
 depend: [Commons]
 author: Luan Pereira
-commands:
-  start:
-    permission: sw.command.start

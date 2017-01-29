@@ -19,16 +19,17 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import br.com.battlebits.skywars.commands.StartCommand;
+import br.com.battlebits.commons.bukkit.command.BukkitCommandFramework;
+import br.com.battlebits.commons.core.command.CommandLoader;
 import br.com.battlebits.skywars.data.MongoBackend;
 import br.com.battlebits.skywars.data.PlayerData;
 import br.com.battlebits.skywars.data.PlayerManager;
 import br.com.battlebits.skywars.game.Engine;
 import br.com.battlebits.skywars.game.EngineMap;
+import br.com.battlebits.skywars.game.EngineMap.Callback;
 import br.com.battlebits.skywars.game.GameListener;
 import br.com.battlebits.skywars.game.GameSchedule;
 import br.com.battlebits.skywars.game.GameType;
-import br.com.battlebits.skywars.game.EngineMap.Callback;
 import br.com.battlebits.skywars.utils.Utils;
 import lombok.Getter;
 
@@ -98,9 +99,10 @@ public class Main extends JavaPlugin {
 			mongoBackend = new MongoBackend();
 			mongoBackend.startConnection();
 
-			getServer().getPluginCommand("start").setExecutor(new StartCommand());
 			getServer().getScheduler().runTaskTimer(this, new GameSchedule(engine), 20L, 20L);
 			getServer().getPluginManager().registerEvents(new GameListener(engine), this);
+			new CommandLoader(new BukkitCommandFramework(this))
+					.loadCommandsFromPackage("br.com.battlebits.skywars.commands");
 		} catch (Exception e) {
 			logError("Erro ao habilitar:", e);
 		}
