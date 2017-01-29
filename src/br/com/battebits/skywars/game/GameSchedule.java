@@ -65,7 +65,7 @@ public class GameSchedule implements Runnable {
 			if (time > 0) {
 				time--;
 			} else {
-				// TODO
+				engine.setStage(GameStage.INGAME);
 			}
 
 			break;
@@ -109,6 +109,7 @@ public class GameSchedule implements Runnable {
 				
 				if (battleBoard != null)
 				{
+					
 					switch (engine.getStage()) 
 					{
 					    case PREGAME:
@@ -130,6 +131,7 @@ public class GameSchedule implements Runnable {
 					rows.put(15 - rows.size(), " ");
 					rows.put(15 - rows.size(), "§ebattlebits.com.br");
 					
+					battleBoard.setDisplayName("§6§lSKYWARS");
 					battleBoard.setRows(rows);
 					rows.clear();
 				}

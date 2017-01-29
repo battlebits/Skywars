@@ -92,6 +92,8 @@ public class GameListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoin(PlayerJoinEvent event) 
 	{
+		event.setJoinMessage(null);
+		
 		Player player = event.getPlayer();
 	
 		PlayerData data = Main.getInstance().getPlayerManager().get(player);
@@ -198,6 +200,8 @@ public class GameListener implements Listener {
 				
 				engine.removePlayer(player);
 				engine.checkCount();
+				
+				//event.getDrops().removeIf(v -> Kit.is)
 				
 				EntityDamageEvent lastDamage = player.getLastDamageCause();
 				PlayerManager manager = Main.getInstance().getPlayerManager();

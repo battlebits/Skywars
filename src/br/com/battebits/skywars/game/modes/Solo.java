@@ -28,7 +28,7 @@ public class Solo extends Engine
 	@Override
 	public void start()
 	{
-		int i = -1;
+		int i = 1;
 		
 		Iterator<Player> iterator = playerMap.keySet().iterator();
 		
@@ -46,8 +46,7 @@ public class Solo extends Engine
 			}
 			else
 			{
-				
-				
+				player.teleport(getMap().getSpawn("is-" + i));
 				i++;
 			}
 		}

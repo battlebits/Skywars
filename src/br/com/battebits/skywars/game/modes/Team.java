@@ -63,6 +63,7 @@ public class Team extends Engine
 					{
 						player.getInventory().clear();
 						player.getInventory().setArmorContents(new ItemStack[4]);
+						player.teleport(getMap().getSpawn("is-" + i));
 						player.updateInventory();
 						playerMap.put(player, i);
 					}

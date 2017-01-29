@@ -96,8 +96,7 @@ public class EngineMap {
 
 	public void enable() {
 		try {
-			World world = Bukkit.getWorld("world");
-
+			World world = Bukkit.getWorlds().get(0);
 			Engine engine = Main.getInstance().getEngine();
 
 			JsonObject object = (JsonObject) readJson("spawns.json");
@@ -112,6 +111,8 @@ public class EngineMap {
 				float yaw = spawn.get("yaw").getAsFloat();
 				float pitch = spawn.get("pitch").getAsFloat();
 
+				Main.getInstance().logWarn(entry.getKey());
+				
 				spawns.put(entry.getKey(), new Location(world, x, y, z, yaw, pitch));
 			}
 
@@ -126,7 +127,7 @@ public class EngineMap {
 				Iterator<JsonElement> iterator = array.iterator();
 
 				while (iterator.hasNext()) {
-					JsonObject chest = (JsonObject) entry.getValue();
+					JsonObject chest = (JsonObject) iterator.next();
 
 					int x = chest.get("x").getAsInt();
 					int y = chest.get("y").getAsInt();

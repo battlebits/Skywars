@@ -1,0 +1,2667 @@
+{
+  "player-refil": {
+    "lista-1": [
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "DIAMOND_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 1
+        }
+      },
+      {
+        "type": "STONE_SWORD",
+        "data": 0,
+        "enchantments": {
+          "KNOCKBACK": 1
+        }
+      },
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0
+      },
+      {
+        "type": "DIAMOND_HELMET",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "ENDER_PEARL",
+        "data": 0
+      },
+      {
+        "type": "COOKED_BEEF",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "POTION",
+        "data": 16385
+      }
+    ],
+    "lista-2": [
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "IRON_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 1
+        }
+      },
+      {
+        "type": "EGG",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "DIAMOND_HELMET",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "ENDER_PEARL",
+        "data": 0
+      },
+      {
+        "type": "IRON_CHESTPLATE",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "COOKED_BEEF",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "POTION",
+        "data": 16385
+      }
+    ],
+    "lista-3": [
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "SNOW_BALL",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "SNOW_BALL",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "IRON_HELMET",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 8
+      },
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "BOW",
+        "data": 0,
+        "enchantments": {
+          "ARROW_DAMAGE": 3
+        }
+      },
+      {
+        "type": "POTION",
+        "data": 16386
+      }
+    ],
+    "lista-4": [
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "STONE_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 2
+        }
+      },
+      {
+        "type": "EGG",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "IRON_LEGGINGS",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "EGG",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "ENDER_PEARL",
+        "data": 0
+      },
+      {
+        "type": "POTION",
+        "data": 16386
+      }
+    ],
+    "lista-5": [
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "DIAMOND_CHESTPLATE",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 8
+      },
+      {
+        "type": "IRON_LEGGINGS",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "COOKED_BEEF",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "WATER_BUCKET",
+        "data": 0
+      },
+      {
+        "type": "ENCHANTMENT_TABLE",
+        "data": 0
+      },
+      {
+        "type": "BOW",
+        "data": 0,
+        "enchantments": {
+          "ARROW_DAMAGE": 3
+        }
+      }
+    ],
+    "lista-6": [
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 24
+      },
+      {
+        "type": "DIAMOND_BOOTS",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "IRON_LEGGINGS",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "DIAMOND_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 1
+        }
+      },
+      {
+        "type": "POTION",
+        "data": 16388
+      }
+    ],
+    "lista-7": [
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "DIAMOND_CHESTPLATE",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "IRON_BOOTS",
+        "data": 0
+      },
+      {
+        "type": "STONE_SWORD",
+        "data": 0,
+        "enchantments": {
+          "KNOCKBACK": 1
+        }
+      },
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 64
+      },
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0
+      }
+    ],
+    "lista-8": [
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 24
+      },
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "COOKED_BEEF",
+        "data": 0,
+        "amount": 24
+      },
+      {
+        "type": "EGG",
+        "data": 0,
+        "amount": 24
+      },
+      {
+        "type": "LAVA_BUCKET",
+        "data": 0
+      },
+      {
+        "type": "DIAMOND_HELMET",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "POTION",
+        "data": 16388
+      },
+      {
+        "type": "BOW",
+        "data": 0,
+        "enchantments": {
+          "ARROW_DAMAGE": 1
+        }
+      },
+      {
+        "type": "ENDER_PEARL",
+        "data": 0
+      }
+    ],
+    "lista-9": [
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0
+      },
+      {
+        "type": "BOW",
+        "data": 0,
+        "enchantments": {
+          "ARROW_DAMAGE": 3
+        }
+      },
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 24
+      },
+      {
+        "type": "IRON_BOOTS",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "IRON_LEGGINGS",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 2
+        }
+      },
+      {
+        "type": "LAVA_BUCKET",
+        "data": 0
+      },
+      {
+        "type": "POTION",
+        "data": 16394
+      }
+    ],
+    "lista-10": [
+      {
+        "type": "IRON_BOOTS",
+        "data": 0
+      },
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "LAVA_BUCKET",
+        "data": 0
+      },
+      {
+        "type": "IRON_LEGGINGS",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 2
+        }
+      },
+      {
+        "type": "IRON_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 1
+        }
+      },
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "POTION",
+        "data": 16394
+      }
+    ],
+    "lista-11": [
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0
+      },
+      {
+        "type": "DIAMOND_CHESTPLATE",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "DIAMOND_BOOTS",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "COOKED_BEEF",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "ENDER_PEARL",
+        "data": 0
+      },
+      {
+        "type": "POTION",
+        "data": 16394
+      }
+    ],
+    "lista-12": [
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "IRON_LEGGINGS",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "DIAMOND_HELMET",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "EGG",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "SNOW_BALL",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "POTION",
+        "data": 16418
+      },
+      {
+        "type": "BOW",
+        "data": 0,
+        "enchantments": {
+          "ARROW_DAMAGE": 1
+        }
+      },
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 15
+      },
+      {
+        "type": "POTION",
+        "data": 16396
+      }
+    ],
+    "lista-13": [
+      {
+        "type": "IRON_CHESTPLATE",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "COOKED_BEEF",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "DIAMOND_BOOTS",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "ENCHANTMENT_TABLE",
+        "data": 0
+      },
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0
+      },
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 16
+      }
+    ],
+    "lista-14": [
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 48
+      },
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "SNOW_BALL",
+        "data": 0,
+        "amount": 64
+      },
+      {
+        "type": "DIAMOND_AXE",
+        "data": 0
+      },
+      {
+        "type": "DIAMOND_CHESTPLATE",
+        "data": 0
+      },
+      {
+        "type": "DIAMOND_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 2
+        }
+      },
+      {
+        "type": "POTION",
+        "data": 16396
+      }
+    ],
+    "lista-15": [
+      {
+        "type": "DIAMOND_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 2
+        }
+      },
+      {
+        "type": "COOKED_BEEF",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "IRON_HELMET",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "POTION",
+        "data": 16396
+      },
+      {
+        "type": "IRON_LEGGINGS",
+        "data": 0
+      },
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 15
+      }
+    ],
+    "lista-16": [
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 64
+      },
+      {
+        "type": "COOKED_BEEF",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "EGG",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "WATER_BUCKET",
+        "data": 0
+      },
+      {
+        "type": "IRON_HELMET",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      }
+    ],
+    "lista-17": [
+      {
+        "type": "FISHING_ROD",
+        "data": 0
+      },
+      {
+        "type": "WATER_BUCKET",
+        "data": 0
+      },
+      {
+        "type": "EGG",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "ENDER_PEARL",
+        "data": 0
+      },
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0,
+        "enchantments": {
+          "DIG_SPEED": 1
+        }
+      },
+      {
+        "type": "DIAMOND_BOOTS",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 2,
+          "PROTECTION_FALL": 3
+        }
+      }
+    ],
+    "lista-18": [
+      {
+        "type": "EGG",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "COOKED_BEEF",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 64
+      },
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "DIAMOND_AXE",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 2
+        }
+      }
+    ],
+    "lista-19": [
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 24
+      },
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 52
+      },
+      {
+        "type": "DIAMOND_CHESTPLATE",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "DIAMOND_LEGGINGS",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 2
+        }
+      },
+      {
+        "type": "DIAMOND_HELMET",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 2,
+          "PROTECTION_FIRE": 3
+        }
+      },
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0,
+        "enchantments": {
+          "DIG_SPEED": 1
+        }
+      },
+      {
+        "type": "ENCHANTMENT_TABLE",
+        "data": 0
+      }
+    ],
+    "lista-20": [
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0,
+        "enchantments": {
+          "DIG_SPEED": 1
+        }
+      },
+      {
+        "type": "DIAMOND_BOOTS",
+        "data": 0
+      },
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 40
+      },
+      {
+        "type": "IRON_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 1
+        }
+      },
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 64
+      },
+      {
+        "type": "WATER_BUCKET",
+        "data": 0
+      },
+      {
+        "type": "LAVA_BUCKET",
+        "data": 0
+      }
+    ],
+    "lista-21": [
+      {
+        "type": "EGG",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 64
+      },
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 40
+      },
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0,
+        "enchantments": {
+          "DIG_SPEED": 1
+        }
+      },
+      {
+        "type": "DIAMOND_BOOTS",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 32
+      }
+    ],
+    "lista-22": [
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "DIAMOND_BOOTS",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 2
+        }
+      },
+      {
+        "type": "DIAMOND_LEGGINGS",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "DIAMOND_CHESTPLATE",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "EGG",
+        "data": 0,
+        "amount": 16
+      }
+    ],
+    "lista-23": [
+      {
+        "type": "DIAMOND_AXE",
+        "data": 0,
+        "enchantments": {
+          "DIG_SPEED": 2
+        }
+      },
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "COOKED_BEEF",
+        "data": 0,
+        "amount": 32
+      }
+    ],
+    "lista-24": [
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "IRON_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 2
+        }
+      },
+      {
+        "type": "DIAMOND_LEGGINGS",
+        "data": 0
+      },
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0,
+        "enchantments": {
+          "DIG_SPEED": 2
+        }
+      },
+      {
+        "type": "DIAMOND_BOOTS",
+        "data": 0
+      }
+    ],
+    "lista-25": [
+      {
+        "type": "COOKED_BEEF",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0,
+        "enchantments": {
+          "DIG_SPEED": 2
+        }
+      },
+      {
+        "type": "DIAMOND_CHESTPLATE",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 2
+        }
+      },
+      {
+        "type": "DIAMOND_AXE",
+        "data": 0,
+        "enchantments": {
+          "DIG_SPEED": 2
+        }
+      },
+      {
+        "type": "WATER_BUCKET",
+        "data": 0
+      }
+    ],
+    "lista-26": [
+      {
+        "type": "BOW",
+        "data": 0,
+        "enchantments": {
+          "ARROW_DAMAGE": 3
+        }
+      },
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "LAVA_BUCKET",
+        "data": 0
+      },
+      {
+        "type": "IRON_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 1
+        }
+      },
+      {
+        "type": "ENDER_PEARL",
+        "data": 0
+      },
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 40
+      },
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0,
+        "enchantments": {
+          "DIG_SPEED": 1
+        }
+      },
+      {
+        "type": "EGG",
+        "data": 0,
+        "amount": 16
+      }
+    ],
+    "lista-28": [
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "DIAMOND_HELMET",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 2
+        }
+      },
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 64
+      },
+      {
+        "type": "COOKED_BEEF",
+        "data": 0,
+        "amount": 32
+      }
+    ],
+    "lista-29": [
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 40
+      },
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "ENCHANTMENT_TABLE",
+        "data": 0
+      },
+      {
+        "type": "DIAMOND_HELMET",
+        "data": 0
+      },
+      {
+        "type": "EGG",
+        "data": 0,
+        "amount": 16
+      }
+    ],
+    "lista-30": [
+      {
+        "type": "WATER_BUCKET",
+        "data": 0
+      },
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0,
+        "enchantments": {
+          "DIG_SPEED": 1
+        }
+      },
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "ENDER_PEARL",
+        "data": 0
+      },
+      {
+        "type": "DIAMOND_CHESTPLATE",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 2
+        }
+      },
+      {
+        "type": "DIAMOND_BOOTS",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1,
+          "PROTECTION_FALL": 2
+        }
+      },
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 64
+      }
+    ],
+    "lista-31": [
+      {
+        "type": "EGG",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "DIAMOND_HELMET",
+        "data": 0
+      },
+      {
+        "type": "DIAMOND_LEGGINGS",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "ENCHANTMENT_TABLE",
+        "data": 0
+      },
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 16
+      }
+    ],
+    "lista-32": [
+      {
+        "type": "IRON_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 2
+        }
+      },
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "DIAMOND_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 1
+        }
+      }
+    ]
+  },
+  "feast-refil": {
+    "lista-1": [
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 64
+      },
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 64
+      },
+      {
+        "type": "ENDER_PEARL",
+        "data": 0
+      },
+      {
+        "type": "DIAMOND_BOOTS",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1,
+          "PROTECTION_FALL": 1
+        }
+      },
+      {
+        "type": "ENDER_PEARL",
+        "data": 0
+      },
+      {
+        "type": "GOLDEN_APPLE",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "FLINT_AND_STEEL",
+        "data": 0
+      }
+    ],
+    "lista-2": [
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0,
+        "enchantments": {
+          "KNOCKBACK": 1,
+          "DIG_SPEED": 1
+        }
+      },
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 64
+      },
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 64
+      }
+    ],
+    "lista-3": [
+      {
+        "type": "DIAMOND_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 1,
+          "KNOCKBACK": 1
+        }
+      },
+      {
+        "type": "GOLDEN_APPLE",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "FLINT_AND_STEEL",
+        "data": 0
+      }
+    ],
+    "lista-4": [
+      {
+        "type": "DIAMOND_SWORD",
+        "data": 0,
+        "enchantments": {
+          "FIRE_ASPECT": 1,
+          "KNOCKBACK": 1,
+          "DAMAGE_ALL": 1
+        }
+      },
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 64
+      },
+      {
+        "type": "ENDER_PEARL",
+        "data": 0
+      },
+      {
+        "type": "SNOW_BALL",
+        "data": 0,
+        "amount": 64
+      },
+      {
+        "type": "SNOW_BALL",
+        "data": 0,
+        "amount": 32
+      }
+    ],
+    "lista-5": [
+      {
+        "type": "DIAMOND_SWORD",
+        "data": 0,
+        "enchantments": {
+          "KNOCKBACK": 1,
+          "DAMAGE_ALL": 1,
+          "FIRE_ASPECT": 1
+        }
+      },
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 64
+      }
+    ],
+    "lista-6": [
+      {
+        "type": "BOW",
+        "data": 0,
+        "enchantments": {
+          "ARROW_DAMAGE": 3,
+          "ARROW_FIRE": 1
+        }
+      },
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 64
+      }
+    ],
+    "lista-7": [
+      {
+        "type": "IRON_SWORD",
+        "data": 0,
+        "enchantments": {
+          "KNOCKBACK": 1,
+          "DAMAGE_ALL": 1,
+          "DURABILITY": 1
+        }
+      },
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 64
+      },
+      {
+        "type": "ENDER_PEARL",
+        "data": 0
+      }
+    ],
+    "lista-8": [
+      {
+        "type": "DIAMOND_SWORD",
+        "data": 0,
+        "enchantments": {
+          "FIRE_ASPECT": 1,
+          "DAMAGE_ALL": 1
+        }
+      },
+      {
+        "type": "WATER_BUCKET",
+        "data": 0
+      },
+      {
+        "type": "LAVA_BUCKET",
+        "data": 0
+      },
+      {
+        "type": "LAVA_BUCKET",
+        "data": 0
+      },
+      {
+        "type": "WATER_BUCKET",
+        "data": 0
+      }
+    ],
+    "lista-9": [
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 64
+      },
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 64
+      },
+      {
+        "type": "DIAMOND_BOOTS",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1,
+          "PROTECTION_FALL": 1
+        }
+      },
+      {
+        "type": "WATER_BUCKET",
+        "data": 0
+      },
+      {
+        "type": "ENDER_PEARL",
+        "data": 0
+      },
+      {
+        "type": "LAVA_BUCKET",
+        "data": 0
+      }
+    ],
+    "lista-10": [
+      {
+        "type": "IRON_SWORD",
+        "data": 0,
+        "enchantments": {
+          "FIRE_ASPECT": 1,
+          "DAMAGE_ALL": 1
+        }
+      },
+      {
+        "type": "DIAMOND_CHESTPLATE",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1,
+          "PROTECTION_FIRE": 1
+        }
+      }
+    ],
+    "lista-11": [
+      {
+        "type": "DIAMOND_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 1,
+          "FIRE_ASPECT": 1
+        }
+      },
+      {
+        "type": "DIAMOND_HELMET",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "ENDER_PEARL",
+        "data": 0
+      }
+    ],
+    "lista-12": [
+      {
+        "type": "IRON_LEGGINGS",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "BOW",
+        "data": 0,
+        "enchantments": {
+          "ARROW_DAMAGE": 3,
+          "ARROW_FIRE": 1
+        }
+      },
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 64
+      }
+    ]
+  },
+  "player": {
+    "lista-1": [
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "STONE_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 1
+        }
+      },
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0
+      },
+      {
+        "type": "DIAMOND_HELMET",
+        "data": 0
+      },
+      {
+        "type": "COOKED_BEEF",
+        "data": 0,
+        "amount": 16
+      }
+    ],
+    "lista-2": [
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 20
+      },
+      {
+        "type": "STONE_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 1
+        }
+      },
+      {
+        "type": "EGG",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "IRON_HELMET",
+        "data": 0
+      },
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "IRON_CHESTPLATE",
+        "data": 0
+      },
+      {
+        "type": "COOKED_BEEF",
+        "data": 0,
+        "amount": 16
+      }
+    ],
+    "lista-3": [
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 20
+      },
+      {
+        "type": "SNOW_BALL",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "SNOW_BALL",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "IRON_HELMET",
+        "data": 0
+      },
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 8
+      },
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "BOW",
+        "data": 0,
+        "enchantments": {
+          "ARROW_DAMAGE": 3
+        }
+      }
+    ],
+    "lista-4": [
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 20
+      },
+      {
+        "type": "STONE_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 1
+        }
+      },
+      {
+        "type": "EGG",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "IRON_LEGGINGS",
+        "data": 0
+      },
+      {
+        "type": "EGG",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "POTION",
+        "data": 16417
+      }
+    ],
+    "lista-5": [
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 20
+      },
+      {
+        "type": "DIAMOND_CHESTPLATE",
+        "data": 0
+      },
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 8
+      },
+      {
+        "type": "IRON_LEGGINGS",
+        "data": 0
+      },
+      {
+        "type": "COOKED_BEEF",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 20
+      },
+      {
+        "type": "WATER_BUCKET",
+        "data": 0
+      },
+      {
+        "type": "ENCHANTMENT_TABLE",
+        "data": 0
+      },
+      {
+        "type": "BOW",
+        "data": 0,
+        "enchantments": {
+          "ARROW_DAMAGE": 1
+        }
+      }
+    ],
+    "lista-6": [
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 8
+      },
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 20
+      },
+      {
+        "type": "IRON_BOOTS",
+        "data": 0
+      },
+      {
+        "type": "IRON_LEGGINGS",
+        "data": 0
+      },
+      {
+        "type": "DIAMOND_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 1
+        }
+      },
+      {
+        "type": "POTION",
+        "data": 16417
+      }
+    ],
+    "lista-7": [
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "IRON_CHESTPLATE",
+        "data": 0
+      },
+      {
+        "type": "IRON_BOOTS",
+        "data": 0
+      },
+      {
+        "type": "STONE_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 1
+        }
+      },
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0
+      }
+    ],
+    "lista-8": [
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 20
+      },
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "COOKED_BEEF",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "EGG",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "LAVA_BUCKET",
+        "data": 0
+      },
+      {
+        "type": "DIAMOND_HELMET",
+        "data": 0
+      },
+      {
+        "type": "POTION",
+        "data": 16394
+      },
+      {
+        "type": "BOW",
+        "data": 0,
+        "enchantments": {
+          "ARROW_DAMAGE": 1
+        }
+      }
+    ],
+    "lista-9": [
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0
+      },
+      {
+        "type": "BOW",
+        "data": 0,
+        "enchantments": {
+          "ARROW_DAMAGE": 1
+        }
+      },
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 15
+      },
+      {
+        "type": "IRON_BOOTS",
+        "data": 0
+      },
+      {
+        "type": "LAVA_BUCKET",
+        "data": 0
+      }
+    ],
+    "lista-10": [
+      {
+        "type": "IRON_BOOTS",
+        "data": 0
+      },
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "LAVA_BUCKET",
+        "data": 0
+      },
+      {
+        "type": "IRON_LEGGINGS",
+        "data": 0
+      },
+      {
+        "type": "STONE_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 1
+        }
+      },
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "POTION",
+        "data": 16388
+      }
+    ],
+    "lista-11": [
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0
+      },
+      {
+        "type": "IRON_LEGGINGS",
+        "data": 0
+      },
+      {
+        "type": "DIAMOND_CHESTPLATE",
+        "data": 0
+      },
+      {
+        "type": "COOKED_BEEF",
+        "data": 0,
+        "amount": 16
+      }
+    ],
+    "lista-12": [
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 20
+      },
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 28
+      },
+      {
+        "type": "IRON_LEGGINGS",
+        "data": 0
+      },
+      {
+        "type": "DIAMOND_HELMET",
+        "data": 0
+      },
+      {
+        "type": "EGG",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "SNOW_BALL",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "POTION",
+        "data": 16418
+      },
+      {
+        "type": "BOW",
+        "data": 0,
+        "enchantments": {
+          "ARROW_DAMAGE": 1
+        }
+      },
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 15
+      }
+    ],
+    "lista-13": [
+      {
+        "type": "IRON_CHESTPLATE",
+        "data": 0
+      },
+      {
+        "type": "COOKED_BEEF",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "DIAMOND_BOOTS",
+        "data": 0
+      },
+      {
+        "type": "ENCHANTMENT_TABLE",
+        "data": 0
+      },
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0
+      },
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 15
+      }
+    ],
+    "lista-14": [
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 8
+      },
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 8
+      },
+      {
+        "type": "SNOW_BALL",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "DIAMOND_AXE",
+        "data": 0
+      },
+      {
+        "type": "DIAMOND_CHESTPLATE",
+        "data": 0
+      },
+      {
+        "type": "STONE_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 1
+        }
+      }
+    ],
+    "lista-15": [
+      {
+        "type": "DIAMOND_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 2
+        }
+      },
+      {
+        "type": "COOKED_BEEF",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "DIAMOND_BOOTS",
+        "data": 0
+      },
+      {
+        "type": "POTION",
+        "data": 16385
+      },
+      {
+        "type": "IRON_LEGGINGS",
+        "data": 0
+      },
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 15
+      }
+    ],
+    "lista-16": [
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 8
+      },
+      {
+        "type": "COOKED_BEEF",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "EGG",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "WATER_BUCKET",
+        "data": 0
+      },
+      {
+        "type": "IRON_HELMET",
+        "data": 0
+      }
+    ],
+    "lista-17": [
+      {
+        "type": "FISHING_ROD",
+        "data": 0
+      },
+      {
+        "type": "WATER_BUCKET",
+        "data": 0
+      },
+      {
+        "type": "EGG",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0
+      },
+      {
+        "type": "DIAMOND_BOOTS",
+        "data": 0
+      }
+    ],
+    "lista-18": [
+      {
+        "type": "EGG",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "COOKED_BEEF",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "DIAMOND_AXE",
+        "data": 0
+      }
+    ],
+    "lista-19": [
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 12
+      },
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 26
+      },
+      {
+        "type": "IRON_CHESTPLATE",
+        "data": 0
+      },
+      {
+        "type": "IRON_LEGGINGS",
+        "data": 0
+      },
+      {
+        "type": "IRON_HELMET",
+        "data": 0
+      },
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0
+      },
+      {
+        "type": "ENCHANTMENT_TABLE",
+        "data": 0
+      }
+    ],
+    "lista-20": [
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0
+      },
+      {
+        "type": "IRON_BOOTS",
+        "data": 0
+      },
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 8
+      },
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 20
+      },
+      {
+        "type": "STONE_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 1
+        }
+      },
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "WATER_BUCKET",
+        "data": 0
+      },
+      {
+        "type": "LAVA_BUCKET",
+        "data": 0
+      }
+    ],
+    "lista-21": [
+      {
+        "type": "EGG",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 20
+      },
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0
+      },
+      {
+        "type": "DIAMOND_BOOTS",
+        "data": 0
+      },
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 16
+      }
+    ],
+    "lista-22": [
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 8
+      },
+      {
+        "type": "IRON_BOOTS",
+        "data": 0
+      },
+      {
+        "type": "DIAMOND_LEGGINGS",
+        "data": 0
+      },
+      {
+        "type": "IRON_CHESTPLATE",
+        "data": 0
+      },
+      {
+        "type": "EGG",
+        "data": 0,
+        "amount": 16
+      }
+    ],
+    "lista-23": [
+      {
+        "type": "DIAMOND_AXE",
+        "data": 0
+      },
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "COOKED_BEEF",
+        "data": 0,
+        "amount": 16
+      }
+    ],
+    "lista-24": [
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 8
+      },
+      {
+        "type": "STONE_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 1
+        }
+      },
+      {
+        "type": "IRON_LEGGINGS",
+        "data": 0
+      },
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 8
+      },
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0
+      },
+      {
+        "type": "IRON_BOOTS",
+        "data": 0
+      }
+    ],
+    "lista-25": [
+      {
+        "type": "COOKED_BEEF",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0
+      },
+      {
+        "type": "DIAMOND_CHESTPLATE",
+        "data": 0
+      },
+      {
+        "type": "DIAMOND_AXE",
+        "data": 0
+      },
+      {
+        "type": "WATER_BUCKET",
+        "data": 0
+      }
+    ],
+    "lista-26": [
+      {
+        "type": "BOW",
+        "data": 0,
+        "enchantments": {
+          "ARROW_DAMAGE": 1
+        }
+      },
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 15
+      },
+      {
+        "type": "LAVA_BUCKET",
+        "data": 0
+      },
+      {
+        "type": "STONE_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 1
+        }
+      },
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 20
+      },
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0
+      },
+      {
+        "type": "EGG",
+        "data": 0,
+        "amount": 16
+      }
+    ],
+    "lista-28": [
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 8
+      },
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "DIAMOND_HELMET",
+        "data": 0
+      },
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "COOKED_BEEF",
+        "data": 0,
+        "amount": 16
+      }
+    ],
+    "lista-29": [
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 20
+      },
+      {
+        "type": "STONE",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "ENCHANTMENT_TABLE",
+        "data": 0
+      },
+      {
+        "type": "IRON_HELMET",
+        "data": 0
+      },
+      {
+        "type": "EGG",
+        "data": 0,
+        "amount": 16
+      }
+    ],
+    "lista-30": [
+      {
+        "type": "WATER_BUCKET",
+        "data": 0
+      },
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0
+      },
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 8
+      },
+      {
+        "type": "DIAMOND_CHESTPLATE",
+        "data": 0
+      },
+      {
+        "type": "DIAMOND_BOOTS",
+        "data": 0
+      },
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 32
+      }
+    ],
+    "lista-31": [
+      {
+        "type": "EGG",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "IRON_HELMET",
+        "data": 0
+      },
+      {
+        "type": "IRON_LEGGINGS",
+        "data": 0
+      },
+      {
+        "type": "ENCHANTMENT_TABLE",
+        "data": 0
+      },
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 8
+      }
+    ],
+    "lista-32": [
+      {
+        "type": "STONE_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 1
+        }
+      },
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 8
+      },
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 8
+      },
+      {
+        "type": "DIAMOND_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 1
+        }
+      }
+    ]
+  },
+  "feast": {
+    "lista-1": [
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "DIAMOND_BOOTS",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "GOLDEN_APPLE",
+        "data": 0
+      },
+      {
+        "type": "FLINT_AND_STEEL",
+        "data": 0
+      }
+    ],
+    "lista-2": [
+      {
+        "type": "DIAMOND_PICKAXE",
+        "data": 0,
+        "enchantments": {
+          "KNOCKBACK": 1
+        }
+      },
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 32
+      }
+    ],
+    "lista-3": [
+      {
+        "type": "DIAMOND_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 1
+        }
+      },
+      {
+        "type": "GOLDEN_APPLE",
+        "data": 0,
+        "amount": 4
+      },
+      {
+        "type": "FLINT_AND_STEEL",
+        "data": 0
+      }
+    ],
+    "lista-4": [
+      {
+        "type": "DIAMOND_SWORD",
+        "data": 0,
+        "enchantments": {
+          "FIRE_ASPECT": 1
+        }
+      },
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 64
+      },
+      {
+        "type": "SNOW_BALL",
+        "data": 0,
+        "amount": 64
+      },
+      {
+        "type": "SNOW_BALL",
+        "data": 0,
+        "amount": 16
+      }
+    ],
+    "lista-5": [
+      {
+        "type": "IRON_SWORD",
+        "data": 0,
+        "enchantments": {
+          "KNOCKBACK": 1
+        }
+      },
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 64
+      }
+    ],
+    "lista-6": [
+      {
+        "type": "BOW",
+        "data": 0,
+        "enchantments": {
+          "ARROW_DAMAGE": 3
+        }
+      },
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 32
+      }
+    ],
+    "lista-7": [
+      {
+        "type": "WOOD_SWORD",
+        "data": 0,
+        "enchantments": {
+          "KNOCKBACK": 1
+        }
+      },
+      {
+        "type": "WOOD",
+        "data": 0,
+        "amount": 64
+      }
+    ],
+    "lista-8": [
+      {
+        "type": "DIAMOND_SWORD",
+        "data": 0,
+        "enchantments": {
+          "FIRE_ASPECT": 1
+        }
+      },
+      {
+        "type": "WATER_BUCKET",
+        "data": 0
+      },
+      {
+        "type": "LAVA_BUCKET",
+        "data": 0
+      },
+      {
+        "type": "LAVA_BUCKET",
+        "data": 0
+      },
+      {
+        "type": "WATER_BUCKET",
+        "data": 0
+      }
+    ],
+    "lista-9": [
+      {
+        "type": "EXP_BOTTLE",
+        "data": 0,
+        "amount": 32
+      },
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 16
+      },
+      {
+        "type": "DIAMOND_BOOTS",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "WATER_BUCKET",
+        "data": 0
+      },
+      {
+        "type": "LAVA_BUCKET",
+        "data": 0
+      }
+    ],
+    "lista-10": [
+      {
+        "type": "WOOD_SWORD",
+        "data": 0,
+        "enchantments": {
+          "FIRE_ASPECT": 2
+        }
+      },
+      {
+        "type": "DIAMOND_CHESTPLATE",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      }
+    ],
+    "lista-11": [
+      {
+        "type": "DIAMOND_SWORD",
+        "data": 0,
+        "enchantments": {
+          "DAMAGE_ALL": 1
+        }
+      },
+      {
+        "type": "DIAMOND_HELMET",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      }
+    ],
+    "lista-12": [
+      {
+        "type": "IRON_LEGGINGS",
+        "data": 0,
+        "enchantments": {
+          "PROTECTION_ENVIRONMENTAL": 1
+        }
+      },
+      {
+        "type": "BOW",
+        "data": 0,
+        "enchantments": {
+          "ARROW_DAMAGE": 3
+        }
+      },
+      {
+        "type": "ARROW",
+        "data": 0,
+        "amount": 32
+      }
+    ]
+  }
+}

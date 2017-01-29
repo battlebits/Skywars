@@ -20,7 +20,7 @@ public abstract class Engine {
 	@Setter(AccessLevel.PRIVATE)
 	private GameType type;
 
-	private GameStage stage;
+	private GameStage stage = GameStage.PREGAME;
 
 	private GameSchedule schedule;
 

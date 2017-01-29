@@ -19,6 +19,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import br.com.battebits.skywars.commands.StartCommand;
 import br.com.battebits.skywars.data.MongoBackend;
 import br.com.battebits.skywars.data.PlayerData;
 import br.com.battebits.skywars.data.PlayerManager;
@@ -29,19 +30,21 @@ import br.com.battebits.skywars.game.GameListener;
 import br.com.battebits.skywars.game.GameSchedule;
 import br.com.battebits.skywars.game.GameType;
 import br.com.battebits.skywars.utils.Utils;
+import br.com.battlebits.commons.bukkit.command.BukkitCommandFramework;
+import br.com.battlebits.commons.core.command.CommandLoader;
 import lombok.Getter;
 
 public class Main extends JavaPlugin {
-	
+
 	@Getter
 	private Engine engine;
-	
+
 	@Getter
 	private PlayerManager playerManager;
-	
+
 	@Getter
 	private MongoBackend mongoBackend;
-	
+
 	@Getter
 	private static Main instance;
 
@@ -51,7 +54,7 @@ public class Main extends JavaPlugin {
 			instance = this;
 			JsonObject config = (JsonObject) readJson("config.json");
 			JsonObject items = (JsonObject) readJson("items.json");
-			
+
 			String type = config.get("type").getAsString();
 			boolean insane = config.get("insane").getAsBoolean();
 
@@ -95,7 +98,9 @@ public class Main extends JavaPlugin {
 			engine.getMap().enable();
 			playerManager = new PlayerManager();
 			mongoBackend = new MongoBackend();
-			
+			mongoBackend.startConnection();
+
+			getServer().getPluginCommand("start").setExecutor(new StartCommand());
 			getServer().getScheduler().runTaskTimer(this, new GameSchedule(engine), 20L, 20L);
 			getServer().getPluginManager().registerEvents(new GameListener(engine), this);
 		} catch (Exception e) {
@@ -106,6 +111,7 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		HandlerList.unregisterAll(this);
+		mongoBackend.closeConnection();
 	}
 
 	/* Plugin Logger */
@@ -149,8 +155,6 @@ public class Main extends JavaPlugin {
 			if (parent != null)
 				parent.mkdirs();
 
-			file.createNewFile();
-
 			try (InputStream in = getResource(name)) {
 				Files.copy(in, file.toPath());
 			}
@@ -166,7 +170,7 @@ public class Main extends JavaPlugin {
 	private List<File> getMaps(String directory, boolean insane) {
 		directory = directory.toLowerCase();
 		directory += (insane ? "_insane" : "");
-		
+
 		File folder = new File("../BSW-Maps/" + directory);
 		if (folder.exists() && folder.isDirectory()) {
 			List<File> files = new ArrayList<>();
@@ -177,11 +181,12 @@ public class Main extends JavaPlugin {
 			}
 			return files;
 		}
-		
+
 		return null;
 	}
-	
+
 	public static void main(String[] args) {
-		System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(new PlayerData(UUID.randomUUID(), "MrLuangamer")));
+		System.out.println(new GsonBuilder().setPrettyPrinting().create()
+				.toJson(new PlayerData(UUID.randomUUID(), "MrLuangamer")));
 	}
 }
