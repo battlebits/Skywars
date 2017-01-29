@@ -4,6 +4,7 @@ import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -52,8 +53,10 @@ import br.com.battlebits.skywars.Main;
 import br.com.battlebits.skywars.data.MongoBackend;
 import br.com.battlebits.skywars.data.PlayerData;
 import br.com.battlebits.skywars.data.PlayerManager;
+import br.com.battlebits.skywars.game.task.DeathTask;
 import br.com.battlebits.skywars.utils.Combat;
 import br.com.battlebits.skywars.utils.Utils;
+import net.minecraft.server.v1_8_R3.NBTTagCompound;
 
 public class GameListener implements Listener {
 	
@@ -152,7 +155,7 @@ public class GameListener implements Listener {
 		    
 		    case INGAME:
 		    {
-		    	if (engine.contains(player))
+		    	if (data != null && engine.contains(player))
 		    	{
 		    		Combat combat = data.getCombat();
 			    	
@@ -205,11 +208,31 @@ public class GameListener implements Listener {
 			{
 				int size = engine.getPlayers().size();
 				
+				new DeathTask(engine, event);
 				engine.removePlayer(player);
 				engine.checkCount();
 				
-				//event.getDrops().removeIf(v -> Kit.is)
-				
+				event.getDrops().removeIf(v -> {
+					
+					net.minecraft.server.v1_8_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(v);
+					
+					NBTTagCompound compound = null;
+					
+					if (!nmsStack.hasTag())
+					{
+						compound = new NBTTagCompound();
+						
+						nmsStack.setTag(compound);
+					}
+					
+					if (compound == null)
+					{
+						compound = nmsStack.getTag();
+					}
+					
+					return compound.hasKey("Undroppable");
+				});
+								
 				EntityDamageEvent lastDamage = player.getLastDamageCause();
 				PlayerManager manager = Main.getInstance().getPlayerManager();
 				PlayerData data = manager.get(player);

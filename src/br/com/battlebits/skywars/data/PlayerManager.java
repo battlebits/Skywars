@@ -17,7 +17,7 @@ public class PlayerManager
 
 	public PlayerData remove(Player player) 
 	{
-		return playerMap.remove(player);
+		return playerMap.remove(player.getUniqueId());
 	}
 	
 	public void add(PlayerData data) 
