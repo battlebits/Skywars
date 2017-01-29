@@ -156,7 +156,7 @@ public class GameListener implements Listener {
 		    	{
 		    		Combat combat = data.getCombat();
 			    	
-			    	if (combat != null && !combat.isExpired()) 
+			    	if (combat != null && combat.isValid()) 
 			    	{
 			    		player.setHealth(0D);
 			    	}
@@ -222,7 +222,7 @@ public class GameListener implements Listener {
 					
 					Combat combat = data.getCombat();
 					
-					if (combat != null && !combat.isExpired())
+					if (combat != null && combat.isValid())
 					{
 						Player killer = combat.getDamager();
 						

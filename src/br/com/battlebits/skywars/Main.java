@@ -98,11 +98,12 @@ public class Main extends JavaPlugin {
 			playerManager = new PlayerManager();
 			mongoBackend = new MongoBackend();
 			mongoBackend.startConnection();
-
+			
+			new CommandLoader(new BukkitCommandFramework(this)).loadCommandsFromPackage("br.com.battlebits.skywars.commands");
 			getServer().getScheduler().runTaskTimer(this, new GameSchedule(engine), 20L, 20L);
 			getServer().getPluginManager().registerEvents(new GameListener(engine), this);
-			new CommandLoader(new BukkitCommandFramework(this))
-					.loadCommandsFromPackage("br.com.battlebits.skywars.commands");
+			
+			logInfo("Carregado com sucesso!");
 		} catch (Exception e) {
 			logError("Erro ao habilitar:", e);
 		}

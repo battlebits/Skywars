@@ -11,9 +11,9 @@ public class Combat {
 	@Getter
 	private Player damager;
 	
-	private long expire;
+	private long expire = 0;
 	
-	public boolean isExpired()
+	public boolean isValid()
 	{
 		return expire > System.currentTimeMillis();
 	}
