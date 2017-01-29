@@ -1,4 +1,4 @@
-package br.com.battebits.skywars.game;
+package br.com.battlebits.skywars.game;
 
 import org.bson.Document;
 import org.bukkit.Bukkit;
@@ -42,17 +42,17 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 
-import br.com.battebits.skywars.Main;
-import br.com.battebits.skywars.data.MongoBackend;
-import br.com.battebits.skywars.data.PlayerData;
-import br.com.battebits.skywars.data.PlayerManager;
-import br.com.battebits.skywars.utils.Combat;
-import br.com.battebits.skywars.utils.Utils;
 import br.com.battlebits.commons.BattlebitsAPI;
 import br.com.battlebits.commons.api.actionbar.ActionBarAPI;
 import br.com.battlebits.commons.bukkit.BukkitMain;
 import br.com.battlebits.commons.core.translate.Language;
 import br.com.battlebits.commons.core.translate.T;
+import br.com.battlebits.skywars.Main;
+import br.com.battlebits.skywars.data.MongoBackend;
+import br.com.battlebits.skywars.data.PlayerData;
+import br.com.battlebits.skywars.data.PlayerManager;
+import br.com.battlebits.skywars.utils.Combat;
+import br.com.battlebits.skywars.utils.Utils;
 
 public class GameListener implements Listener {
 	

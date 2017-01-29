@@ -1,4 +1,4 @@
-package br.com.battebits.skywars.game.modes;
+package br.com.battlebits.skywars.game.modes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,9 +13,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import br.com.battebits.skywars.game.Engine;
-import br.com.battebits.skywars.game.GameStage;
-import br.com.battebits.skywars.game.GameType;
+import br.com.battlebits.skywars.game.Engine;
+import br.com.battlebits.skywars.game.GameStage;
+import br.com.battlebits.skywars.game.GameType;
 
 public class Team extends Engine
 {

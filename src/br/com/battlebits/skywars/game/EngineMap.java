@@ -1,4 +1,4 @@
-package br.com.battebits.skywars.game;
+package br.com.battlebits.skywars.game;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -27,7 +27,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import br.com.battebits.skywars.Main;
+import br.com.battlebits.skywars.Main;
 import lombok.Getter;
 import net.minecraft.server.v1_8_R3.DedicatedPlayerList;
 

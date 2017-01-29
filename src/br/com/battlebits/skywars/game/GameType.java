@@ -1,8 +1,8 @@
-package br.com.battebits.skywars.game;
+package br.com.battlebits.skywars.game;
 
-import br.com.battebits.skywars.game.modes.Mega;
-import br.com.battebits.skywars.game.modes.Solo;
-import br.com.battebits.skywars.game.modes.Team;
+import br.com.battlebits.skywars.game.modes.Mega;
+import br.com.battlebits.skywars.game.modes.Solo;
+import br.com.battlebits.skywars.game.modes.Team;
 
 public enum GameType {
 	

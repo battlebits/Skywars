@@ -1,10 +1,10 @@
-package br.com.battebits.skywars.commands;
+package br.com.battlebits.skywars.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import br.com.battebits.skywars.Main;
+import br.com.battlebits.skywars.Main;
 
 public class StartCommand implements CommandExecutor 
 {

@@ -1,4 +1,4 @@
-package br.com.battebits.skywars.data;
+package br.com.battlebits.skywars.data;
 
 import java.util.HashMap;
 import java.util.Map;

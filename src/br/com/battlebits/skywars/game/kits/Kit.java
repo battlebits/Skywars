@@ -1,4 +1,4 @@
-package br.com.battebits.skywars.game.kits;
+package br.com.battlebits.skywars.game.kits;
 
 import java.util.HashSet;
 

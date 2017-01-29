@@ -1,4 +1,4 @@
-package br.com.battebits.skywars;
+package br.com.battlebits.skywars;
 
 import java.io.File;
 import java.io.FileReader;
@@ -19,17 +19,17 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import br.com.battebits.skywars.commands.StartCommand;
-import br.com.battebits.skywars.data.MongoBackend;
-import br.com.battebits.skywars.data.PlayerData;
-import br.com.battebits.skywars.data.PlayerManager;
-import br.com.battebits.skywars.game.Engine;
-import br.com.battebits.skywars.game.EngineMap;
-import br.com.battebits.skywars.game.EngineMap.Callback;
-import br.com.battebits.skywars.game.GameListener;
-import br.com.battebits.skywars.game.GameSchedule;
-import br.com.battebits.skywars.game.GameType;
-import br.com.battebits.skywars.utils.Utils;
+import br.com.battlebits.skywars.commands.StartCommand;
+import br.com.battlebits.skywars.data.MongoBackend;
+import br.com.battlebits.skywars.data.PlayerData;
+import br.com.battlebits.skywars.data.PlayerManager;
+import br.com.battlebits.skywars.game.Engine;
+import br.com.battlebits.skywars.game.EngineMap;
+import br.com.battlebits.skywars.game.GameListener;
+import br.com.battlebits.skywars.game.GameSchedule;
+import br.com.battlebits.skywars.game.GameType;
+import br.com.battlebits.skywars.game.EngineMap.Callback;
+import br.com.battlebits.skywars.utils.Utils;
 import lombok.Getter;
 
 public class Main extends JavaPlugin {

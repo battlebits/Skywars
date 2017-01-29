@@ -1,4 +1,4 @@
-package br.com.battebits.skywars.game;
+package br.com.battlebits.skywars.game;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,11 +6,11 @@ import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import br.com.battebits.skywars.Main;
-import br.com.battebits.skywars.data.PlayerData;
-import br.com.battebits.skywars.utils.Utils;
 import br.com.battlebits.commons.bukkit.scoreboard.BattleBoard;
 import br.com.battlebits.commons.core.translate.Language;
+import br.com.battlebits.skywars.Main;
+import br.com.battlebits.skywars.data.PlayerData;
+import br.com.battlebits.skywars.utils.Utils;
 import lombok.Getter;
 import lombok.Setter;
 

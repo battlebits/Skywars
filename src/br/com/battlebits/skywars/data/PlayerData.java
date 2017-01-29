@@ -1,4 +1,4 @@
-package br.com.battebits.skywars.data;
+package br.com.battlebits.skywars.data;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -10,10 +10,10 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 
-import br.com.battebits.skywars.Main;
-import br.com.battebits.skywars.game.Engine;
-import br.com.battebits.skywars.utils.Combat;
 import br.com.battlebits.commons.bukkit.scoreboard.BattleBoard;
+import br.com.battlebits.skywars.Main;
+import br.com.battlebits.skywars.game.Engine;
+import br.com.battlebits.skywars.utils.Combat;
 import lombok.Getter;
 import lombok.Setter;
 

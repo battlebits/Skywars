@@ -1,4 +1,4 @@
-package br.com.battebits.skywars.data;
+package br.com.battlebits.skywars.data;
 
 import java.util.ArrayList;
 import java.util.List;

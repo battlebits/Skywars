@@ -1,4 +1,4 @@
-package br.com.battebits.skywars.game.modes;
+package br.com.battlebits.skywars.game.modes;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -12,9 +12,9 @@ import org.bukkit.inventory.ItemStack;
 
 import com.google.common.collect.Iterables;
 
-import br.com.battebits.skywars.game.Engine;
-import br.com.battebits.skywars.game.GameStage;
-import br.com.battebits.skywars.game.GameType;
+import br.com.battlebits.skywars.game.Engine;
+import br.com.battlebits.skywars.game.GameStage;
+import br.com.battlebits.skywars.game.GameType;
 
 public class Solo extends Engine
 {

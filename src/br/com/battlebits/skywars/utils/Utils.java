@@ -1,4 +1,4 @@
-package br.com.battebits.skywars.utils;
+package br.com.battlebits.skywars.utils;
 
 import java.util.Random;
 
