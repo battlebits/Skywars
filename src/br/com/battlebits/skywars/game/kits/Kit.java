@@ -156,6 +156,27 @@ public class Kit implements Listener
 
         return found;
     }
+    
+    public static boolean isUndroppable(ItemStack item)
+    {
+    	net.minecraft.server.v1_8_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
+		
+		NBTTagCompound compound = null;
+		
+		if (!nmsStack.hasTag())
+		{
+			compound = new NBTTagCompound();
+			
+			nmsStack.setTag(compound);
+		}
+		
+		if (compound == null)
+		{
+			compound = nmsStack.getTag();
+		}
+		
+		return compound.hasKey("Undroppable");
+    }
 
     public static Kit getKit(Player player)
     {

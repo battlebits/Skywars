@@ -53,6 +53,7 @@ import br.com.battlebits.skywars.Main;
 import br.com.battlebits.skywars.data.MongoBackend;
 import br.com.battlebits.skywars.data.PlayerData;
 import br.com.battlebits.skywars.data.PlayerManager;
+import br.com.battlebits.skywars.game.kits.Kit;
 import br.com.battlebits.skywars.game.task.DeathTask;
 import br.com.battlebits.skywars.utils.Combat;
 import br.com.battlebits.skywars.utils.Utils;
@@ -211,28 +212,8 @@ public class GameListener implements Listener {
 				new DeathTask(engine, event);
 				engine.removePlayer(player);
 				engine.checkCount();
-				
-				event.getDrops().removeIf(v -> {
-					
-					net.minecraft.server.v1_8_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(v);
-					
-					NBTTagCompound compound = null;
-					
-					if (!nmsStack.hasTag())
-					{
-						compound = new NBTTagCompound();
-						
-						nmsStack.setTag(compound);
-					}
-					
-					if (compound == null)
-					{
-						compound = nmsStack.getTag();
-					}
-					
-					return compound.hasKey("Undroppable");
-				});
-								
+
+				event.getDrops().removeIf(v -> Kit.isUndroppable(v));
 				EntityDamageEvent lastDamage = player.getLastDamageCause();
 				PlayerManager manager = Main.getInstance().getPlayerManager();
 				PlayerData data = manager.get(player);
