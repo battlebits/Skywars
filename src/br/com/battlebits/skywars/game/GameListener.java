@@ -4,7 +4,6 @@ import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -30,10 +29,14 @@ import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.ItemStack;
@@ -57,10 +60,9 @@ import br.com.battlebits.skywars.game.kits.Kit;
 import br.com.battlebits.skywars.game.task.DeathTask;
 import br.com.battlebits.skywars.utils.Combat;
 import br.com.battlebits.skywars.utils.Utils;
-import net.minecraft.server.v1_8_R3.NBTTagCompound;
 
-public class GameListener implements Listener {
-	
+public class GameListener implements Listener
+{	
 	private Engine engine;
 	
 	public GameListener(Engine engine)
@@ -68,7 +70,7 @@ public class GameListener implements Listener {
 		this.engine = engine;
 	}
 	
-	@EventHandler(priority = EventPriority.LOWEST)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onAsyncPlayerPreLogin(AsyncPlayerPreLoginEvent event)
 	{
 		PlayerData data = null;		
@@ -141,8 +143,10 @@ public class GameListener implements Listener {
 		Player player = event.getPlayer();
 		
 		if (engine.contains(player))
+		{
 			BukkitMain.broadcastMessage("sw_player_quit", new String[] {"%player%", player.getName()});
-		
+		}
+	
 		PlayerData data = Main.getInstance().getPlayerManager().remove(player);
 		
 		switch (engine.getStage())
@@ -185,20 +189,199 @@ public class GameListener implements Listener {
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerInteract(PlayerInteractEvent event)
 	{
-//		/Player player = event.getPlayer();
+		Player player = event.getPlayer();
+		
+		if (!engine.contains(player)) 
+		{
+			event.setCancelled(true);
+		}
+		
+		switch (engine.getStage()) 
+		{
+		    case PREGAME:
+		    {
+		    	event.setCancelled(true);
+		    	player.updateInventory();
+		    	
+		    	if (event.hasItem())
+		    	{
+		    		ItemStack item = event.getItem();
+		    		
+		    		if (item.getType() == Material.CHEST)
+		    		{
+		    			// TODO: abrir menu de kits
+		    		}
+		    		else if (item.getType() == Material.ENDER_CHEST)
+		    		{
+		    			// TODO: abrir menu da loja de kits
+		    		}
+		    	}
+		    	
+		    	break;
+		    }
+			
+		    default:
+		    {
+		    	if (!engine.contains(player))
+		    	{
+		    		if (event.hasItem())
+		    		{
+		    			ItemStack item = event.getItem();
+		    			
+		    			if (item.getType() == Material.COMPASS)
+		    			{
+		    				// TODO: abrir menu de spec
+		    			}
+		    		}
+		    	}
 
+		    	break;
+		    }
+		}
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerInteract(PlayerInteractEntityEvent event)
 	{
-		
+		switch (engine.getStage())
+		{
+		    case INGAME:
+		    {
+		    	Player player = event.getPlayer();
+		    	
+		    	if (!engine.contains(player))
+		    	{
+		    		event.setCancelled(true);
+		    	}
+		    	
+		    	break;
+		    }
+		    
+		    default:
+		    {
+		    	event.setCancelled(true);
+		    	break;
+		    }
+		}
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onHangingBreakByEntity(HangingBreakByEntityEvent event)
+	{
+		switch (engine.getStage()) 
+		{
+		    case INGAME:
+		    {
+		    	if (event.getRemover() instanceof Player)
+		    	{
+		    		Player remover = (Player) event.getRemover();
+		    		
+		    		if (!engine.contains(remover))
+		    		{
+		    			event.setCancelled(true);
+		    		}
+		    	}
+		    	
+		    	break;
+		    }
+		    
+		    default:
+		    {
+		    	event.setCancelled(true);
+		    	break;
+		    }
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onHangingPlace(HangingPlaceEvent event)
+	{		
+		switch (engine.getStage()) 
+		{
+		    case INGAME:
+		    {
+		    	Player player = event.getPlayer();
+		    	
+		    	if (!engine.contains(player))
+		    	{
+		    		event.setCancelled(true);
+		    	}
+		    	
+		    	break;
+		    }
+		    
+		    default:
+		    {
+		    	event.setCancelled(true);
+		    	break;
+		    }
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerDropItem(PlayerDropItemEvent event)
+	{		
+		switch (engine.getStage()) 
+		{
+		    case INGAME:
+		    {
+		    	Player player = event.getPlayer();
+		    	
+		    	if (engine.contains(player))
+		    	{
+		    		ItemStack item = event.getItemDrop().getItemStack();
+		    		
+		    		if (Kit.isUndroppable(item))
+		    		{
+		    			event.setCancelled(true);
+		    			player.updateInventory();
+		    		}
+		    	}
+		    	else
+		    	{
+		    		event.setCancelled(true);
+		    	}
+		    	
+		    	break;
+		    }
+		    
+		    default:
+		    {
+		    	event.setCancelled(true);
+		    	break;
+		    }
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerPickupItem(PlayerPickupItemEvent event)
+	{
+		switch (engine.getStage()) 
+		{
+		    case INGAME:
+		    {
+		    	Player player = event.getPlayer();
+		    	
+		    	if (!engine.contains(player))
+		    	{
+		    		event.setCancelled(true);
+		    	}
+		    	
+		    	break;
+		    }
+		    
+		    default:
+		    {
+		    	event.setCancelled(true);
+		    	break;
+		    }
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerDeath(PlayerDeathEvent event)
 	{
 		Player player = event.getEntity();
@@ -299,7 +482,7 @@ public class GameListener implements Listener {
 		event.setDroppedExp(0);
 	}
 	
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onExplosionPrime(ExplosionPrimeEvent event)
     {
         if (engine.getStage() != GameStage.INGAME)
@@ -308,7 +491,7 @@ public class GameListener implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onEntityExplode(EntityExplodeEvent event)
     {
         if (engine.getStage() != GameStage.INGAME)
@@ -344,17 +527,15 @@ public class GameListener implements Listener {
 		    	if (event.getEntity() instanceof Player)
 		    	{
 		    		Player player = (Player) event.getEntity();
-		    		
-		    		int time = engine.getSchedule().getTime();
-		    		
+
 		    		if (event.getCause() == DamageCause.FALL)
 		    		{
-		    			event.setCancelled(time <= 3);
+		    			boolean cancel = false;
 		    			
-		    			if (!engine.contains(player))
-		    			{
-		    				event.setCancelled(true);
-		    			}
+		    			cancel |= !(engine.contains(player));
+		    			cancel |= !(engine.getSchedule().getTime() > 3);
+		    			
+		    			event.setCancelled(cancel);
 		    		}
 		    		else if (!engine.contains(player))
 		    		{
@@ -425,7 +606,7 @@ public class GameListener implements Listener {
 			    					{
 			    						double health = 0D;
 			    						double damage = 1D;
-			    				
+			    						
 			    						if ((health = Math.round((damager.getHealth() - event.getFinalDamage()) * 100.0D)) / 100.0D > 0.0D)
 			    						{
 			    							damager.sendMessage(T.t(Utils.getLanguage(damager), "sw_arrow_health", new String[] {"%health%", Double.toString(health)}));
@@ -525,7 +706,7 @@ public class GameListener implements Listener {
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onFoodLevelChange(FoodLevelChangeEvent event)
 	{
 		if (event.getEntity() instanceof Player)
@@ -565,7 +746,7 @@ public class GameListener implements Listener {
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPotionSplash(PotionSplashEvent event)
 	{
 		switch (engine.getStage()) 
@@ -596,13 +777,13 @@ public class GameListener implements Listener {
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockCanBuild(BlockCanBuildEvent event)
 	{
 		event.setBuildable(true);
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockPlace(BlockPlaceEvent event)
 	{
 		switch (engine.getStage())
@@ -627,7 +808,7 @@ public class GameListener implements Listener {
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onBlockBreak(BlockBreakEvent event)
 	{
 		switch (engine.getStage())
@@ -652,7 +833,7 @@ public class GameListener implements Listener {
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onBlockIgnite(BlockIgniteEvent event)
 	{
 		switch (engine.getStage())
@@ -677,7 +858,7 @@ public class GameListener implements Listener {
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onBlockBurn(BlockBurnEvent event)
 	{
 		if (engine.getStage() != GameStage.INGAME)
@@ -686,7 +867,7 @@ public class GameListener implements Listener {
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onBlockFade(BlockFadeEvent event)
 	{
 		if (engine.getStage() != GameStage.INGAME)
@@ -700,7 +881,7 @@ public class GameListener implements Listener {
 		}
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onWeatherChange(WeatherChangeEvent event) 
 	{
 		if (event.toWeatherState()) 
@@ -709,7 +890,7 @@ public class GameListener implements Listener {
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onCreatureSpawn(CreatureSpawnEvent event) 
 	{
 		if (event.getSpawnReason() != SpawnReason.CUSTOM)

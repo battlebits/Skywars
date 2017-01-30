@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import br.com.battlebits.commons.bukkit.scoreboard.BattleBoard;
@@ -23,8 +24,8 @@ public class GameSchedule implements Runnable {
 	@Setter
 	private int time = 30, shutdown = 15;
 
-	//private static final int REFIL_1 = 10;
-	//private static final int REFIL_2 = 20;
+	private static final int REFIL_1 = 10;
+	private static final int REFIL_2 = 20;
 
 	public GameSchedule(Engine engine) {
 		engine.setSchedule(this);
@@ -77,8 +78,25 @@ public class GameSchedule implements Runnable {
 		case INGAME: {
 			time++;
 
-			// TODO
-
+			switch (time) 
+			{
+			    case REFIL_1:
+			    case REFIL_2:
+			    {
+			    	engine.applyRefill("feast", "feast-l2");
+			    	engine.applyRefill("player-1", "player-1-l2");
+			    	engine.applyRefill("player-2", "player-2-l2");
+			    	engine.applyRefill("player-3", "player-3-l2");
+			    	
+			    	for (Player player : Bukkit.getOnlinePlayers())
+			    	{
+			    		player.playSound(player.getLocation(), Sound.CHEST_OPEN, 1F, 1.1F);
+			    	}
+			    	
+			    	break;
+			    }
+			}
+			
 			break;
 		}
 

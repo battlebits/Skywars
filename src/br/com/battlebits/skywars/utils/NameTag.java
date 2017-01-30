@@ -44,8 +44,6 @@ public class NameTag
 				if (engine.contains(player) && t1 > 0)
 				{
 					int t2 = engine.getIsland(observer);
-
-                    Team team = null;
 					
 					switch (engine.getType()) 
 					{
@@ -53,38 +51,29 @@ public class NameTag
 					    case MEGA:
 					    {
 					    	if (t1 != t2)
-					    	{
-					    		team = getTeam(scoreboard, "c", "§c[" + Utils.CHARS[t1 - 1] + "] ");
-					    		
-					    		addTeam(team, player.getName());
+					    	{					    		
+					    		addTeam(getTeam(scoreboard, "c", "§c[" + Utils.CHARS[t1 - 1] + "]"), player.getName());
+					    		break;
 					    	}
 					    	else
-					    	{
-					    		team = getTeam(scoreboard, "b", "§a[" + Utils.CHARS[t1 - 1] + "] ");
-					    		
-					    		addTeam(team, player.getName());
-					    	}
-					    	
-					    	
-					    	break;
+					    	{					    		
+					    		addTeam(getTeam(scoreboard, "b", "§a[" + Utils.CHARS[t1 - 1] + "]"), player.getName());
+					    		break;
+					    	}		
 					    }
 						
 					    case SOLO:
 					    {
 					    	if (t1 != t2)
-					    	{
-					    		team = getTeam(scoreboard, "c", "§c");
-					    		
-					    		addTeam(team, player.getName());
+					    	{					    		
+					    		addTeam(getTeam(scoreboard, "c", "§c"), player.getName());
+					    		break;
 					    	}
 					    	else
-					    	{
-					    		team = getTeam(scoreboard, "b", "§a");
-					    		
-					    		addTeam(team, player.getName());
-					    	}
-					    	
-					    	break;
+					    	{					    		
+					    		addTeam(getTeam(scoreboard, "b", "§a"), player.getName());
+					    		break;
+					    	}					    	
 					    }
 					}
 				}

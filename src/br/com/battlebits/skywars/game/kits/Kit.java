@@ -29,6 +29,16 @@ public class Kit implements Listener
 		KITS.add(this);
 	}
 	
+	public void add(Player player)
+	{
+		players.add(player);
+	}
+
+	public void remove(Player player)
+	{
+		players.remove(player);
+	}
+	
 	public boolean contains(Player player)
 	{
 		return players.contains(player);
@@ -175,7 +185,9 @@ public class Kit implements Listener
 			compound = nmsStack.getTag();
 		}
 		
-		return compound.hasKey("Undroppable");
+		return compound != null
+				&& compound.hasKey("Undroppable")
+				&& compound.getBoolean("Undroppable");
     }
 
     public static Kit getKit(Player player)

@@ -1,22 +1,24 @@
 package br.com.battlebits.skywars.data;
 
+import java.util.Iterator;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.bson.Document;
 import org.bukkit.entity.Player;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 
 import br.com.battlebits.commons.bukkit.scoreboard.BattleBoard;
 import br.com.battlebits.skywars.Main;
-import br.com.battlebits.skywars.game.Engine;
 import br.com.battlebits.skywars.utils.Combat;
 import br.com.battlebits.skywars.utils.NameTag;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 public class PlayerData 
@@ -29,16 +31,23 @@ public class PlayerData
 	private int deaths = 0;
 	private int assists = 0;
 	private int timePlayed = 0;
-	
-	@Setter
+	private JsonArray items;
+
+	private transient Combat combat;
 	private transient NameTag nameTag;
 	private transient BattleBoard battleBoard;
-	private transient Combat combat;
 	
 	public PlayerData(UUID uuid, String name)
 	{
 		this.uuid = uuid;
 		this.name = name;
+		this.combat = new Combat();
+		this.items = new JsonArray();
+	}
+	
+	public Combat getCombat()
+	{
+		return combat;
 	}
 	
 	public void addWin()
@@ -63,12 +72,12 @@ public class PlayerData
 	
 	public void addTimePlayed()
 	{
-		Engine engine = Main.getInstance().getEngine();
-		long difference = System.currentTimeMillis() - engine.getStarted();
+		long started = Main.getInstance().getEngine().getStarted();
+		long difference = System.currentTimeMillis() - started;
 		timePlayed += TimeUnit.MILLISECONDS.toSeconds(difference);
 	}
-	
-	public void update() 
+
+	public void update()
 	{
 		Thread thread = new Thread(new Runnable() 
 		{
@@ -92,19 +101,11 @@ public class PlayerData
 		
 		thread.start();
 	}
-	
-	public Combat getCombat()
-	{
-		if (combat == null)
-			combat = new Combat();
-		return combat;
-	}
-	
+
 	public void onJoin(Player player)
 	{
-		battleBoard = new BattleBoard(player);
-		
 		nameTag = new NameTag(player);
+		battleBoard = new BattleBoard(player);
 		
 		if (!getName().equals(player.getName()))
 		{
@@ -122,5 +123,60 @@ public class PlayerData
 			
 			thread.start();
 		}
+	}
+	
+	public boolean hasItem(String type, String item)
+	{
+		boolean found = false;
+		
+		Iterator<JsonElement> iterator = items.iterator();
+		
+		while (iterator.hasNext())
+		{
+			boolean check = false;
+			
+			JsonObject object = (JsonObject) iterator.next();
+			
+			if (object.has("expire"))
+			{
+				long expire = object.get("expire").getAsLong();
+				
+				if (expire < System.currentTimeMillis())
+				{
+					check = true;
+				}
+			}
+			else if (object.has("lifetime"))
+			{
+				check = object.get("lifetime").getAsBoolean();
+			}
+			
+			if (check && object.has("type") && object.has("item"))
+			{
+				String otherType = object.get("type").getAsString();
+				String otherItem = object.get("item").getAsString();
+				found = otherType.equals(type) && otherItem.equals(item);
+			}
+		}
+		
+		return found;
+	}
+	
+	public void addItem(String type, String item)
+	{
+		JsonObject object = new JsonObject();
+		object.addProperty("type", type);
+		object.addProperty("item", item);
+		object.addProperty("lifetime", true);
+		items.add(object);
+	}
+	
+	public void addItem(String type, String item, long expire)
+	{
+		JsonObject object = new JsonObject();
+		object.addProperty("type", type);
+		object.addProperty("item", item);
+		object.addProperty("expire", expire);
+		items.add(object);
 	}
 }

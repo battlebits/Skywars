@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -78,6 +77,11 @@ public class Team extends Engine
 				i++;
 			}
 		}
+		
+		applyRefill("player-1", "player-1");
+		applyRefill("player-2", "player-2");
+		applyRefill("player-3", "player-3");
+		applyRefill("feast", "feast");
 	
 		setStage(GameStage.PREPARING);
 		getSchedule().setTime(10);
@@ -134,7 +138,10 @@ public class Team extends Engine
 	@Override
 	public int getIsland(Player player)
 	{
-		return Optional.ofNullable(playerMap.get(player)).orElse(-1);
+		int id = -1;
+		if (playerMap.containsKey(player))
+			id = playerMap.get(player);
+		return id;		
 	}
 	
 	@Override
@@ -153,11 +160,18 @@ public class Team extends Engine
 	{
 		List<Player> organized = new ArrayList<>();
 		
-		// TODO: /party with Redis
+		/** TODO: party
+		for (Player owner : playerMap.keySet())
+		{
+			
+		}**/
 		
 		for (Player player : playerMap.keySet())
 		{
-			organized.add(player);
+			if (!organized.contains(player))
+			{
+				organized.add(player);
+			}
 		}
 				
 		return organized;

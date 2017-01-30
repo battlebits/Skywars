@@ -3,7 +3,6 @@ package br.com.battlebits.skywars.game.modes;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -56,6 +55,11 @@ public class Solo extends Engine
 			}
 		}
 		
+		applyRefill("player-1", "player-1");
+		applyRefill("player-2", "player-2");
+		applyRefill("player-3", "player-3");
+		applyRefill("feast", "feast");
+
 		setStage(GameStage.PREPARING);
 		getSchedule().setTime(10);
 		
@@ -112,7 +116,10 @@ public class Solo extends Engine
 	@Override
 	public int getIsland(Player player)
 	{
-		return Optional.ofNullable(playerMap.get(player)).orElse(-1);
+		int id = -1;
+		if (playerMap.containsKey(player))
+			id = playerMap.get(player);
+		return id;		
 	}
 	
 	@Override

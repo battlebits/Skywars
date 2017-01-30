@@ -173,4 +173,12 @@ public class EngineMap {
 	{
 		return spawns.get(name);
 	}
+	
+	public List<Block> getChests(String name)
+	{
+		List<Block> blocks = chests.get(name);
+		if (blocks == null) 
+			blocks = new ArrayList<>();
+		return blocks;		
+	}
 }
