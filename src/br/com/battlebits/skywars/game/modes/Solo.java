@@ -64,7 +64,7 @@ public class Solo extends Engine
 		getSchedule().setTime(10);
 		
 		setStarted(System.currentTimeMillis());
-		BukkitMain.getPlugin().setTagControl(false);
+		BukkitMain.getInstance().setTagControl(false);
 	}
 	
 	@Override
