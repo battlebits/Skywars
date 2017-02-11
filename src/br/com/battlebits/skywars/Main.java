@@ -32,6 +32,7 @@ import br.com.battlebits.skywars.game.GameSchedule;
 import br.com.battlebits.skywars.game.GameType;
 import br.com.battlebits.skywars.utils.Utils;
 import lombok.Getter;
+import net.md_5.bungee.api.ChatColor;
 
 public class Main extends JavaPlugin {
 
@@ -117,15 +118,15 @@ public class Main extends JavaPlugin {
 
 	/* Plugin Logger */
 	public void logInfo(String info) {
-		getServer().getConsoleSender().sendMessage("§6[SkyWars] §b[INFO] " + info);
+		getServer().getConsoleSender().sendMessage("ï¿½6[SkyWars] "+ChatColor.AQUA+"[INFO] " + info);
 	}
 
 	public void logWarn(String warn) {
-		getServer().getConsoleSender().sendMessage("§6[SkyWars] §e[WARN] " + warn);
+		getServer().getConsoleSender().sendMessage("ï¿½6[SkyWars] "+ChatColor.YELLOW+"[WARN] " + warn);
 	}
 
 	public void logError(String error) {
-		getServer().getConsoleSender().sendMessage("§6[SkyWars] §c[ERROR] " + error);
+		getServer().getConsoleSender().sendMessage("ï¿½6[SkyWars] "+ChatColor.RED+"[ERROR] " + error);
 	}
 
 	public void logError(Exception e) {
@@ -148,7 +149,7 @@ public class Main extends JavaPlugin {
 	private JsonElement readJson(String name) throws IOException {
 		File file = new File(getDataFolder(), name);
 
-		logInfo("Lendo o arquivo §e\"" + file.getName() + "\" §b...");
+		logInfo("Lendo o arquivo ï¿½e\"" + file.getName() + "\" ï¿½b...");
 
 		if (!file.exists()) {
 			File parent = file.getParentFile();

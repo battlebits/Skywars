@@ -24,6 +24,7 @@ public class Team extends Engine
 {
 	private int maxPerIsland = 2;
 	protected Map<Player, Integer> playerMap = new HashMap<>();
+	protected Map<Player, Integer> islandMap = new HashMap<>();
 	
 	public Team()
 	{
@@ -71,6 +72,7 @@ public class Team extends Engine
 						player.teleport(getMap().getSpawn("is-" + i));
 						player.updateInventory();
 						playerMap.put(player, i);
+						islandMap.put(player, i);
 					}
 				}
 
@@ -78,10 +80,10 @@ public class Team extends Engine
 			}
 		}
 		
+		applyRefill("feast", "feast");
 		applyRefill("player-1", "player-1");
 		applyRefill("player-2", "player-2");
 		applyRefill("player-3", "player-3");
-		applyRefill("feast", "feast");
 	
 		setStage(GameStage.PREPARING);
 		getSchedule().setTime(10);
@@ -138,10 +140,11 @@ public class Team extends Engine
 	@Override
 	public int getIsland(Player player)
 	{
-		int id = -1;
 		if (playerMap.containsKey(player))
-			id = playerMap.get(player);
-		return id;		
+			return playerMap.get(player);
+		if (islandMap.containsKey(player))
+			return islandMap.get(player);
+		return -1;	
 	}
 	
 	@Override
@@ -163,10 +166,12 @@ public class Team extends Engine
 		/* TODO: Replace to party list */
 		for (int i = 0; i < 1; i++)
 		{
+			/* TODO: Player owner = party.getPartyOwner(); */
 			Player owner = getPartyOwner();
 			
 			if (owner != null && contains(owner) && !organized.contains(owner))
 			{
+				/* TODO: Iterator<Player> i1 = party.getPartyMembers().iterator(); */
 				Iterator<Player> i1 = getPartyMembers().iterator();
 				Iterator<Player> i2 = playerMap.keySet().iterator();
 				
@@ -183,6 +188,7 @@ public class Team extends Engine
 						if (contains(next) && !organized.contains(next))
 						{
 							organized.add(next);
+							toAdd--;
 						}
 					}
 					else if (i2.hasNext())
@@ -192,6 +198,7 @@ public class Team extends Engine
 						if (!organized.contains(next))
 						{
 							organized.add(next);
+							toAdd--;
 						}
 					}
 					else
@@ -215,11 +222,11 @@ public class Team extends Engine
 	
 	private Player getPartyOwner()
 	{
-		throw new UnsupportedOperationException("OperaÁ„o n„o suportada.");
+		throw new UnsupportedOperationException("Opera√ß√£o n√£o suportada.");
 	}
 	
 	private List<Player> getPartyMembers()
 	{
-		throw new UnsupportedOperationException("OperaÁ„o n„o suportada.");
+		throw new UnsupportedOperationException("Opera√ß√£o n√£o suportada.");
 	}
 }

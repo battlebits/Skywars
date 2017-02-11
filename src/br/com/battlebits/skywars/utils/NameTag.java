@@ -8,6 +8,7 @@ import org.bukkit.scoreboard.Team;
 import br.com.battlebits.skywars.Main;
 import br.com.battlebits.skywars.game.Engine;
 import br.com.battlebits.skywars.game.GameStage;
+import net.md_5.bungee.api.ChatColor;
 
 public class NameTag 
 {
@@ -52,12 +53,12 @@ public class NameTag
 					    {
 					    	if (t1 != t2)
 					    	{					    		
-					    		addTeam(getTeam(scoreboard, "c", "§c[" + Utils.CHARS[t1 - 1] + "]"), player.getName());
+					    		addTeam(getTeam(scoreboard, "c", ChatColor.RED + "[" + Utils.CHARS[t1 - 1] + "]"), player.getName());
 					    		break;
 					    	}
 					    	else
 					    	{					    		
-					    		addTeam(getTeam(scoreboard, "b", "§a[" + Utils.CHARS[t1 - 1] + "]"), player.getName());
+					    		addTeam(getTeam(scoreboard, "b", ChatColor.GREEN + "[" + Utils.CHARS[t1 - 1] + "]"), player.getName());
 					    		break;
 					    	}		
 					    }
@@ -66,12 +67,12 @@ public class NameTag
 					    {
 					    	if (t1 != t2)
 					    	{					    		
-					    		addTeam(getTeam(scoreboard, "c", "§c"), player.getName());
+					    		addTeam(getTeam(scoreboard, "c", ChatColor.RED.toString()), player.getName());
 					    		break;
 					    	}
 					    	else
 					    	{					    		
-					    		addTeam(getTeam(scoreboard, "b", "§a"), player.getName());
+					    		addTeam(getTeam(scoreboard, "b", ChatColor.GREEN.toString()), player.getName());
 					    		break;
 					    	}					    	
 					    }
@@ -79,9 +80,9 @@ public class NameTag
 				}
 				else
 				{
-					addTeam(getTeam(scoreboard, "a", "§7"), player.getName());
 					removeEntry(scoreboard.getTeam("b"), player.getName());
-					removeEntry(scoreboard.getTeam("c"), player.getName());					
+					removeEntry(scoreboard.getTeam("c"), player.getName());
+					addTeam(getTeam(scoreboard, "a", ChatColor.GRAY.toString()), player.getName());
 				}
 			}
 		}

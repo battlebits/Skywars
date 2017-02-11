@@ -30,7 +30,7 @@ public class StartCommand implements CommandClass
 				}
 				else
 				{
-					// A partida est· em andamento
+					// A partida est√° em andamento
 				}
 			}
 			else

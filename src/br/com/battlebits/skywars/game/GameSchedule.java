@@ -136,16 +136,16 @@ public class GameSchedule implements Runnable {
 					    case PREGAME:
 					    {
 							rows.put(15 - rows.size(), " ");
-							rows.put(15 - rows.size(), "§7Kills: §b" + data.getKills());
-							rows.put(15 - rows.size(), "§7Deaths: §b" + data.getDeaths());
-							rows.put(15 - rows.size(), "§7XP: §b0");
-							rows.put(15 - rows.size(), "§7Liga: §b-UNRANKED");
+							rows.put(15 - rows.size(), "Â§7Kills: Â§b" + data.getKills());
+							rows.put(15 - rows.size(), "Â§7Deaths: Â§b" + data.getDeaths());
+							rows.put(15 - rows.size(), "Â§7XP: Â§b0");
+							rows.put(15 - rows.size(), "Â§7Liga: Â§b-UNRANKED");
 							rows.put(15 - rows.size(), " ");
-							rows.put(15 - rows.size(), "§7Inicia em: §e" + time(time));
-							rows.put(15 - rows.size(), "§7Servidor: §e" + Bukkit.getServerName());
-							rows.put(15 - rows.size(), "§7Jogadores: §e" + engine.getPlayers().size() + "/" + Bukkit.getMaxPlayers());
+							rows.put(15 - rows.size(), "Â§7Inicia em: Â§e" + time(time));
+							rows.put(15 - rows.size(), "Â§7Servidor: Â§e" + Bukkit.getServerName());
+							rows.put(15 - rows.size(), "Â§7Jogadores: Â§e" + engine.getPlayers().size() + "/" + Bukkit.getMaxPlayers());
 							rows.put(15 - rows.size(), " ");
-							rows.put(15 - rows.size(), "§7Kit: §bNenhum");
+							rows.put(15 - rows.size(), "Â§7Kit: Â§bNenhum");
 					    	break;
 					    }
 						
@@ -161,9 +161,9 @@ public class GameSchedule implements Runnable {
 					}
 					
 					rows.put(15 - rows.size(), " ");
-					rows.put(15 - rows.size(), "§ebattlebits.com.br");
+					rows.put(15 - rows.size(), "Â§ebattlebits.com.br");
 					
-					battleBoard.setDisplayName("§f§lBattle§6§lBits");
+					battleBoard.setDisplayName("Â§fÂ§lBattleÂ§6Â§lBits");
 					battleBoard.setRows(rows);
 					rows.clear();
 				}

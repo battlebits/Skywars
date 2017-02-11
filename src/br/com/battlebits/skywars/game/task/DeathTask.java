@@ -30,7 +30,6 @@ public class DeathTask extends BukkitRunnable
 	{
 		Player player = event.getEntity();
 		
-		player.setGameMode(GameMode.ADVENTURE);
 		player.teleport(engine.getMap().getSpawn("spectators"));
 		player.getActivePotionEffects().forEach(v -> player.removePotionEffect(v.getType()));
 		
@@ -43,6 +42,7 @@ public class DeathTask extends BukkitRunnable
 		
 		player.updateInventory();
 		
+		player.setGameMode(GameMode.ADVENTURE);
 		player.setAllowFlight(true);
 		player.setFlying(true);
 		player.setFireTicks(0);

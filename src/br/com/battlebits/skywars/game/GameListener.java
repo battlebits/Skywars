@@ -82,7 +82,6 @@ public class GameListener implements Listener
 		MongoDatabase database = backend.getClient().getDatabase("skywars");
 		MongoCollection<Document> collection = database.getCollection("data");
 
-		
 		collection.deleteOne(Filters.eq("uuid", event.getUniqueId().toString()));
 		
 		Document document = collection.find(Filters.eq("uuid", event.getUniqueId().toString())).first();
@@ -115,7 +114,7 @@ public class GameListener implements Listener
 		
 		Player player = event.getPlayer();
 		
-		TabListAPI.setHeaderAndFooter(player, "ง%tab_header%ง", "ง%tab_footer%ง");
+		TabListAPI.setHeaderAndFooter(player, "ยง%tab_header%ยง", "ยง%tab_footer%ยง");
 	
 		PlayerData data = Main.getInstance().getPlayerManager().get(player);
 		if (data != null) data.onJoin(player);
