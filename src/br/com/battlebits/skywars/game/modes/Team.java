@@ -41,7 +41,7 @@ public class Team extends Engine
 	{
 		int i = 1;
 
-		Iterator<Player> iterator = orderPlayers().iterator();
+		Iterator<Player> iterator = orderPlayers(maxPerIsland).iterator();
 		
 		while (iterator.hasNext())
 		{
@@ -156,15 +156,51 @@ public class Team extends Engine
 		playerMap.remove(player);
 	}
 	
-	private List<Player> orderPlayers()
+	private List<Player> orderPlayers(int max)
 	{
 		List<Player> organized = new ArrayList<>();
-		
-		/** TODO: party
-		for (Player owner : playerMap.keySet())
+	
+		/* TODO: Replace to party list */
+		for (int i = 0; i < 1; i++)
 		{
+			Player owner = getPartyOwner();
 			
-		}**/
+			if (owner != null && contains(owner) && !organized.contains(owner))
+			{
+				Iterator<Player> i1 = getPartyMembers().iterator();
+				Iterator<Player> i2 = playerMap.keySet().iterator();
+				
+				organized.add(owner);
+				
+				int toAdd = (max - 1);
+				
+				while (toAdd > 0)
+				{
+					if (i1.hasNext())
+					{
+						Player next = i1.next();
+						
+						if (contains(next) && !organized.contains(next))
+						{
+							organized.add(next);
+						}
+					}
+					else if (i2.hasNext())
+					{
+						Player next = i2.next();
+						
+						if (!organized.contains(next))
+						{
+							organized.add(next);
+						}
+					}
+					else
+					{
+						break;
+					}
+				}
+			}
+		}
 		
 		for (Player player : playerMap.keySet())
 		{
@@ -175,5 +211,15 @@ public class Team extends Engine
 		}
 				
 		return organized;
+	}
+	
+	private Player getPartyOwner()
+	{
+		throw new UnsupportedOperationException("Operação não suportada.");
+	}
+	
+	private List<Player> getPartyMembers()
+	{
+		throw new UnsupportedOperationException("Operação não suportada.");
 	}
 }

@@ -2,6 +2,7 @@ package br.com.battlebits.skywars.game;
 
 import org.bson.Document;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
@@ -40,6 +41,7 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import com.google.gson.Gson;
 import com.mongodb.client.MongoCollection;
@@ -79,17 +81,27 @@ public class GameListener implements Listener
 		MongoBackend backend = Main.getInstance().getMongoBackend();
 		MongoDatabase database = backend.getClient().getDatabase("skywars");
 		MongoCollection<Document> collection = database.getCollection("data");
+
+		
+		collection.deleteOne(Filters.eq("uuid", event.getUniqueId().toString()));
 		
 		Document document = collection.find(Filters.eq("uuid", event.getUniqueId().toString())).first();
 		
 		if (document != null)
 		{
 			data = gson.fromJson(gson.toJson(document), PlayerData.class);
+		
+			Main.getInstance().logWarn(gson.toJson(document));
 		}
 		else if (document == null)
 		{
+			
 			data = new PlayerData(event.getUniqueId(), event.getName());
 			document = Document.parse(gson.toJson(data));
+			
+			
+			Main.getInstance().logWarn(gson.toJson(document));
+			
 			collection.insertOne(document);
 		}
 		
@@ -119,17 +131,38 @@ public class GameListener implements Listener
 		    	player.teleport(engine.getMap().getSpawn("lobby"));	
 		    	player.updateInventory();
 		    	
+		    	
+		    	player.sendMessage("hasItem (Lumberjack): " + data.hasItem("Kit", "Lumberjack"));
+		    	player.sendMessage("hasItem (Archer):" + data.hasItem("Kit", "Archer"));
+		    
+		    	data.addItem("Kit", "Lumberjack");
+		    	data.addItem("Kit", "Archer");
+
 		    	BukkitMain.broadcastMessage("sw_player_join", new String[] {"%player%", "%size%"}, new String[] {player.getName(), "(" + engine.getPlayers().size() + "/" + Bukkit.getMaxPlayers() + ")"});
 		    	break;
 		    }
 	
 		    default:
 		    {
-		    	player.getActivePotionEffects().forEach(v -> player.removePotionEffect(v.getType()));
-		    	player.teleport(engine.getMap().getSpawn("spectators"));
-		    	player.getInventory().setArmorContents(new ItemStack[4]);
-		    	player.getInventory().clear();
-		    	player.updateInventory();
+		    	player.setGameMode(GameMode.ADVENTURE);
+				player.teleport(engine.getMap().getSpawn("spectators"));
+				player.getActivePotionEffects().forEach(v -> player.removePotionEffect(v.getType()));
+				
+				PlayerInventory inventory = player.getInventory();
+				
+				inventory.clear();
+				inventory.setArmorContents(new ItemStack[4]);
+				inventory.setItem(0, new ItemStack(Material.COMPASS));
+				inventory.setItem(8, new ItemStack(Material.BED));
+				
+				player.updateInventory();
+				
+				player.setAllowFlight(true);
+				player.setFlying(true);
+				player.setFireTicks(0);
+				player.setFoodLevel(20);
+				player.setLevel(0);
+				player.setExp(0F);	
 		    	break;
 		    }
 		}

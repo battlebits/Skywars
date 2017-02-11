@@ -164,19 +164,38 @@ public class PlayerData
 	
 	public void addItem(String type, String item)
 	{
-		JsonObject object = new JsonObject();
-		object.addProperty("type", type);
-		object.addProperty("item", item);
-		object.addProperty("lifetime", true);
-		items.add(object);
+		addItem(type, item, true, 0L);
 	}
 	
-	public void addItem(String type, String item, long expire)
+	public void addItem(String type, String item, boolean lifetime, long expire)
 	{
 		JsonObject object = new JsonObject();
+		
 		object.addProperty("type", type);
 		object.addProperty("item", item);
-		object.addProperty("expire", expire);
+		
+		if (lifetime)
+			object.addProperty("lifetime", lifetime);
+		else 
+			object.addProperty("expire", expire);	
+		
 		items.add(object);
+		
+		Thread thread = new Thread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				Main.getInstance().logWarn(items.toString());
+				
+				MongoBackend backend = Main.getInstance().getMongoBackend();
+				MongoDatabase database = backend.getClient().getDatabase("skywars");
+				MongoCollection<Document> collection = database.getCollection("data");
+				
+				collection.updateOne(Filters.eq("uuid", uuid.toString()), new Document("$set", new Document("items", Document.parse(items.toString()))));
+			}
+		});
+		
+		thread.start();
 	}
 }

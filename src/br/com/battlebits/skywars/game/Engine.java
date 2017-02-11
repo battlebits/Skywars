@@ -85,61 +85,66 @@ public abstract class Engine {
 	
 	public void applyRefill(String target, String preset)
 	{
-		for (Block block : getMap().getChests(target))
+		if (!items.has(preset)) return;
+
+		if (map.containsChests(target))
 		{
-			try
+			for (Block block : getMap().getChests(target))
 			{
-				block.getChunk().load(true);
-				
-				if (block.getState() instanceof Chest)
+				try
 				{
-					Chest chest = (Chest) block.getState();
+					block.getChunk().load(true);
 					
-					Inventory inventory = chest.getInventory();
-					inventory.clear();
-
-					JsonObject presets = items.getAsJsonObject(preset);
-					List<Map.Entry<String, JsonElement>> entries = Lists.newArrayList(presets.entrySet());
-					Map.Entry<String, JsonElement> entry = entries.get(Utils.RANDOM.nextInt(entries.size()));
-					Iterator<JsonElement> iterator = ((JsonArray) entry.getValue()).iterator();
-					
-					while (iterator.hasNext())
+					if (block.getState() instanceof Chest)
 					{
-						JsonObject item = (JsonObject) iterator.next();
+						Chest chest = (Chest) block.getState();
 						
-						Material material = Material.valueOf(item.get("type").getAsString());
-						int amount = item.has("amount") ? item.get("amount").getAsInt() : 1;
-						short data = item.has("data") ? item.get("data").getAsShort() : 0;
-						
-						ItemBuilder builder = new ItemBuilder().type(material).amount(amount).durability(data);
-						
-						if (item.has("enchantments"))
-						{
-							JsonObject enchantments = item.getAsJsonObject("enchantments");
-							
-							for (Map.Entry<String, JsonElement> ench : enchantments.entrySet())
-							{
-								Enchantment enchantment = Enchantment.getByName(ench.getKey());
-								builder.enchantment(enchantment, ench.getValue().getAsInt());
-							}
-						}
-						
-						int slot = Utils.RANDOM.nextInt(27);
-						
-						while (inventory.getItem(slot) != null)
-						{
-							slot = Utils.RANDOM.nextInt(27);
-						}
-						
-						inventory.setItem(slot, builder.build());
-					}
+						Inventory inventory = chest.getInventory();
+						inventory.clear();
 
-					chest.update();
+						JsonObject presets = items.getAsJsonObject(preset);
+						List<Map.Entry<String, JsonElement>> entries = Lists.newArrayList(presets.entrySet());
+						Map.Entry<String, JsonElement> entry = entries.get(Utils.RANDOM.nextInt(entries.size()));
+						Iterator<JsonElement> iterator = ((JsonArray) entry.getValue()).iterator();
+						
+						while (iterator.hasNext())
+						{
+							JsonObject item = (JsonObject) iterator.next();
+							
+							Material material = Material.valueOf(item.get("type").getAsString());
+							int amount = item.has("amount") ? item.get("amount").getAsInt() : 1;
+							short data = item.has("data") ? item.get("data").getAsShort() : 0;
+							
+							ItemBuilder builder = new ItemBuilder().type(material).amount(amount).durability(data);
+							
+							if (item.has("enchantments"))
+							{
+								JsonObject enchantments = item.getAsJsonObject("enchantments");
+								
+								for (Map.Entry<String, JsonElement> ench : enchantments.entrySet())
+								{
+									Enchantment enchantment = Enchantment.getByName(ench.getKey());
+									builder.enchantment(enchantment, ench.getValue().getAsInt());
+								}
+							}
+							
+							int slot = Utils.RANDOM.nextInt(27);
+							
+							while (inventory.getItem(slot) != null)
+							{
+								slot = Utils.RANDOM.nextInt(27);
+							}
+							
+							inventory.setItem(slot, builder.build());
+						}
+
+						chest.update();
+					}
 				}
-			}
-			catch (Exception e) 
-			{
-				Main.getInstance().logError("Erro ao aplicar refil no báu:", e);
+				catch (Exception e) 
+				{
+					Main.getInstance().logError("Erro ao aplicar refil no báu:", e);
+				}
 			}
 		}
 	}

@@ -104,7 +104,7 @@ public class GameSchedule implements Runnable {
 			if (shutdown > 0) {
 				shutdown--;
 			} else {
-
+				Bukkit.shutdown();
 			}
 
 			break;
@@ -112,9 +112,10 @@ public class GameSchedule implements Runnable {
 		}
 		
 		updateScoreboard();
+		updateVanished();
 	}
 	
-	public void updateScoreboard()
+	private void updateScoreboard()
 	{
 		Map<Integer, String> rows = new HashMap<>();
 		
@@ -134,6 +135,17 @@ public class GameSchedule implements Runnable {
 					{
 					    case PREGAME:
 					    {
+							rows.put(15 - rows.size(), " ");
+							rows.put(15 - rows.size(), "§7Kills: §b" + data.getKills());
+							rows.put(15 - rows.size(), "§7Deaths: §b" + data.getDeaths());
+							rows.put(15 - rows.size(), "§7XP: §b0");
+							rows.put(15 - rows.size(), "§7Liga: §b-UNRANKED");
+							rows.put(15 - rows.size(), " ");
+							rows.put(15 - rows.size(), "§7Inicia em: §e" + time(time));
+							rows.put(15 - rows.size(), "§7Servidor: §e" + Bukkit.getServerName());
+							rows.put(15 - rows.size(), "§7Jogadores: §e" + engine.getPlayers().size() + "/" + Bukkit.getMaxPlayers());
+							rows.put(15 - rows.size(), " ");
+							rows.put(15 - rows.size(), "§7Kit: §bNenhum");
 					    	break;
 					    }
 						
@@ -151,7 +163,7 @@ public class GameSchedule implements Runnable {
 					rows.put(15 - rows.size(), " ");
 					rows.put(15 - rows.size(), "§ebattlebits.com.br");
 					
-					battleBoard.setDisplayName("§6§lSKYWARS");
+					battleBoard.setDisplayName("§f§lBattle§6§lBits");
 					battleBoard.setRows(rows);
 					rows.clear();
 				}
@@ -161,5 +173,34 @@ public class GameSchedule implements Runnable {
 				if (nameTag != null) nameTag.update();
 			}
 		}
+	}
+	
+	private void updateVanished()
+	{
+		for (Player player : Bukkit.getOnlinePlayers())
+		{
+			for (Player other : Bukkit.getOnlinePlayers())
+			{
+				if (!other.equals(player))
+				{
+					if (!engine.contains(other))
+					{
+						if (player.canSee(other))
+						{
+							player.hidePlayer(other);
+						}
+					}
+					else if (!player.canSee(other))
+					{
+						player.showPlayer(other);
+					}
+				}
+			}
+		}
+	}
+	
+	private String time(int time)
+	{
+		return time / 60 + ":" + (time % 60 < 10 ? "0" : "") + time % 60;
 	}
 }
