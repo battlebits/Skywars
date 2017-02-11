@@ -118,15 +118,15 @@ public class Main extends JavaPlugin {
 
 	/* Plugin Logger */
 	public void logInfo(String info) {
-		getServer().getConsoleSender().sendMessage("�6[SkyWars] "+ChatColor.AQUA+"[INFO] " + info);
+		getServer().getConsoleSender().sendMessage(ChatColor.GOLD + "[SkyWars] " + ChatColor.AQUA + "[INFO] " + info);
 	}
 
 	public void logWarn(String warn) {
-		getServer().getConsoleSender().sendMessage("�6[SkyWars] "+ChatColor.YELLOW+"[WARN] " + warn);
+		getServer().getConsoleSender().sendMessage(ChatColor.GOLD + "[SkyWars] " + ChatColor.YELLOW + "[WARN] " + warn);
 	}
 
 	public void logError(String error) {
-		getServer().getConsoleSender().sendMessage("�6[SkyWars] "+ChatColor.RED+"[ERROR] " + error);
+		getServer().getConsoleSender().sendMessage(ChatColor.GOLD + "[SkyWars] " + ChatColor.RED + "[ERROR] " + error);
 	}
 
 	public void logError(Exception e) {
@@ -149,7 +149,7 @@ public class Main extends JavaPlugin {
 	private JsonElement readJson(String name) throws IOException {
 		File file = new File(getDataFolder(), name);
 
-		logInfo("Lendo o arquivo �e\"" + file.getName() + "\" �b...");
+		logInfo("Lendo o arquivo " + ChatColor.YELLOW + "\"" + file.getName() + "\" " + ChatColor.AQUA + "...");
 
 		if (!file.exists()) {
 			File parent = file.getParentFile();

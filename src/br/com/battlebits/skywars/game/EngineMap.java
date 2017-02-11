@@ -17,6 +17,7 @@ import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -156,11 +157,11 @@ public class EngineMap {
 			Main.getInstance().logError("Erro ao habilitar o mapa:", e);
 		}
 	}
-
+ 
 	private JsonElement readJson(String name) throws IOException {
 		File file = new File(folder, name);
 
-		Main.getInstance().logInfo("Lendo o arquivo §e\"" + file.getName() + "\" §b...");
+		Main.getInstance().logInfo("Lendo o arquivo " + ChatColor.YELLOW + "\"" + file.getName() + "\" " + ChatColor.AQUA + "...");
 
 		try (FileReader reader = new FileReader(file)) {
 			JsonParser parser = new JsonParser();
