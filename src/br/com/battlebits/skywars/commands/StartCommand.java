@@ -5,19 +5,24 @@ import org.bukkit.entity.Player;
 import br.com.battlebits.commons.bukkit.command.BukkitCommandArgs;
 import br.com.battlebits.commons.core.command.CommandClass;
 import br.com.battlebits.commons.core.command.CommandFramework.Command;
+import br.com.battlebits.commons.core.permission.Group;
+import br.com.battlebits.commons.core.translate.T;
 import br.com.battlebits.skywars.Main;
 import br.com.battlebits.skywars.game.Engine;
 import br.com.battlebits.skywars.game.GameStage;
 
 public class StartCommand implements CommandClass 
 {
-	@Command(name = "start")
+	@Command(name = "start", 
+			usage = "</command>", 
+			groupToUse = Group.ADMIN,
+			noPermMessageId = "skywars-command-start-no-permission")
 	public void start(BukkitCommandArgs cmdArgs) 
 	{
 		if (cmdArgs.isPlayer())
 		{
 			String[] args = cmdArgs.getArgs();
-			
+
 			Player player = cmdArgs.getPlayer();
 			
 			if (args.length == 0)
@@ -30,17 +35,17 @@ public class StartCommand implements CommandClass
 				}
 				else
 				{
-					// A partida está em andamento
+					player.sendMessage(T.t(cmdArgs.getLanguage(), "skywars-command-start-ingame"));
 				}
 			}
 			else
 			{
-				// Uso correto
+				player.sendMessage(T.t(cmdArgs.getLanguage(), "skywars-command-start-usage"));
 			}
 		}
 		else
 		{
-			// Console
+			cmdArgs.getSender().sendMessage(T.t(cmdArgs.getLanguage(), "skywars-command-non-console"));
 		}
 	}
 }

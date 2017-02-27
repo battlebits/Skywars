@@ -10,6 +10,7 @@ import java.util.Set;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.craftbukkit.v1_8_R3.block.CraftChest;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -45,7 +46,8 @@ public abstract class Engine {
 	private HashSet<CageTask> cages = new HashSet<>();
 	private Map<Player, Integer> killsMap = new HashMap<>();
 	
-	public Engine(GameType type) {
+	public Engine(GameType type) 
+	{
 		this.type = type;
 	}
 
@@ -72,33 +74,29 @@ public abstract class Engine {
 	
 	public void addKill(Player player)
 	{
-		killsMap.put(player, getKills(player) + 1);
+		killsMap.put(player, killsMap.getOrDefault(player, 0) + 1);
 	}
 	
 	public int getKills(Player player)
 	{
-		int kills = 0;
-		if (killsMap.containsKey(player))
-			kills = killsMap.get(player);
-		return kills;	
+		return killsMap.getOrDefault(player, 0);
 	}
 	
 	public void applyRefill(String target, String preset)
 	{
-		if (!items.has(preset)) return;
-
-		if (map.containsChests(target))
+		if (map.containsChests(target) && items.has(preset))
 		{
-			for (Block block : getMap().getChests(target))
+			for (Block block : map.getChests(target))
 			{
 				try
 				{
 					block.getChunk().load(true);
 					
 					if (block.getState() instanceof Chest)
-					{
+					{						
 						Chest chest = (Chest) block.getState();
 						
+						((CraftChest) chest).getTileEntity().a("");
 						Inventory inventory = chest.getInventory();
 						inventory.clear();
 
@@ -121,13 +119,13 @@ public abstract class Engine {
 							{
 								JsonObject enchantments = item.getAsJsonObject("enchantments");
 								
-								for (Map.Entry<String, JsonElement> ench : enchantments.entrySet())
+								for (Map.Entry<String, JsonElement> enchEntry : enchantments.entrySet())
 								{
-									Enchantment enchantment = Enchantment.getByName(ench.getKey());
-									builder.enchantment(enchantment, ench.getValue().getAsInt());
+									Enchantment enchantment = Enchantment.getByName(enchEntry.getKey());
+									builder.enchantment(enchantment, enchEntry.getValue().getAsInt());
 								}
 							}
-							
+	
 							int slot = Utils.RANDOM.nextInt(27);
 							
 							while (inventory.getItem(slot) != null)
@@ -143,7 +141,7 @@ public abstract class Engine {
 				}
 				catch (Exception e) 
 				{
-					Main.getInstance().logError("Erro ao aplicar refil no b·u:", e);
+					Main.getInstance().logError("Erro ao aplicar refil no ba√∫:", e);
 				}
 			}
 		}

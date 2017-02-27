@@ -33,26 +33,23 @@ import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.PlayerAchievementAwardedEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-
-import com.google.gson.Gson;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 
-import br.com.battlebits.commons.BattlebitsAPI;
 import br.com.battlebits.commons.api.actionbar.ActionBarAPI;
-import br.com.battlebits.commons.api.tablist.TabListAPI;
 import br.com.battlebits.commons.bukkit.BukkitMain;
-import br.com.battlebits.commons.core.translate.Language;
+import br.com.battlebits.commons.core.account.BattlePlayer;
 import br.com.battlebits.commons.core.translate.T;
 import br.com.battlebits.skywars.Main;
 import br.com.battlebits.skywars.data.MongoBackend;
@@ -63,6 +60,8 @@ import br.com.battlebits.skywars.game.task.DeathTask;
 import br.com.battlebits.skywars.utils.Combat;
 import br.com.battlebits.skywars.utils.Utils;
 
+import static br.com.battlebits.commons.BattlebitsAPI.getGson;
+
 public class GameListener implements Listener
 {	
 	private Engine engine;
@@ -71,91 +70,63 @@ public class GameListener implements Listener
 	{
 		this.engine = engine;
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onAsyncPlayerPreLogin(AsyncPlayerPreLoginEvent event)
 	{
 		PlayerData data = null;		
-		Gson gson = BattlebitsAPI.getGson();
 		
 		MongoBackend backend = Main.getInstance().getMongoBackend();
 		MongoDatabase database = backend.getClient().getDatabase("skywars");
 		MongoCollection<Document> collection = database.getCollection("data");
-
-		collection.deleteOne(Filters.eq("uuid", event.getUniqueId().toString()));
-		
 		Document document = collection.find(Filters.eq("uuid", event.getUniqueId().toString())).first();
 		
 		if (document != null)
 		{
-			data = gson.fromJson(gson.toJson(document), PlayerData.class);
-		
-			Main.getInstance().logWarn(gson.toJson(document));
+			String json = getGson().toJson(document);			
+			data = getGson().fromJson(json, PlayerData.class);
 		}
 		else if (document == null)
 		{
-			
 			data = new PlayerData(event.getUniqueId(), event.getName());
-			document = Document.parse(gson.toJson(data));
-			
-			
-			Main.getInstance().logWarn(gson.toJson(document));
-			
+			document = Document.parse(getGson().toJson(data));			
 			collection.insertOne(document);
 		}
 		
 		Main.getInstance().getPlayerManager().add(data);
 	}
 
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerJoin(PlayerJoinEvent event) 
 	{
 		event.setJoinMessage(null);
 		
 		Player player = event.getPlayer();
 		
-		TabListAPI.setHeaderAndFooter(player, "§%tab_header%§", "§%tab_footer%§");
+		PlayerData playerData = Main.getInstance().getPlayerManager().get(player);
+		if (playerData != null)
+			playerData.onJoin(player);
 	
-		PlayerData data = Main.getInstance().getPlayerManager().get(player);
-		if (data != null) data.onJoin(player);
-		
 		switch (engine.getStage())
 		{
 		    case PREGAME:
 		    {
 		    	engine.addPlayer(player);
-		    	
-		    	player.getInventory().clear();
-		    	player.getInventory().setArmorContents(new ItemStack[4]);
+		    	Utils.clearInventory(player);
+		    	Utils.addPlayerItems(player);
 		    	player.teleport(engine.getMap().getSpawn("lobby"));	
-		    	player.updateInventory();
-		    	
-		    	
-		    	player.sendMessage("hasItem (Lumberjack): " + data.hasItem("Kit", "Lumberjack"));
-		    	player.sendMessage("hasItem (Archer):" + data.hasItem("Kit", "Archer"));
-		    
-		    	data.addItem("Kit", "Lumberjack");
-		    	data.addItem("Kit", "Archer");
 
-		    	BukkitMain.broadcastMessage("sw_player_join", new String[] {"%player%", "%size%"}, new String[] {player.getName(), "(" + engine.getPlayers().size() + "/" + Bukkit.getMaxPlayers() + ")"});
+		    	BukkitMain.broadcastMessage("skywars-player-join", new String[] {"%playername%", "%size%"}, new String[] {player.getDisplayName(), "(" + engine.getPlayers().size() + "/" + Bukkit.getMaxPlayers() + ")"});
 		    	break;
 		    }
 	
 		    default:
 		    {
+		    	Utils.clearInventory(player);
+		    	Utils.addSpectatorItems(player);
 		    	player.setGameMode(GameMode.ADVENTURE);
 				player.teleport(engine.getMap().getSpawn("spectators"));
 				player.getActivePotionEffects().forEach(v -> player.removePotionEffect(v.getType()));
-				
-				PlayerInventory inventory = player.getInventory();
-				
-				inventory.clear();
-				inventory.setArmorContents(new ItemStack[4]);
-				inventory.setItem(0, new ItemStack(Material.COMPASS));
-				inventory.setItem(8, new ItemStack(Material.BED));
-				
-				player.updateInventory();
-				
 				player.setAllowFlight(true);
 				player.setFlying(true);
 				player.setFireTicks(0);
@@ -176,7 +147,7 @@ public class GameListener implements Listener
 		
 		if (engine.contains(player))
 		{
-			BukkitMain.broadcastMessage("sw_player_quit", new String[] {"%player%", player.getName()});
+			BukkitMain.broadcastMessage("skywars-player-leave", new String[] {"%playername%", player.getName()});
 		}
 	
 		PlayerData data = Main.getInstance().getPlayerManager().remove(player);
@@ -203,7 +174,7 @@ public class GameListener implements Listener
 			    	else
 			    	{
 			    		data.addTimePlayed();
-				    	data.update();
+				    	data.executeUpdate();
 			    	}
 		    	}
 		    	
@@ -226,52 +197,10 @@ public class GameListener implements Listener
 	{
 		Player player = event.getPlayer();
 		
-		if (!engine.contains(player)) 
+		if (engine.getStage() == GameStage.PREGAME || !engine.contains(player))
 		{
 			event.setCancelled(true);
-		}
-		
-		switch (engine.getStage()) 
-		{
-		    case PREGAME:
-		    {
-		    	event.setCancelled(true);
-		    	player.updateInventory();
-		    	
-		    	if (event.hasItem())
-		    	{
-		    		ItemStack item = event.getItem();
-		    		
-		    		if (item.getType() == Material.CHEST)
-		    		{
-		    			// TODO: abrir menu de kits
-		    		}
-		    		else if (item.getType() == Material.ENDER_CHEST)
-		    		{
-		    			// TODO: abrir menu da loja de kits
-		    		}
-		    	}
-		    	
-		    	break;
-		    }
-			
-		    default:
-		    {
-		    	if (!engine.contains(player))
-		    	{
-		    		if (event.hasItem())
-		    		{
-		    			ItemStack item = event.getItem();
-		    			
-		    			if (item.getType() == Material.COMPASS)
-		    			{
-		    				// TODO: abrir menu de spec
-		    			}
-		    		}
-		    	}
-
-		    	break;
-		    }
+			player.updateInventory();
 		}
 	}
 	
@@ -287,6 +216,13 @@ public class GameListener implements Listener
 		    	if (!engine.contains(player))
 		    	{
 		    		event.setCancelled(true);
+		    		
+		    		if (event.getRightClicked() instanceof Player)
+		    		{
+		    			player.setGameMode(GameMode.SPECTATOR);
+		    			player.setSpectatorTarget(event.getRightClicked());
+		    			player.setSneaking(false);
+		    		}
 		    	}
 		    	
 		    	break;
@@ -430,71 +366,69 @@ public class GameListener implements Listener
 
 				event.getDrops().removeIf(v -> Kit.isUndroppable(v));
 				EntityDamageEvent lastDamage = player.getLastDamageCause();
-				PlayerManager manager = Main.getInstance().getPlayerManager();
-				PlayerData data = manager.get(player);
 				
-				if (data != null) 
-				{
-					data.addTimePlayed();
-					data.addDeath();
-					data.update();
-					
-					Combat combat = data.getCombat();
-					
-					if (combat != null && combat.isValid())
-					{
-						Player killer = combat.getDamager();
-						
-						if (lastDamage.getCause() == DamageCause.VOID)
-						{
-							BukkitMain.broadcastMessage("sw_death_by_killer_void", new String[] {"%player%", "%killer%"}, new String[] {player.getName(), killer.getName()});
-						}
-						else if (lastDamage.getCause() == DamageCause.PROJECTILE)
-						{
-							if (lastDamage instanceof EntityDamageByEntityEvent)
-							{
-								Entity damager = ((EntityDamageByEntityEvent) lastDamage).getDamager();
-								
-								if (damager instanceof Arrow)
-								{
-									double y1 = damager.getLocation().getY();
-									double y2 = player.getLocation().getY();
-                                    boolean headshot = y1 - y2 > 1.35D;
+				PlayerData victimData = Main.getInstance().getPlayerManager().get(player);
 
-                                    BukkitMain.broadcastMessage("sw_death_by_arrow" + (headshot ? "_headshot" : ""), new String[] {"%player%", "%killer%"}, new String[] {player.getName(), killer.getName()});
-								}
+				victimData.addDeath();
+				victimData.addTimePlayed();
+				victimData.executeUpdate();
+				
+				Combat combat = victimData.getCombat();
+				
+				if (combat != null && combat.isValid())
+				{
+					Player killer = combat.getDamager();
+					
+					if (lastDamage.getCause() == DamageCause.VOID)
+					{
+						BukkitMain.broadcastMessage("skywars-death-by-killer-void", new String[] {"%playerName%", "%killerName%"}, new String[] {player.getName(), killer.getName()});
+					}
+					else if (lastDamage.getCause() == DamageCause.PROJECTILE)
+					{
+						if (lastDamage instanceof EntityDamageByEntityEvent)
+						{
+							Entity damager = ((EntityDamageByEntityEvent) lastDamage).getDamager();
+							
+							if (damager instanceof Arrow)
+							{
+								double y1 = damager.getLocation().getY();
+								double y2 = player.getLocation().getY();
+                                boolean headshot = y1 - y2 > 1.35D;
+
+                                BukkitMain.broadcastMessage("skywars-death-by-arrow" + (headshot ? "-headshot" : ""), new String[] {"%playerName%", "%killerName%"}, new String[] {player.getName(), killer.getName()});
 							}
 						}
-						else
-						{
-							BukkitMain.broadcastMessage("sw_death_by_killer", new String[] {"%player%", "%killer%"}, new String[] {player.getName(), killer.getName()});
-						}
-						
-						data = manager.get(killer);
-						data.addKill();
-						data.update();
 					}
-					else if (lastDamage.getCause() == DamageCause.VOID)
-                    {
-						BukkitMain.broadcastMessage("sw_death_by_void", new String[] {"%player%", player.getName()});							
-                    }
-                    else if (lastDamage.getCause() == DamageCause.ENTITY_EXPLOSION)
-                    {
-						BukkitMain.broadcastMessage("sw_death_by_explosion", new String[] {"%player%", player.getName()});	                    	
-                    }
-                    else if (lastDamage.getCause() == DamageCause.BLOCK_EXPLOSION)
-                    {
-						BukkitMain.broadcastMessage("sw_death_by_explosion", new String[] {"%player%", player.getName()});	                    	
-                    }
-                    else if (lastDamage.getCause() == DamageCause.STARVATION)
-                    {
-						BukkitMain.broadcastMessage("sw_death_by_hunger", new String[] {"%player%", player.getName()});	                    	
-                    }
-                    else
-                    {
-						BukkitMain.broadcastMessage("sw_death", new String[] {"%player%", player.getName()});
-                    }
+					else
+					{
+						BukkitMain.broadcastMessage("skywars-death-by-player", new String[] {"%playerName%", "%killerName%"}, new String[] {player.getName(), killer.getName()});
+					}
+					
+					PlayerData killerData = Main.getInstance().getPlayerManager().get(killer);
+					
+					killerData.addKill();
+					killerData.executeUpdate();
 				}
+				else if (lastDamage.getCause() == DamageCause.VOID)
+                {
+					BukkitMain.broadcastMessage("skywars-death-by-void", new String[] {"%playerName%", player.getName()});							
+                }
+                else if (lastDamage.getCause() == DamageCause.ENTITY_EXPLOSION)
+                {
+					BukkitMain.broadcastMessage("sskywars-death-by-explosion", new String[] {"%playerName%", player.getName()});	                    	
+                }
+                else if (lastDamage.getCause() == DamageCause.BLOCK_EXPLOSION)
+                {
+					BukkitMain.broadcastMessage("skywars-death-by-explosion", new String[] {"%playerName%", player.getName()});	                    	
+                }
+                else if (lastDamage.getCause() == DamageCause.STARVATION)
+                {
+					BukkitMain.broadcastMessage("skywars-death-by-hunger", new String[] {"%playerName%", player.getName()});	                    	
+                }
+                else
+                {
+					BukkitMain.broadcastMessage("skywars-death-unknown", new String[] {"%playerName%", player.getName()});
+                }
 
 				size--;
 				
@@ -502,9 +436,7 @@ public class GameListener implements Listener
 				{
 					for (Player other : Bukkit.getOnlinePlayers())
 					{
-						Language language = Utils.getLanguage(player);
-						
-						ActionBarAPI.send(other, T.t(language, "actionbar_players_remaining", new String[] {"%size%", Integer.toString(size)}));					
+						ActionBarAPI.send(other, T.t(BattlePlayer.getLanguage(player.getUniqueId()), "skywars-players-remaining-actionbar", new String[] {"%size%", Integer.toString(size)}));					
 					}					
 				}
 			}
@@ -545,7 +477,7 @@ public class GameListener implements Listener
 		    	{
 		    		Player player = (Player) event.getEntity();
 		    		
-		    		if (event.getCause() == DamageCause.FALL)
+		    		if (event.getCause() == DamageCause.VOID)
 		    		{
 		    			player.teleport(engine.getMap().getSpawn("lobby"));
 		    		}
@@ -559,19 +491,21 @@ public class GameListener implements Listener
 		    	if (event.getEntity() instanceof Player)
 		    	{
 		    		Player player = (Player) event.getEntity();
-
-		    		if (event.getCause() == DamageCause.FALL)
-		    		{
-		    			boolean cancel = false;
-		    			
-		    			cancel |= !(engine.contains(player));
-		    			cancel |= !(engine.getSchedule().getTime() > 3);
-		    			
-		    			event.setCancelled(cancel);
-		    		}
-		    		else if (!engine.contains(player))
+		    		
+		    		if (!engine.contains(player))
 		    		{
 		    			event.setCancelled(true);
+		    		}
+		    		else if (event.getCause() == DamageCause.FALL)
+		    		{
+		    			if (engine.getSchedule().getTime() < 3)
+		    			{
+		    				event.setCancelled(true);
+		    			}
+		    		} 
+		    		else if (event.getCause() == DamageCause.VOID)
+		    		{
+		    			event.setDamage(100D);
 		    		}
 		    	}
 		    	
@@ -583,6 +517,23 @@ public class GameListener implements Listener
 		    	event.setCancelled(true);
 		    	break;
 		    }
+		}
+	}
+	
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	public void onPlayerToggleSneak(PlayerToggleSneakEvent event)
+	{
+		Player player = event.getPlayer();
+		
+		if (event.isSneaking() && !engine.contains(player) && engine.getStage() != GameStage.PREGAME)
+		{
+			if (player.getGameMode() == GameMode.SPECTATOR)
+			{
+				player.setSpectatorTarget(player);
+				player.setGameMode(GameMode.ADVENTURE);
+				player.setAllowFlight(true);
+				player.setFlying(true);
+			}
 		}
 	}
 	
@@ -601,7 +552,7 @@ public class GameListener implements Listener
 			    	{
 			    		event.setCancelled(true);
 			    		
-			    		// Spectator
+			    		
 			    	}
 			    	else
 			    	{
@@ -629,10 +580,10 @@ public class GameListener implements Listener
 			    		{
 			    			if (engine.contains(damager))
 			    			{
-			    				int t1 = engine.getIsland(damager);
-			    				int t2 = engine.getIsland(damaged);
+			    				int pid = engine.getIsland(damager);
+			    				int tid = engine.getIsland(damaged);
 			    				
-			    				if (t1 > 0 && t2 > 0 && t1 != t2)
+			    				if (pid > 0 && tid > 0 && pid != tid)
 			    				{
 			    					if (arrow)
 			    					{
@@ -641,7 +592,7 @@ public class GameListener implements Listener
 			    						
 			    						if ((health = Math.round((damager.getHealth() - event.getFinalDamage()) * 100.0D)) / 100.0D > 0.0D)
 			    						{
-			    							damager.sendMessage(T.t(Utils.getLanguage(damager), "sw_arrow_health", new String[] {"%health%", Double.toString(health)}));
+			    							damager.sendMessage(T.t(BattlePlayer.getLanguage(damager.getUniqueId()), "skywars-player-health-arrow-hit", new String[] {"%health%", Double.toString(health)}));
 			    						}
 			    						
 			    						ItemStack item = damager.getItemInHand();
@@ -722,6 +673,9 @@ public class GameListener implements Listener
 			    			else
 			    			{
 			    				event.setCancelled(true);
+			    				damager.setGameMode(GameMode.SPECTATOR);
+			    				damager.setSpectatorTarget(damaged);
+			    				damager.setSneaking(false);
 			    			}
 			    		}
 			    	}
@@ -924,10 +878,16 @@ public class GameListener implements Listener
 	
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onCreatureSpawn(CreatureSpawnEvent event) 
-	{
+	{		
 		if (event.getSpawnReason() != SpawnReason.CUSTOM)
 		{
 			event.setCancelled(true);
 		}
+	}
+	
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	public void onPlayerAchievement(PlayerAchievementAwardedEvent event)
+	{
+		event.setCancelled(true);
 	}
 }

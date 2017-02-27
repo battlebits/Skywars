@@ -5,15 +5,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import br.com.battlebits.commons.core.account.BattlePlayer;
+import br.com.battlebits.commons.core.translate.T;
 import br.com.battlebits.skywars.Main;
 import br.com.battlebits.skywars.game.Engine;
 import br.com.battlebits.skywars.game.GameStage;
-import net.md_5.bungee.api.ChatColor;
 
 public class NameTag 
 {
 	private Player player;
 
+	private static final String SPECTATOR = "a";
+	private static final String PLAYER = "b";
+	private static final String ENEMY = "c";
+	
 	public NameTag(Player player)
 	{
 		this.player = player;
@@ -25,64 +30,42 @@ public class NameTag
 		
 		if (engine.getStage() != GameStage.PREGAME)
 		{
-			int t1 = engine.getIsland(player);
+			int pid = engine.getIsland(player);
+			
+			Scoreboard mainScoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
 			
 			for (Player observer : Bukkit.getOnlinePlayers())
 			{
 				Scoreboard scoreboard = observer.getScoreboard();
-
-				for (Team team : scoreboard.getTeams())
-                {
-                    if (!team.getName().equals("a")
-                    		&& !team.getName().equals("b")
-                    		&& !team.getName().equals("c") 
-                    		&& !team.getName().startsWith("row"))
-                    {
-                        team.unregister();
-                    }
-                }
 				
-				if (engine.contains(player) && t1 > 0)
+				if (!scoreboard.equals(mainScoreboard))
 				{
-					int t2 = engine.getIsland(observer);
+					for (Team team : scoreboard.getTeams())
+	                {
+	                    if (!team.getName().equals(SPECTATOR)
+	                    		&& !team.getName().equals(PLAYER)
+	                    		&& !team.getName().equals(ENEMY) 
+	                    		&& !team.getName().startsWith("row"))
+	                    {
+	                        team.unregister();
+	                    }
+	                }
 					
-					switch (engine.getType()) 
+					if (engine.contains(player) && pid > 0)
 					{
-					    case TEAM:
-					    case MEGA:
-					    {
-					    	if (t1 != t2)
-					    	{					    		
-					    		addTeam(getTeam(scoreboard, "c", ChatColor.RED + "[" + Utils.CHARS[t1 - 1] + "]"), player.getName());
-					    		break;
-					    	}
-					    	else
-					    	{					    		
-					    		addTeam(getTeam(scoreboard, "b", ChatColor.GREEN + "[" + Utils.CHARS[t1 - 1] + "]"), player.getName());
-					    		break;
-					    	}		
-					    }
-						
-					    case SOLO:
-					    {
-					    	if (t1 != t2)
-					    	{					    		
-					    		addTeam(getTeam(scoreboard, "c", ChatColor.RED.toString()), player.getName());
-					    		break;
-					    	}
-					    	else
-					    	{					    		
-					    		addTeam(getTeam(scoreboard, "b", ChatColor.GREEN.toString()), player.getName());
-					    		break;
-					    	}					    	
-					    }
+						int oid = engine.getIsland(observer);
+
+						if (pid != oid)
+				    		addTeam(getTeam(scoreboard, ENEMY, "§c§l"+T.t(BattlePlayer.getLanguage(observer.getUniqueId()), "skywars-tag-enemy")+"§c "), player.getName());
+						else
+				    		addTeam(getTeam(scoreboard, PLAYER, "§a§l"+T.t(BattlePlayer.getLanguage(observer.getUniqueId()), "skywars-tag-friend")+"§a "), player.getName());
 					}
-				}
-				else
-				{
-					removeEntry(scoreboard.getTeam("b"), player.getName());
-					removeEntry(scoreboard.getTeam("c"), player.getName());
-					addTeam(getTeam(scoreboard, "a", ChatColor.GRAY.toString()), player.getName());
+					else
+					{
+						addTeam(getTeam(scoreboard, SPECTATOR, "§7§l"+T.t(BattlePlayer.getLanguage(observer.getUniqueId()), "skywars-tag-spectator")+"§7 "), player.getName());					
+			    		removeEntry(scoreboard.getTeam(PLAYER), player.getName());
+						removeEntry(scoreboard.getTeam(ENEMY), player.getName());
+					}
 				}
 			}
 		}
@@ -109,11 +92,13 @@ public class NameTag
 		Team team = scoreboard.getTeam(name);
 		
 		if (team == null)
-		{
 			team = scoreboard.registerNewTeam(name);
-		}
+		
+		if (color.length() > 16)
+			color = color.substring(0, 16);
 		
 		team.setPrefix(color);
+		team.setSuffix("");
 		
 		return team;
 	}

@@ -23,7 +23,7 @@ public class MongoBackend implements Backend
 	{
 		this("localhost", "", "", "", 27017);
 	}
-
+	
 	@Override
 	public void startConnection()
 	{
@@ -50,13 +50,13 @@ public class MongoBackend implements Backend
 	{
 		return client;
 	}
-
+	
 	@Override
 	public boolean isConnected() throws Exception
 	{
 		return client != null;
 	}
-
+	
 	@Override
 	public void recallConnection() throws Exception {}
 }

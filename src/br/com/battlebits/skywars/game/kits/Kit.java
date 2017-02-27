@@ -102,24 +102,23 @@ public class Kit implements Listener
 	{
 		net.minecraft.server.v1_8_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
 		
-		NBTTagCompound compound = null;
+		NBTTagCompound tag = null;
 		
 		if (!nmsStack.hasTag())
 		{
-			compound = new NBTTagCompound();
+			tag = new NBTTagCompound();
 			
-			nmsStack.setTag(compound);
+			nmsStack.setTag(tag);
 		}
 		
-		if (compound == null)
+		if (tag == null)
 		{
-			compound = nmsStack.getTag();
+			tag = nmsStack.getTag();
 		}
 		
-		compound.setString("Kit", this.name);
-		
-		if (undroppable) compound.setBoolean("Undroppable", true);
-		
+		tag.setString("Kit", this.name);
+		tag.setBoolean("Undroppable", undroppable);
+				
 		items.add(CraftItemStack.asBukkitCopy(nmsStack));
 	}
 	
@@ -139,29 +138,27 @@ public class Kit implements Listener
 
         if (item != null)
         {
-            net.minecraft.server.v1_8_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
-
-            NBTTagCompound compound = nmsStack.getTag();
-
-            if (compound != null && compound.hasKey("Kit"))
-            {
-                String name = compound.getString("Kit");
-
-                if (kit.getName().equals(name))
-                {
-                    found = true;
-                    
-                    if (material != null)
-                    {
-                        found = found && item.getType() == material;
-                    }
-
-                    if (data != 0)
-                    {
-                        found = found && item.getDurability() == data;
-                    }
-                }
-            }
+        	NBTTagCompound tag = CraftItemStack.asNMSCopy(item).getTag();
+        	
+        	if (tag != null && tag.hasKey("Kit"))
+        	{
+        		String name = tag.getString("Kit");
+        		
+        		if (kit.getName().equals(name))
+        		{
+        			found = true;
+     
+        			if (material != null)
+        			{
+        				found = found && item.getType().equals(material);
+        			}
+        			
+        			if (data != 0)
+        			{
+        				found = found && item.getDurability() == data;
+        			}
+        		}
+        	}
         }
 
         return found;
@@ -169,25 +166,12 @@ public class Kit implements Listener
     
     public static boolean isUndroppable(ItemStack item)
     {
-    	net.minecraft.server.v1_8_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
-		
-		NBTTagCompound compound = null;
-		
-		if (!nmsStack.hasTag())
-		{
-			compound = new NBTTagCompound();
-			
-			nmsStack.setTag(compound);
-		}
-		
-		if (compound == null)
-		{
-			compound = nmsStack.getTag();
-		}
-		
-		return compound != null
-				&& compound.hasKey("Undroppable")
-				&& compound.getBoolean("Undroppable");
+    	NBTTagCompound tag = CraftItemStack.asNMSCopy(item).getTag();
+    	
+    	return tag != null 
+    			&& tag.hasKey("Kit")
+    			&& tag.hasKey("Undroppable") 
+    			&& tag.getBoolean("Undroppable");
     }
 
     public static Kit getKit(Player player)
@@ -214,5 +198,11 @@ public class Kit implements Listener
         }
 
         return null;
+    }
+    
+    @Override
+    public String toString() 
+    {
+    	return name;
     }
 }

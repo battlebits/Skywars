@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.bson.Document;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.google.gson.JsonArray;
@@ -18,6 +19,7 @@ import br.com.battlebits.commons.bukkit.scoreboard.BattleBoard;
 import br.com.battlebits.skywars.Main;
 import br.com.battlebits.skywars.utils.Combat;
 import br.com.battlebits.skywars.utils.NameTag;
+import br.com.battlebits.skywars.utils.Utils;
 import lombok.Getter;
 
 @Getter
@@ -77,51 +79,20 @@ public class PlayerData
 		timePlayed += TimeUnit.MILLISECONDS.toSeconds(difference);
 	}
 
-	public void update()
-	{
-		Thread thread = new Thread(new Runnable() 
-		{
-			@Override
-			public void run() 
-			{
-				MongoBackend backend = Main.getInstance().getMongoBackend();
-				MongoDatabase database = backend.getClient().getDatabase("skywars");
-				MongoCollection<Document> collection = database.getCollection("data");
-				
-				Document document = new Document();
-				document.append("wins", wins);
-				document.append("kills", kills);
-				document.append("deaths", deaths);
-				document.append("assists", assists);
-				document.append("timePlayed", timePlayed);
-				
-				collection.updateOne(Filters.eq("uuid", uuid.toString()), new Document("$set", document));
-			}
-		});
-		
-		thread.start();
-	}
-
 	public void onJoin(Player player)
 	{
 		nameTag = new NameTag(player);
 		battleBoard = new BattleBoard(player);
 		
 		if (!getName().equals(player.getName()))
-		{
-			Thread thread = new Thread(new Runnable() 
+		{ 
+			Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> 
 			{
-				@Override
-				public void run() 
-				{
-					MongoBackend backend = Main.getInstance().getMongoBackend();
-					MongoDatabase database = backend.getClient().getDatabase("skywars");
-					MongoCollection<Document> collection = database.getCollection("data");
-					collection.updateOne(Filters.eq("uuid", uuid.toString()), new Document("$set", new Document("name", player.getName())));
-				}
+				MongoBackend backend = Main.getInstance().getMongoBackend();
+				MongoDatabase database = backend.getClient().getDatabase("skywars");
+				MongoCollection<Document> collection = database.getCollection("data");
+				collection.updateOne(Filters.eq("uuid", uuid.toString()), new Document("$set", new Document("name", player.getName())));
 			});
-			
-			thread.start();
 		}
 	}
 	
@@ -130,32 +101,32 @@ public class PlayerData
 		boolean found = false;
 		
 		Iterator<JsonElement> iterator = items.iterator();
-		
+
 		while (iterator.hasNext())
 		{
-			boolean check = false;
+			boolean valid = false;
 			
 			JsonObject object = (JsonObject) iterator.next();
 			
 			if (object.has("expire"))
 			{
 				long expire = object.get("expire").getAsLong();
-				
-				if (expire < System.currentTimeMillis())
+
+				if (expire > System.currentTimeMillis())
 				{
-					check = true;
+					valid = true;
 				}
 			}
 			else if (object.has("lifetime"))
 			{
-				check = object.get("lifetime").getAsBoolean();
+				valid = object.get("lifetime").getAsBoolean();
 			}
 			
-			if (check && object.has("type") && object.has("item"))
+			if (valid && object.has("type") && object.has("item"))
 			{
 				String otherType = object.get("type").getAsString();
 				String otherItem = object.get("item").getAsString();
-				found = otherType.equals(type) && otherItem.equals(item);
+				found |= otherType.equals(type) && otherItem.equals(item);
 			}
 		}
 		
@@ -167,8 +138,15 @@ public class PlayerData
 		addItem(type, item, true, 0L);
 	}
 	
-	public void addItem(String type, String item, boolean lifetime, long expire)
+	public void addItem(String type, String item, long expire)
 	{
+		addItem(type, item, false, expire);
+	}
+	
+	private void addItem(String type, String item, boolean lifetime, long expire)
+	{
+		if (hasItem(type, item)) return;
+		
 		JsonObject object = new JsonObject();
 		
 		object.addProperty("type", type);
@@ -181,21 +159,19 @@ public class PlayerData
 		
 		items.add(object);
 		
-		Thread thread = new Thread(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				Main.getInstance().logWarn(items.toString());
-				
-				MongoBackend backend = Main.getInstance().getMongoBackend();
-				MongoDatabase database = backend.getClient().getDatabase("skywars");
-				MongoCollection<Document> collection = database.getCollection("data");
-				
-				collection.updateOne(Filters.eq("uuid", uuid.toString()), new Document("$set", new Document("items", Document.parse(items.toString()))));
-			}
-		});
+		executeUpdate();
+	}
+	
+	public void executeUpdate()
+	{
+		if (uuid == null) return;
 		
-		thread.start();
+		Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () ->
+		{
+			MongoBackend backend = Main.getInstance().getMongoBackend();
+			MongoDatabase database = backend.getClient().getDatabase("skywars");
+			MongoCollection<Document> collection = database.getCollection("data");
+			collection.updateOne(Filters.eq("uuid", uuid.toString()), new Document("$set", Utils.toDocument(PlayerData.this)));
+		});
 	}
 }

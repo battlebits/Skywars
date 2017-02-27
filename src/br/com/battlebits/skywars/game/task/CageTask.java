@@ -2,14 +2,17 @@ package br.com.battlebits.skywars.game.task;
 
 import java.util.HashSet;
 
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-
+import br.com.battlebits.commons.api.title.TitleAPI;
 import br.com.battlebits.skywars.game.Engine;
 import br.com.battlebits.skywars.game.kits.Kit;
 
+@SuppressWarnings("deprecation")
 public class CageTask 
 {
 	private Player[] players;
@@ -49,9 +52,9 @@ public class CageTask
 	            {
 		    		for (int z = -2; z <= 2; ++z)
 		    		{
-		    			for (int y = 0; y <= 4; ++y)
+		    			for (int y = -2; y <= 2; ++y)
 		                {
-		    				if ((x % 2 == 0 && x != 0) || (z % 2 == 0 && z != 0) || (y % 4 == 0))
+		    				if ((x % 2 == 0 && x != 0) || (z % 2 == 0 && z != 0) || (y % 2 == 0 && y != 0))
 	                        {
 	                           blocks.add(location.clone().add(x, y, z).getBlock());
 	                        }
@@ -65,22 +68,28 @@ public class CageTask
 
 		for (Block block : blocks)
 		{
-			block.setType(Material.GLASS);
+			block.setType(Material.GLASS);	
 		}
 		
 		for (Player player : players)
 		{
+			Location fixed = fixLocation(location).add(0D, 1.5D, 0);
+			
 			if (player != null && player.isOnline())
 			{
-				player.teleport(location.clone().add(0D, 1.5D, 0D));
+				player.teleport(fixed.clone());				
 			}
 		}
+		
+		stepEffects();
 	}
 	
 	public void run(int time)
 	{
 		if (time <= 0)
 		{
+			stepEffects();
+			
 			for (Block block : blocks)
 			{
 				block.setType(Material.AIR);
@@ -105,7 +114,8 @@ public class CageTask
 			{
 				if (player != null && player.isOnline())
 				{
-					// TODO: Tiles
+					player.playSound(player.getLocation(), Sound.NOTE_PLING, 1F, 2F);
+					TitleAPI.setTitle(player, (time > 3 ? "§e" : "§c") + time, "§%skywars-cage-opening%§", 0, 30, 0, true);					
 				}
 			}
 		}
@@ -116,9 +126,29 @@ public class CageTask
 			{
 				if (player.getLocation().distance(location) > 3D)
 				{
-					player.teleport(location.clone().add(0D, 1.5D, 0D));
+					Location fixed = fixLocation(location).add(0D, 1.5D, 0);
+					
+					if (player != null && player.isOnline())
+					{
+						player.teleport(fixed.clone());				
+					}
 				}
 			}
 		}
+	}
+	
+	public void stepEffects()
+	{
+		for (Block block : blocks)
+			block.getWorld().spigot().playEffect(block.getLocation(), Effect.STEP_SOUND, block.getTypeId(), block.getData(), 0.0F, 0.0F, 0.0F, 1.0F, 1, 64);			
+	}
+	
+	public Location fixLocation(Location input)
+	{
+		Location output = new Location(input.getWorld(), input.getBlockX(), input.getBlockY(), input.getBlockZ());
+		output.setPitch(input.getPitch());
+		output.setYaw(input.getYaw());
+		output.add(0.5D, 0.5D, 0.5D);
+		return output;		
 	}
 }

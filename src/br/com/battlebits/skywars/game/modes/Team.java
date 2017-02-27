@@ -2,6 +2,7 @@ package br.com.battlebits.skywars.game.modes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -9,16 +10,23 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
+import br.com.battlebits.commons.BattlebitsAPI;
+import br.com.battlebits.commons.api.title.TitleAPI;
 import br.com.battlebits.commons.bukkit.BukkitMain;
+import br.com.battlebits.commons.bukkit.party.BukkitParty;
+import br.com.battlebits.commons.core.account.BattlePlayer;
+import br.com.battlebits.commons.core.party.Party;
+import br.com.battlebits.commons.core.translate.Language;
+import br.com.battlebits.commons.core.translate.T;
 import br.com.battlebits.skywars.Main;
 import br.com.battlebits.skywars.data.PlayerData;
 import br.com.battlebits.skywars.game.Engine;
 import br.com.battlebits.skywars.game.GameStage;
 import br.com.battlebits.skywars.game.GameType;
 import br.com.battlebits.skywars.game.task.CageTask;
+import br.com.battlebits.skywars.utils.Utils;
 
 public class Team extends Engine
 {
@@ -40,18 +48,21 @@ public class Team extends Engine
 	@Override
 	public void start()
 	{
-		int i = 1;
-
 		Iterator<Player> iterator = orderPlayers(maxPerIsland).iterator();
 		
-		while (iterator.hasNext())
+		for (int i = 1; iterator.hasNext(); i++)
 		{
 			if (i > (Bukkit.getMaxPlayers() / maxPerIsland))
 			{
 				Player player = iterator.next();
 				
-				player.getInventory().clear();
-				player.getInventory().setArmorContents(new ItemStack[4]);
+				Utils.clearInventory(player);
+				Utils.addSpectatorItems(player);
+				player.setGameMode(GameMode.ADVENTURE);
+				player.setAllowFlight(true);
+				player.setFlying(true);
+				
+				playerMap.remove(player);
 			}
 			else
 			{
@@ -67,16 +78,12 @@ public class Team extends Engine
 				{
 					if (player != null)
 					{
-						player.getInventory().clear();
-						player.getInventory().setArmorContents(new ItemStack[4]);
+						Utils.clearInventory(player);
 						player.teleport(getMap().getSpawn("is-" + i));
-						player.updateInventory();
 						playerMap.put(player, i);
 						islandMap.put(player, i);
 					}
 				}
-
-				i++;
 			}
 		}
 		
@@ -95,16 +102,64 @@ public class Team extends Engine
 	@Override
 	public void end()
 	{
-		for (Player player : Bukkit.getOnlinePlayers())
+		int wid = 0;
+		
+		if (getStage() != GameStage.ENDING)
 		{
-			if (playerMap.containsKey(player))
+			setStage(GameStage.ENDING);
+			
+			for (Player player : getPlayers())
 			{
-				PlayerData data = Main.getInstance().getPlayerManager().get(player);
+				int pid = playerMap.getOrDefault(player, -1);
 				
-				if (data != null)
+				if (pid > 0)
 				{
-					data.addWin();
-					data.update();
+					player.setAllowFlight(true);
+					player.setFlying(true);
+					
+					Language language = BattlePlayer.getLanguage(player.getUniqueId());					
+					TitleAPI.setTitle(player, T.t(language, "skywars-victory-title"), T.t(language, "skywars-victory-subtitle"), 10, 100, 10, true);
+					
+					PlayerData winnerData = Main.getInstance().getPlayerManager().get(player);
+					
+					if (winnerData != null)
+					{
+						winnerData.addWin();
+						winnerData.addTimePlayed();
+						winnerData.executeUpdate();
+					}
+					
+					if (wid > 0)
+						continue;
+					
+					wid = pid;
+				}
+			}
+			
+			for (Player player : Bukkit.getOnlinePlayers())
+			{
+				Language language = BattlePlayer.getLanguage(player.getUniqueId());
+				
+				if (!playerMap.containsKey(player))
+				{
+					int tid = islandMap.getOrDefault(player, -1);
+					
+					if (tid > 0 && tid == wid) 
+					{						
+						TitleAPI.setTitle(player, T.t(language, "skywars-victory-title"), T.t(language, "skywars-victory-subtitle"), 10, 100, 10, true);
+
+						PlayerData winnerData = Main.getInstance().getPlayerManager().get(player);
+						
+						if (winnerData != null)
+						{
+							winnerData.addWin();
+							winnerData.executeUpdate();
+						}
+					}
+					else
+					{
+						TitleAPI.setTitle(player, T.t(language, "skywars-lose-title"), T.t(language, "skywars-lose-subtitle"), 10, 100, 10, true);
+					}
 				}
 			}
 		}
@@ -117,7 +172,7 @@ public class Team extends Engine
 		
 		if (result.isEmpty())
 		{
-			Bukkit.shutdown();
+			Utils.shutdownDelayed(60);			
 		}
 		else if (result.size() == 1)
 		{
@@ -163,17 +218,15 @@ public class Team extends Engine
 	{
 		List<Player> organized = new ArrayList<>();
 	
-		/* TODO: Replace to party list */
-		for (int i = 0; i < 1; i++)
+		for (Party p : new HashSet<>(BattlebitsAPI.getPartyCommon().getPartys()))
 		{
-			/* TODO: Player owner = party.getPartyOwner(); */
-			Player owner = getPartyOwner();
-			
+			BukkitParty party = (BukkitParty) p;
+			Player owner = party.getBukkitOwner();
+	
 			if (owner != null && contains(owner) && !organized.contains(owner))
 			{
-				/* TODO: Iterator<Player> i1 = party.getPartyMembers().iterator(); */
-				Iterator<Player> i1 = getPartyMembers().iterator();
-				Iterator<Player> i2 = playerMap.keySet().iterator();
+				Iterator<Player> itr1 = party.getBukkitMembers().iterator();
+				Iterator<Player> itr2 = playerMap.keySet().iterator();
 				
 				organized.add(owner);
 				
@@ -181,23 +234,23 @@ public class Team extends Engine
 				
 				while (toAdd > 0)
 				{
-					if (i1.hasNext())
+					if (itr1.hasNext())
 					{
-						Player next = i1.next();
+						Player member = itr1.next();
 						
-						if (contains(next) && !organized.contains(next))
+						if (contains(member) && !organized.contains(member))
 						{
-							organized.add(next);
+							organized.add(member);
 							toAdd--;
 						}
 					}
-					else if (i2.hasNext())
+					else if (itr2.hasNext())
 					{
-						Player next = i2.next();
+						Player queue = itr2.next();
 						
-						if (!organized.contains(next))
+						if (!organized.contains(queue))
 						{
-							organized.add(next);
+							organized.add(queue);
 							toAdd--;
 						}
 					}
@@ -209,24 +262,8 @@ public class Team extends Engine
 			}
 		}
 		
-		for (Player player : playerMap.keySet())
-		{
-			if (!organized.contains(player))
-			{
-				organized.add(player);
-			}
-		}
-				
+		playerMap.keySet().stream().filter(v -> !organized.contains(v)).forEach(v -> organized.add(v));
+
 		return organized;
-	}
-	
-	private Player getPartyOwner()
-	{
-		throw new UnsupportedOperationException("Operação não suportada.");
-	}
-	
-	private List<Player> getPartyMembers()
-	{
-		throw new UnsupportedOperationException("Operação não suportada.");
 	}
 }

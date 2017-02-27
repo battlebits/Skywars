@@ -8,13 +8,15 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
+import java.util.Map;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -22,7 +24,6 @@ import com.google.gson.JsonParser;
 import br.com.battlebits.commons.bukkit.command.BukkitCommandFramework;
 import br.com.battlebits.commons.core.command.CommandLoader;
 import br.com.battlebits.skywars.data.MongoBackend;
-import br.com.battlebits.skywars.data.PlayerData;
 import br.com.battlebits.skywars.data.PlayerManager;
 import br.com.battlebits.skywars.game.Engine;
 import br.com.battlebits.skywars.game.EngineMap;
@@ -95,15 +96,20 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		try {
-			engine.getMap().enable();
+			engine.getMap().onEnable();
 			playerManager = new PlayerManager();
 			mongoBackend = new MongoBackend();
 			mongoBackend.startConnection();
 			
+			if (Bukkit.getSpawnRadius() > 0)
+				Bukkit.setSpawnRadius(0);
+			
 			new CommandLoader(new BukkitCommandFramework(this)).loadCommandsFromPackage("br.com.battlebits.skywars.commands");
+			
+			getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 			getServer().getScheduler().runTaskTimer(this, new GameSchedule(engine), 20L, 20L);
 			getServer().getPluginManager().registerEvents(new GameListener(engine), this);
-			
+						
 			logInfo("Carregado com sucesso!");
 		} catch (Exception e) {
 			logError("Erro ao habilitar:", e);
@@ -186,9 +192,33 @@ public class Main extends JavaPlugin {
 
 		return null;
 	}
-
+	
 	public static void main(String[] args) {
-		System.out.println(new GsonBuilder().setPrettyPrinting().create()
-				.toJson(new PlayerData(UUID.randomUUID(), "MrLuangamer")));
+		/**long expiresCheck;
+		try {
+			expiresCheck = DateUtils.parseDateDiff("1024d", true);
+		} catch (Exception e1) {
+			
+			return;
+		}
+		expiresCheck = expiresCheck - System.currentTimeMillis();
+	
+		long newAdd = System.currentTimeMillis();
+		newAdd = newAdd + expiresCheck;
+		System.out.println(newAdd);**/
+		
+		
+		GameType type = GameType.MEGA;
+		Map<String, Location> map = new HashMap<>();
+		
+		for (int i = 1; i <= 12; i++)
+			map.put("is-" + i, new Location(null, 0, 0, 0));
+		
+		map.put("lobby", new Location(null, 0, 0, 0));
+		map.put("spectator", new Location(null, 0, 0, 0));
+		
+		int sum = map.entrySet().stream().filter(e -> e.getKey().startsWith("is")).mapToInt(e -> type.getSizePerIsland()).sum();
+		
+		System.out.println(sum);
 	}
 }
