@@ -1,8 +1,5 @@
 package br.com.battlebits.skywars.game;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -11,7 +8,6 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Objective;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -19,13 +15,11 @@ import com.google.common.io.ByteStreams;
 import br.com.battlebits.commons.BattlebitsAPI;
 import br.com.battlebits.commons.api.tablist.TabListAPI;
 import br.com.battlebits.commons.api.title.TitleAPI;
-import br.com.battlebits.commons.bukkit.scoreboard.BattleBoard;
 import br.com.battlebits.commons.core.account.BattlePlayer;
 import br.com.battlebits.commons.core.translate.T;
 import br.com.battlebits.skywars.Main;
 import br.com.battlebits.skywars.data.PlayerData;
 import br.com.battlebits.skywars.utils.IFirework;
-import br.com.battlebits.skywars.utils.NameTag;
 import br.com.battlebits.skywars.utils.Utils;
 import lombok.Getter;
 import lombok.Setter;
@@ -117,6 +111,7 @@ public class GameSchedule implements Runnable
 				    case REFIL_2:
 				    {
 				    	engine.applyRefill("feast", "feast-l2");
+				    	engine.applyRefill("subfeast", "subfeast-l2");
 				    	engine.applyRefill("player-1", "player-1-l2");
 				    	engine.applyRefill("player-2", "player-2-l2");
 				    	engine.applyRefill("player-3", "player-3-l2");
@@ -147,8 +142,7 @@ public class GameSchedule implements Runnable
 
                         for (int i = 2; i <= 8; i++)
                         {
-                            int grau = 360 / 7 * i;
-                            double raio = Math.toRadians(grau);
+                            double raio = Math.toRadians(360 / i);
                             double x = 4 * Math.cos(raio);
                             double z = 4 * Math.sin(raio);
                             Location loc = player.getLocation().clone().add(x, 0.2D, z);
@@ -165,7 +159,7 @@ public class GameSchedule implements Runnable
 		    			player.sendPluginMessage(Main.getInstance(), "BungeeCord", out.toByteArray());
 		    		}
 		    		
-					Utils.shutdownDelayed(60);
+					Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> Bukkit.shutdown(), 60L);
 				}
 		    	
 		    	break;
@@ -173,11 +167,11 @@ public class GameSchedule implements Runnable
 		}
 
 		updateTabHeaderAndFooter();
-		updateScoreboard();
+		//updateScoreboard();
 		updateVanished();
 	}
 
-	private void updateScoreboard()
+	/**private void updateScoreboard()
 	{
 		Map<Integer, String> rows = new HashMap<>();
 		
@@ -237,7 +231,7 @@ public class GameSchedule implements Runnable
 				if (nameTag != null) nameTag.update();
 			}
 		}
-	}
+	}**/
 	
 	private void updateVanished()
 	{

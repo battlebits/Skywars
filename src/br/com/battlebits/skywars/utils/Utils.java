@@ -4,7 +4,6 @@ import java.lang.reflect.Field;
 import java.util.Random;
 
 import org.bson.Document;
-import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -55,7 +54,6 @@ public class Utils
 			{
 				KitMenu menu = new KitMenu();
 				menu.open(player);
-				
 				return false;
 			}
 		}).getItemStack());
@@ -67,7 +65,6 @@ public class Utils
 				ByteArrayDataOutput out = ByteStreams.newDataOutput();
 				out.writeUTF("Lobby");
 				player.sendPluginMessage(Main.getInstance(), "BungeeCord", out.toByteArray());
-				
 				return false;
 			}
 		}).getItemStack());
@@ -85,14 +82,11 @@ public class Utils
 			public boolean onInteract(Player player, ItemStack item, Action action) 
 			{
 				Engine engine = Main.getInstance().getEngine();
-				
 				int pid = engine.getIsland(player);
 				int size = engine.getPlayers().size();
                 int rows = (size <= 9) ? 1 : Math.round(size / 9);
-                
 				SpectatorMenu menu = new SpectatorMenu(pid, rows);
 				menu.open(player);
-				
 				return false;
 			}
 		}).getItemStack());
@@ -104,25 +98,18 @@ public class Utils
 				ByteArrayDataOutput out = ByteStreams.newDataOutput();
 				out.writeUTF("Lobby");
 				player.sendPluginMessage(Main.getInstance(), "BungeeCord", out.toByteArray());
-				
 				return false;
 			}
 		}).getItemStack());
     	
     	player.updateInventory();
     }
-    
-    public static void shutdownDelayed(int ticks)
-    {
-    	Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> Bukkit.shutdown(), ticks);
-    }
-    
+
     public static Color getRandomColor()
     {
     	try
     	{
     		Field[] fields = Color.class.getFields();
-    		
     		return (Color) fields[RANDOM.nextInt(fields.length)].get(Color.class);
     	}
     	catch (Exception e) 

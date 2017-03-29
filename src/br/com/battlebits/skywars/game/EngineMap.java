@@ -1,6 +1,5 @@
 package br.com.battlebits.skywars.game;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -16,12 +15,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.FileUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -33,10 +28,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import br.com.battlebits.commons.core.data.DataServer;
 import br.com.battlebits.skywars.Main;
 import lombok.Getter;
-import net.minecraft.server.v1_8_R3.DedicatedPlayerList;
 
 public class EngineMap 
 {
@@ -45,145 +38,115 @@ public class EngineMap
 	private File file, folder;
 	private Map<String, Location> spawns = new HashMap<>();
 	private Map<String, List<Block>> chests = new HashMap<>();
+	private Map<String, JsonElement> resources = new HashMap<>();
 
-	public EngineMap(File file, File folder)
+	public EngineMap(File file, File folder) throws Exception
 	{
 		this.file = file;
 		this.folder = folder;
 		this.name = file.getName()
 				.replace("_", " ")
 				.replaceFirst(".dat", "");
-	}
+        extractFiles();
+    }
 
-	public void unzip(Callback callback) 
-	{
-		try
-		{
-			FileUtils.deleteDirectory(folder);
+	public void extractFiles() throws Exception
+    {
+        FileUtils.deleteDirectory(folder);
+        if (!folder.exists()) folder.mkdirs();
 
-			if (!folder.exists()) folder.mkdirs();
+        try (FileInputStream fis = new FileInputStream(file))
+        {
+            try (ZipInputStream zis = new ZipInputStream(fis))
+            {
+                ZipEntry ze = zis.getNextEntry();
 
-			try (FileInputStream fis = new FileInputStream(file))
-			{
-				try (ZipInputStream zis = new ZipInputStream(fis))
-				{
-					ZipEntry entry = zis.getNextEntry();
+                while (ze != null)
+                {
+                    String path = folder.getAbsolutePath() + File.separator + ze.getName();
 
-					while (entry != null)
-					{
-						String path = folder.getAbsolutePath() + File.separator + entry.getName();
+                    if (!ze.isDirectory())
+                    {
+                        try (FileOutputStream fos = new FileOutputStream(path))
+                        {
+                            int len;
+                            byte[] chunk = new byte[4096];
+                            while ((len = zis.read(chunk)) > 0)
+                                fos.write(chunk, 0, len);
+                        }
+                    }
+                    else
+                    {
+                        File dir = new File(path);
+                        if (!dir.exists()) dir.mkdir();
+                    }
 
-						if (!entry.isDirectory())
-						{
-							try (FileOutputStream fos = new FileOutputStream(path)) 
-							{
-								int len = 0;
+                    zis.closeEntry();
+                    ze = zis.getNextEntry();
+                }
+            }
+        }
+    }
 
-								byte[] buffer = new byte[1024];
+	public void startup(int perIsland) throws Exception
+    {
+        resources.put("chests", readJson("chests.json"));
+        resources.put("spawns", readJson("spawns.json"));
 
-								try (BufferedOutputStream bos = new BufferedOutputStream(fos))
-								{
-									while ((len = zis.read(buffer)) != -1)
-									{
-										bos.write(buffer, 0, len);
-									}
-								}
-							}
-						}
-						else
-						{
-							File dir = new File(path);
-							if (!dir.exists()) dir.mkdir();
-						}
+        JsonObject spawns = (JsonObject) resources.get("spawns");
+        int maxPlayers = spawns.entrySet().stream()
+                .filter(e -> e.getKey().startsWith("is"))
+                .mapToInt(e -> perIsland).sum();
 
-						zis.closeEntry();
-						entry = zis.getNextEntry();
-					}
-				}
-			}
+        Object handle = Bukkit.getServer().getClass().getMethod("getHandle").invoke(Bukkit.getServer());
+        Field field = handle.getClass().getSuperclass().getDeclaredField("maxPlayers");
+        field.setAccessible(true);
+        field.set(handle, maxPlayers);
+    }
 
-			callback.done(null);
-		}
-		catch (Exception e)
-		{
-			callback.done(e);
-		}
-	}
+    public void postWorld() throws Exception
+    {
+        World world = Bukkit.getWorlds().get(0);
+        world.setGameRuleValue("doDaylightCycle", "false");
+        world.setGameRuleValue("showDeathMessages", "false");
+        world.setStorm(false);
+        world.setTime(6000L);
 
-	public interface Callback
-	{
-		void done(Exception e);
-	}
-	
-	public void onEnable()
-	{
-		try 
-		{
-			World world = Bukkit.getWorlds().get(0);
-			Engine engine = Main.getInstance().getEngine();
-			
-            world.setGameRuleValue("doDaylightCycle", "false");
-            world.setGameRuleValue("showDeathMessages", "false");
-            world.setTime(6000L);
-            
-			for (Entity entity : world.getEntities())
-				if ((entity instanceof Animals) || (entity instanceof Monster) 
-						|| (entity instanceof NPC) || (entity instanceof Item))
-					entity.remove();
- 
-			JsonObject json = (JsonObject) readJson("spawns.json");
+        for (Entity entity : world.getEntities())
+            if ((entity instanceof Animals) || (entity instanceof Monster)
+                    || (entity instanceof NPC) || (entity instanceof Item))
+                entity.remove();
 
-			for (Map.Entry<String, JsonElement> entry : json.entrySet()) 
-			{
-				JsonObject spawn = (JsonObject) entry.getValue();
+        JsonObject spawns = (JsonObject) resources.get("spawns");
+        for (Map.Entry<String, JsonElement> entry : spawns.entrySet())
+        {
+            JsonObject spawn = (JsonObject) entry.getValue();
+            double x = spawn.get("x").getAsDouble();
+            double y = spawn.get("y").getAsDouble();
+            double z = spawn.get("z").getAsDouble();
+            float yaw = spawn.get("yaw").getAsFloat();
+            float pitch = spawn.get("pitch").getAsFloat();
+            this.spawns.put(entry.getKey(), new Location(world, x, y, z, yaw, pitch));
+        }
 
-				double x = spawn.get("x").getAsDouble();
-				double y = spawn.get("y").getAsDouble();
-				double z = spawn.get("z").getAsDouble();
-				float yaw = spawn.get("yaw").getAsFloat();
-				float pitch = spawn.get("pitch").getAsFloat();
-				
-				spawns.put(entry.getKey(), new Location(world, x, y, z, yaw, pitch));
-			}
+        JsonObject chests = (JsonObject) resources.get("chests");
+        for (Map.Entry<String, JsonElement> entry : chests.entrySet())
+        {
+            List<Block> blocks = this.chests.computeIfAbsent(entry.getKey(), v -> new ArrayList<>());
 
-			json = (JsonObject) readJson("chests.json");
+            JsonArray array = (JsonArray) entry.getValue();
+            Iterator<JsonElement> iterator = array.iterator();
 
-			for (Map.Entry<String, JsonElement> entry : json.entrySet())
-			{
-				List<Block> blocks = chests.computeIfAbsent(entry.getKey(), v -> new ArrayList<>());
-
-				JsonArray array = (JsonArray) entry.getValue();	
-				Iterator<JsonElement> iterator = array.iterator();
-
-				while (iterator.hasNext()) 
-				{
-					JsonObject chest = (JsonObject) iterator.next();
-
-					int x = chest.get("x").getAsInt();
-					int y = chest.get("y").getAsInt();
-					int z = chest.get("z").getAsInt();
-
-					blocks.add(world.getBlockAt(x, y, z));
-				}
-			}
-			
-			int maxPlayers = spawns.entrySet().stream()
-					.filter(e -> e.getKey().startsWith("is"))
-					.mapToInt(e -> engine.getType().getSizePerIsland()).sum();
-			
-			DedicatedPlayerList handle = ((CraftServer) Bukkit.getServer()).getHandle();
-			Field field = handle.getClass().getSuperclass().getDeclaredField("maxPlayers");
-			field.setAccessible(true);
-			field.set(handle, maxPlayers);
-			
-			DataServer.stopServer();
-			DataServer.newServer(maxPlayers);
-		}
-		catch (Exception e) 
-		{
-			Main.getInstance().logError("Erro ao habilitar o mapa:", e);
-		}
-	}
+            while (iterator.hasNext())
+            {
+                JsonObject chest = (JsonObject) iterator.next();
+                int x = chest.get("x").getAsInt();
+                int y = chest.get("y").getAsInt();
+                int z = chest.get("z").getAsInt();
+                blocks.add(world.getBlockAt(x, y, z));
+            }
+        }
+    }
 
 	private JsonElement readJson(String name) throws IOException 
 	{
@@ -193,24 +156,22 @@ public class EngineMap
 
 		try (FileReader reader = new FileReader(file))
 		{
-			JsonParser parser = new JsonParser();
-
-			return parser.parse(reader);
+			return new JsonParser().parse(reader);
 		}
 	}
-	
-	public Location getSpawn(String name)
-	{
-		return spawns.get(name);
-	}
-	
+
 	public boolean containsChests(String name)
 	{
 		return chests.containsKey(name);
 	}
-	
+
 	public List<Block> getChests(String name)
 	{
-		return chests.computeIfAbsent(name, v -> new ArrayList<>());
+		return chests.get(name);
 	}
+
+    public Location getSpawn(String name)
+    {
+        return spawns.get(name);
+    }
 }

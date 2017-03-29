@@ -1,5 +1,7 @@
-package br.com.battlebits.skywars.game;
+package br.com.battlebits.skywars.game.listener;
 
+import br.com.battlebits.skywars.game.Engine;
+import br.com.battlebits.skywars.game.GameStage;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -52,7 +54,7 @@ import br.com.battlebits.commons.bukkit.BukkitMain;
 import br.com.battlebits.commons.core.account.BattlePlayer;
 import br.com.battlebits.commons.core.translate.T;
 import br.com.battlebits.skywars.Main;
-import br.com.battlebits.skywars.data.MongoBackend;
+import br.com.battlebits.skywars.data.mongodb.MongoBackend;
 import br.com.battlebits.skywars.data.PlayerData;
 import br.com.battlebits.skywars.data.PlayerManager;
 import br.com.battlebits.skywars.game.kits.Kit;
@@ -366,9 +368,8 @@ public class GameListener implements Listener
 
 				event.getDrops().removeIf(v -> Kit.isUndroppable(v));
 				EntityDamageEvent lastDamage = player.getLastDamageCause();
-				
-				PlayerData victimData = Main.getInstance().getPlayerManager().get(player);
 
+				PlayerData victimData = Main.getInstance().getPlayerManager().get(player);
 				victimData.addDeath();
 				victimData.addTimePlayed();
 				victimData.executeUpdate();

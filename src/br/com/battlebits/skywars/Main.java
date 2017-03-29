@@ -8,13 +8,14 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import br.com.battlebits.commons.util.ClassGetter;
+import br.com.battlebits.skywars.game.kits.Kit;
+import br.com.battlebits.skywars.game.listener.UpdateListener;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.gson.JsonElement;
@@ -23,12 +24,11 @@ import com.google.gson.JsonParser;
 
 import br.com.battlebits.commons.bukkit.command.BukkitCommandFramework;
 import br.com.battlebits.commons.core.command.CommandLoader;
-import br.com.battlebits.skywars.data.MongoBackend;
+import br.com.battlebits.skywars.data.mongodb.MongoBackend;
 import br.com.battlebits.skywars.data.PlayerManager;
 import br.com.battlebits.skywars.game.Engine;
 import br.com.battlebits.skywars.game.EngineMap;
-import br.com.battlebits.skywars.game.EngineMap.Callback;
-import br.com.battlebits.skywars.game.GameListener;
+import br.com.battlebits.skywars.game.listener.GameListener;
 import br.com.battlebits.skywars.game.GameSchedule;
 import br.com.battlebits.skywars.game.GameType;
 import br.com.battlebits.skywars.utils.Utils;
@@ -53,40 +53,34 @@ public class Main extends JavaPlugin {
 	public void onLoad() {
 		try {
 			instance = this;
-			JsonObject config = (JsonObject) readJson("config.json");
-			JsonObject items = (JsonObject) readJson("items.json");
 
-			String type = config.get("type").getAsString();
+            JsonObject items = (JsonObject) readJson("items.json");
+            JsonObject config = (JsonObject) readJson("config.json");
+            JsonObject mongodb = config.getAsJsonObject("mongodb");
+
+			this.mongoBackend = new MongoBackend(mongodb);
+			this.mongoBackend.startConnection();
+
 			boolean insane = config.get("insane").getAsBoolean();
+            String type = config.get("type").getAsString();
+            List<File> files = getMaps(type, insane);
 
-			List<File> files = null;
-
-			if ((files = getMaps(type, insane)) != null && !files.isEmpty()) {
-				File file = files.get(Utils.RANDOM.nextInt(files.size()));
-				EngineMap map = new EngineMap(file, new File("world"));
-				map.unzip(new Callback() {
-					@Override
-					public void done(Exception e) {
-						if (e != null) {
-							logError("Erro ao extrair o mapa:", e);
-							getServer().shutdown();
-						} else {
-							try {
-								engine = GameType.newInstance(type);
-								engine.setInsane(insane);
-								engine.setItems(items);
-								engine.setMap(map);
-							} catch (Exception e1) {
-								logError("Erro ao criar instancia:", e1);
-								getServer().shutdown();
-							}
-						}
-					}
-				});
-			} else {
-				logWarn("Nenhum mapa foi encontrado!");
-				getServer().shutdown();
-			}
+			if (files != null && !files.isEmpty()) {
+			    if ((engine = GameType.getByName(type)) != null) {
+			        File file = files.get(Utils.RANDOM.nextInt(files.size()));
+			        EngineMap engineMap = new EngineMap(file, new File("world"));
+                    engineMap.startup(engine.getType().getSizePerIsland());
+                    engine.setMap(engineMap);
+                    engine.setInsane(insane);
+                    engine.setItems(items);
+                } else {
+			        logWarn("Modo \"" + type + "\" não encontrado!");
+			        getServer().shutdown();
+                }
+            } else {
+                logWarn("Nenhum mapa foi encontrado!");
+                getServer().shutdown();
+            }
 		} catch (Exception e) {
 			logError("Erro ao carregar:", e);
 			getServer().shutdown();
@@ -95,31 +89,43 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		try {
-			engine.getMap().onEnable();
-			playerManager = new PlayerManager();
-			mongoBackend = new MongoBackend();
-			mongoBackend.startConnection();
-			
-			if (Bukkit.getSpawnRadius() > 0)
-				Bukkit.setSpawnRadius(0);
-			
-			new CommandLoader(new BukkitCommandFramework(this)).loadCommandsFromPackage("br.com.battlebits.skywars.commands");
-			
-			getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-			getServer().getScheduler().runTaskTimer(this, new GameSchedule(engine), 20L, 20L);
-			getServer().getPluginManager().registerEvents(new GameListener(engine), this);
-						
-			logInfo("Carregado com sucesso!");
-		} catch (Exception e) {
-			logError("Erro ao habilitar:", e);
-		}
+	    if (engine != null) {
+            try {
+                engine.getMap().postWorld();
+                playerManager = new PlayerManager();
+
+                if (Bukkit.getSpawnRadius() > 0)
+                    Bukkit.setSpawnRadius(0);
+
+                // TODO: Spawn lobby
+
+                getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+                getServer().getScheduler().runTaskTimer(this, new GameSchedule(engine), 20L, 20L);
+                getServer().getPluginManager().registerEvents(new GameListener(engine), this);
+                getServer().getPluginManager().registerEvents(new UpdateListener(engine), this);
+
+                new CommandLoader(new BukkitCommandFramework(this)).loadCommandsFromPackage(getFile(), "br.com.battlebits.skywars.commands");
+                for (Class<?> clazz : ClassGetter.getClassesForPackageByFile(getFile(), "br.com.battlebits.skywars.game.kits.classes")) {
+                    if (Kit.class.isAssignableFrom(clazz)) {
+                        Kit kit = (Kit) clazz.newInstance();
+                        logInfo("Registrando o kit §e\"" + kit.getName() + "\" §b...");
+                        getServer().getPluginManager().registerEvents(kit, this);
+                    }
+                }
+
+                logInfo("Carregado com sucesso!");
+            } catch (Exception e) {
+                logError("Erro ao habilitar:", e);
+            }
+        }
 	}
 
 	@Override
 	public void onDisable() {
 		HandlerList.unregisterAll(this);
-		mongoBackend.closeConnection();
+		if (mongoBackend != null) {
+            mongoBackend.closeConnection();
+        }
 	}
 
 	/* Plugin Logger */
@@ -148,7 +154,6 @@ public class Main extends JavaPlugin {
 		}
 
 		e.printStackTrace(new PrintWriter(writer));
-
 		logError(writer.toString());
 	}
 
@@ -169,9 +174,7 @@ public class Main extends JavaPlugin {
 		}
 
 		try (FileReader reader = new FileReader(file)) {
-			JsonParser parser = new JsonParser();
-
-			return parser.parse(reader);
+			return new JsonParser().parse(reader);
 		}
 	}
 
@@ -191,34 +194,5 @@ public class Main extends JavaPlugin {
 		}
 
 		return null;
-	}
-	
-	public static void main(String[] args) {
-		/**long expiresCheck;
-		try {
-			expiresCheck = DateUtils.parseDateDiff("1024d", true);
-		} catch (Exception e1) {
-			
-			return;
-		}
-		expiresCheck = expiresCheck - System.currentTimeMillis();
-	
-		long newAdd = System.currentTimeMillis();
-		newAdd = newAdd + expiresCheck;
-		System.out.println(newAdd);**/
-		
-		
-		GameType type = GameType.MEGA;
-		Map<String, Location> map = new HashMap<>();
-		
-		for (int i = 1; i <= 12; i++)
-			map.put("is-" + i, new Location(null, 0, 0, 0));
-		
-		map.put("lobby", new Location(null, 0, 0, 0));
-		map.put("spectator", new Location(null, 0, 0, 0));
-		
-		int sum = map.entrySet().stream().filter(e -> e.getKey().startsWith("is")).mapToInt(e -> type.getSizePerIsland()).sum();
-		
-		System.out.println(sum);
 	}
 }

@@ -88,6 +88,7 @@ public class Team extends Engine
 		}
 		
 		applyRefill("feast", "feast");
+		applyRefill("subfeast", "subfeast");
 		applyRefill("player-1", "player-1");
 		applyRefill("player-2", "player-2");
 		applyRefill("player-3", "player-3");
@@ -169,15 +170,21 @@ public class Team extends Engine
 	public void checkCount()
 	{
 		Map<Integer, Long> result = playerMap.values().stream().collect(Collectors.groupingBy(v -> v, Collectors.counting()));
-		
-		if (result.isEmpty())
-		{
-			Utils.shutdownDelayed(60);			
-		}
-		else if (result.size() == 1)
-		{
-			end();
-		}
+
+		switch (result.size())
+        {
+            case 0:
+            {
+                Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> Bukkit.shutdown(), 60L);
+                break;
+            }
+
+            case 1:
+            {
+                end();
+                break;
+            }
+        }
 	}
 
 	@Override

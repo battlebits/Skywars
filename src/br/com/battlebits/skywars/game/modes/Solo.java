@@ -37,7 +37,6 @@ public class Solo extends Engine
 	public void start()
 	{
 		Set<Player> players = new HashSet<>(playerMap.keySet());
-		
 		Iterator<Player> iterator = players.iterator();
 		
 		for (int i = 1; iterator.hasNext(); i++)
@@ -58,10 +57,10 @@ public class Solo extends Engine
 				playerMap.put(player, i);
 				addCage(new CageTask(this, getMap().getSpawn("is-" + i), player));
 			}
-			
 		}
 
 		applyRefill("feast", "feast");
+		applyRefill("subfeast", "subfeast");
 		applyRefill("player-1", "player-1");
 		applyRefill("player-2", "player-2");
 		applyRefill("player-3", "player-3");
@@ -110,14 +109,20 @@ public class Solo extends Engine
 	@Override
 	public void checkCount()
 	{
-		if (playerMap.isEmpty())
-		{
-			Utils.shutdownDelayed(60);			
-		}
-		else if (playerMap.size() == 1)
-		{
-			end();
-		}
+	    switch (playerMap.size())
+        {
+            case 0:
+            {
+                Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> Bukkit.shutdown(), 60L);
+                break;
+            }
+
+            case 1:
+            {
+                end();
+                break;
+            }
+        }
 	}
 	
 	@Override

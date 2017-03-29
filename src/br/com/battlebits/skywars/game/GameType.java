@@ -26,11 +26,19 @@ public enum GameType
 	{
 		return clazz.newInstance();
 	}
-	
-	public static Engine newInstance(String type) throws Exception 
-	{
-		return valueOf(type).newInstance();
-	}
+
+	public static Engine getByName(String string) throws Exception
+    {
+        for (GameType type : values())
+        {
+            if (type.name().equalsIgnoreCase(string))
+            {
+                return type.newInstance();
+            }
+        }
+
+        return null;
+    }
 	
 	public int getSizePerIsland()
 	{

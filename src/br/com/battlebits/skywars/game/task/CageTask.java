@@ -66,18 +66,13 @@ public class CageTask
 		    }
 		}
 
-		for (Block block : blocks)
+        blocks.forEach(block -> block.setType(Material.GLASS));
+
+        for (Player player : players)
 		{
-			block.setType(Material.GLASS);	
-		}
-		
-		for (Player player : players)
-		{
-			Location fixed = fixLocation(location).add(0D, 1.5D, 0);
-			
 			if (player != null && player.isOnline())
 			{
-				player.teleport(fixed.clone());				
+				player.teleport(location.add(0D, 1.5D, 0D));
 			}
 		}
 		
@@ -89,11 +84,8 @@ public class CageTask
 		if (time <= 0)
 		{
 			stepEffects();
-			
-			for (Block block : blocks)
-			{
-				block.setType(Material.AIR);
-			}
+
+			blocks.forEach(block -> block.setType(Material.AIR));
 			
 			for (Player player : players)
 			{
@@ -126,12 +118,7 @@ public class CageTask
 			{
 				if (player.getLocation().distance(location) > 3D)
 				{
-					Location fixed = fixLocation(location).add(0D, 1.5D, 0);
-					
-					if (player != null && player.isOnline())
-					{
-						player.teleport(fixed.clone());				
-					}
+				    player.teleport(location.clone().add(0D, 1.5D, 0D));
 				}
 			}
 		}
@@ -139,16 +126,6 @@ public class CageTask
 	
 	public void stepEffects()
 	{
-		for (Block block : blocks)
-			block.getWorld().spigot().playEffect(block.getLocation(), Effect.STEP_SOUND, block.getTypeId(), block.getData(), 0.0F, 0.0F, 0.0F, 1.0F, 1, 64);			
-	}
-	
-	public Location fixLocation(Location input)
-	{
-		Location output = new Location(input.getWorld(), input.getBlockX(), input.getBlockY(), input.getBlockZ());
-		output.setPitch(input.getPitch());
-		output.setYaw(input.getYaw());
-		output.add(0.5D, 0.5D, 0.5D);
-		return output;		
+	    blocks.forEach(block -> block.getWorld().spigot().playEffect(block.getLocation(), Effect.STEP_SOUND, block.getTypeId(), block.getData(), 0.0F, 0.0F, 0.0F, 1.0F, 1, 64));
 	}
 }
