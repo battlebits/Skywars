@@ -24,7 +24,6 @@ import br.com.battlebits.commons.core.account.BattlePlayer;
 import br.com.battlebits.commons.core.translate.T;
 import br.com.battlebits.skywars.Main;
 import br.com.battlebits.skywars.data.PlayerData;
-import br.com.battlebits.skywars.menu.spectator.SpectatorMenu;
 import br.com.battlebits.skywars.utils.IFirework;
 import br.com.battlebits.skywars.utils.NameTag;
 import br.com.battlebits.skywars.utils.Utils;
@@ -173,7 +172,6 @@ public class GameSchedule implements Runnable
 		    }
 		}
 
-		SpectatorMenu.updateAll();
 		updateTabHeaderAndFooter();
 		updateScoreboard();
 		updateVanished();

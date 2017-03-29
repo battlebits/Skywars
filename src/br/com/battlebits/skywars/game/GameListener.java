@@ -587,7 +587,7 @@ public class GameListener implements Listener
 			    				{
 			    					if (arrow)
 			    					{
-			    						double health = 0D;
+			    						double health;
 			    						double damage = 1D;
 			    						
 			    						if ((health = Math.round((damager.getHealth() - event.getFinalDamage()) * 100.0D)) / 100.0D > 0.0D)

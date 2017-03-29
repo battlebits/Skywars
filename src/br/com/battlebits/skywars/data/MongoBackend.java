@@ -27,10 +27,10 @@ public class MongoBackend implements Backend
 	@Override
 	public void startConnection()
 	{
-		List<ServerAddress> seeds = new ArrayList<ServerAddress>();
+		List<ServerAddress> seeds = new ArrayList<>();
 		seeds.add(new ServerAddress(hostname, port));
 		
-		List<MongoCredential> credentials = new ArrayList<MongoCredential>();
+		List<MongoCredential> credentials = new ArrayList<>();
 		
 		if (!username.isEmpty() && !password.isEmpty() && !database.isEmpty()) 
 		{
