@@ -1,5 +1,7 @@
 package br.com.battlebits.skywars.game;
 
+import br.com.battlebits.commons.bukkit.event.update.UpdateEvent;
+import br.com.battlebits.commons.bukkit.event.update.UpdateEvent.UpdateType;
 import br.com.battlebits.commons.core.data.DataServer;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -13,7 +15,6 @@ import org.bukkit.entity.Player;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
-import br.com.battlebits.commons.BattlebitsAPI;
 import br.com.battlebits.commons.api.tablist.TabListAPI;
 import br.com.battlebits.commons.api.title.TitleAPI;
 import br.com.battlebits.commons.core.account.BattlePlayer;
@@ -25,8 +26,11 @@ import br.com.battlebits.skywars.utils.Utils;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.entity.Wither;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 
-public class GameSchedule implements Runnable {
+public class GameSchedule implements Listener {
     private Engine engine;
 
     @Getter
@@ -42,8 +46,11 @@ public class GameSchedule implements Runnable {
         this.engine = engine;
     }
 
-    @Override
-    public void run() {
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onUpdate(UpdateEvent event) {
+        if (event.getType() != UpdateType.SECOND)
+            return;
+
         switch (engine.getStage()) {
             case PREGAME: {
                 int count = engine.getPlayers().size();
@@ -178,11 +185,9 @@ public class GameSchedule implements Runnable {
 
     private void updateTabHeaderAndFooter() {
         for (Player player : Bukkit.getOnlinePlayers()) {
+            BattlePlayer bp = BattlePlayer.getPlayer(player.getUniqueId());
             PlayerData pd = Main.getInstance().getPlayerManager().get(player);
-
-            BattlePlayer bp = BattlebitsAPI.getAccountCommon().getBattlePlayer(player.getUniqueId());
-
-            if (pd != null && bp != null) {
+            if (bp != null && pd != null) {
                 TabListAPI.setHeaderAndFooter(player, " \n§e" + time(engine.getSchedule().getTime()) + " §6> Servidor: §f" + Bukkit.getServerName() + " §6< §e" + engine.getPlayers().size() + "/" + Bukkit.getMaxPlayers() + "\n§6Mapa: §e" + engine.getMap().getName() + " §1- §6Kit: §eNenhum §1- §6Kills: §e" + engine.getKills(player) + " §1- §6Ping: §e" + ((CraftPlayer) player).getHandle().ping + "\n ", "\n§bNick: §f" + player.getName() + " §1- §bWins: §f" + pd.getWins() + " §1- §bLiga: §f" + bp.getLeague().name() + "\n§bMais informações: §fbattlebits.com.br\n ");
             }
         }

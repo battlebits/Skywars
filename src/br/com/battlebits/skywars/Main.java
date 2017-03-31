@@ -96,7 +96,7 @@ public class Main extends JavaPlugin {
                     Bukkit.setSpawnRadius(0);
 
                 getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-                getServer().getScheduler().runTaskTimer(this, new GameSchedule(engine), 1L, 20L);
+                getServer().getPluginManager().registerEvents(new GameSchedule(engine), this);
                 getServer().getPluginManager().registerEvents(new ChatListener(engine), this);
                 getServer().getPluginManager().registerEvents(new GameListener(engine), this);
                 getServer().getPluginManager().registerEvents(new UpdateListener(engine), this);
