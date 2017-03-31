@@ -1,10 +1,6 @@
 package br.com.battlebits.skywars.game;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,9 +10,13 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import br.com.battlebits.commons.bukkit.tcbo3.BO3Common;
+import br.com.battlebits.commons.bukkit.tcbo3.BO3Object;
+import net.minecraft.server.v1_8_R3.DedicatedPlayerList;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -35,6 +35,8 @@ public class EngineMap
 {
 	@Getter
 	private String name;
+	@Getter
+	private BO3Object lobby;
 	private File file, folder;
 	private Map<String, Location> spawns = new HashMap<>();
 	private Map<String, List<Block>> chests = new HashMap<>();
@@ -98,7 +100,7 @@ public class EngineMap
                 .filter(e -> e.getKey().startsWith("is"))
                 .mapToInt(e -> perIsland).sum();
 
-        Object handle = Bukkit.getServer().getClass().getMethod("getHandle").invoke(Bukkit.getServer());
+        DedicatedPlayerList handle = ((CraftServer) Bukkit.getServer()).getHandle();
         Field field = handle.getClass().getSuperclass().getDeclaredField("maxPlayers");
         field.setAccessible(true);
         field.set(handle, maxPlayers);
@@ -146,6 +148,9 @@ public class EngineMap
                 blocks.add(world.getBlockAt(x, y, z));
             }
         }
+
+        lobby = BO3Common.parse(Main.getInstance().getResource("lobby.bo3"));
+        lobby.paste(getSpawn("lobby").clone().subtract(0D, 2D, 0D));
     }
 
 	private JsonElement readJson(String name) throws IOException 

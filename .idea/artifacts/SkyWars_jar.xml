@@ -6,6 +6,7 @@
       <element id="file-copy" path="$PROJECT_DIR$/resources/plugin.yml" />
       <element id="file-copy" path="$PROJECT_DIR$/resources/items.json" />
       <element id="file-copy" path="$PROJECT_DIR$/resources/config.json" />
+      <element id="file-copy" path="$PROJECT_DIR$/resources/bo3/lobby.bo3" />
     </root>
   </artifact>
 </component>

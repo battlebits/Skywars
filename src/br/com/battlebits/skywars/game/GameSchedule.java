@@ -1,5 +1,6 @@
 package br.com.battlebits.skywars.game;
 
+import br.com.battlebits.commons.core.data.DataServer;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -23,6 +24,7 @@ import br.com.battlebits.skywars.utils.IFirework;
 import br.com.battlebits.skywars.utils.Utils;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.entity.Wither;
 
 public class GameSchedule implements Runnable 
 {
@@ -32,8 +34,9 @@ public class GameSchedule implements Runnable
 	@Setter
 	private int time = 30, shutdown = 15;
 
-	private static final int REFIL_1 = 10;
-	private static final int REFIL_2 = 20;
+	public static final int REFIL_1 = 420;
+    public static final int REFIL_2 = 900;
+    public static final int FINAL = 1200;
 
 	public GameSchedule(Engine engine) 
 	{
@@ -124,6 +127,23 @@ public class GameSchedule implements Runnable
 				    	
 				    	break;
 				    }
+
+                    case FINAL:
+                    {
+                        Location location = engine.getMap().getSpawn("spectators");
+
+                        for (int k = 1; k <= 3; k++)
+                        {
+                            Wither wither = location.getWorld().spawn(location.clone(), Wither.class);
+                            wither.setNoDamageTicks(Integer.MAX_VALUE);
+                            wither.setCustomNameVisible(false);
+                            wither.setCustomName(" ");
+                            wither.setMaxHealth(2048D);
+                            wither.setHealth(2048D);
+                        }
+
+                        break;
+                    }
 				}
 		    	
 		    	break;
@@ -142,7 +162,7 @@ public class GameSchedule implements Runnable
 
                         for (int i = 2; i <= 8; i++)
                         {
-                            double raio = Math.toRadians(360 / i);
+                            double raio = Math.toRadians(360 / 7 * i);
                             double x = 4 * Math.cos(raio);
                             double z = 4 * Math.sin(raio);
                             Location loc = player.getLocation().clone().add(x, 0.2D, z);
@@ -166,73 +186,11 @@ public class GameSchedule implements Runnable
 		    }
 		}
 
+		Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> DataServer.updateStatus(engine.getStage().toMinigameState(), time));
 		updateTabHeaderAndFooter();
-		//updateScoreboard();
 		updateVanished();
 	}
 
-	/**private void updateScoreboard()
-	{
-		Map<Integer, String> rows = new HashMap<>();
-		
-		for (Player player : Bukkit.getOnlinePlayers())
-		{
-			PlayerData data = Main.getInstance().getPlayerManager().get(player);
-			
-			if (data != null)
-			{
-				BattleBoard battleBoard = data.getBattleBoard();
-
-				if (battleBoard != null)
-				{
-					switch (engine.getStage()) 
-					{
-					    case PREGAME:
-					    {
-					    	rows.put(15 - rows.size(), "Stage: PREGAME");
-					    	rows.put(15 - rows.size(), "...");
-					    	break;
-					    }
-						
-					    case PREPARING:
-					    {
-					    	rows.put(15 - rows.size(), "Stage: PREPARING");
-					    	rows.put(15 - rows.size(), "...");
-					    	break;
-					    }
-					    
-					    default:
-					    {
-					    	Objective belowName = battleBoard.registerBelowName("§c\u2764");
-					    	Objective playerList = battleBoard.registerPlayerList();
-					
-							for (Player target : Bukkit.getOnlinePlayers())
-	                        {
-	                            int score = !engine.contains(target) ? 0 : Math.max(1, (int) target.getHealth());
-
-	                            belowName.getScore(target.getName()).setScore(score);
-	                            playerList.getScore(target.getName()).setScore(score);
-	                        }
-					    	
-					    	rows.put(15 - rows.size(), "Stage: INGAME");
-					    	rows.put(15 - rows.size(), "...");
-					    	break;
-					    }
-					}
-					
-					rows.put(15 - rows.size(), " ");
-					rows.put(15 - rows.size(), "§ebattlebits.com.br");
-					battleBoard.setDisplayName("§f§lBattle§6§lBits");
-					battleBoard.setRows(rows);
-					rows.clear();
-				}
-				
-				NameTag nameTag = data.getNameTag();
-				if (nameTag != null) nameTag.update();
-			}
-		}
-	}**/
-	
 	private void updateVanished()
 	{
 		for (Player player : Bukkit.getOnlinePlayers())

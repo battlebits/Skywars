@@ -22,16 +22,9 @@ import org.bukkit.event.block.BlockCanBuildEvent;
 import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.ExplosionPrimeEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
@@ -116,9 +109,8 @@ public class GameListener implements Listener
 		    	engine.addPlayer(player);
 		    	Utils.clearInventory(player);
 		    	Utils.addPlayerItems(player);
-		    	player.teleport(engine.getMap().getSpawn("lobby"));	
-
-		    	BukkitMain.broadcastMessage("skywars-player-join", new String[] {"%playername%", "%size%"}, new String[] {player.getDisplayName(), "(" + engine.getPlayers().size() + "/" + Bukkit.getMaxPlayers() + ")"});
+		    	player.teleport(engine.getMap().getSpawn("lobby"));
+		    	BukkitMain.broadcastMessage("skywars-player-join", new String[] {"%playerName%", "%playerCount%"}, new String[] {player.getDisplayName(), "(" + engine.getPlayers().size() + "/" + Bukkit.getMaxPlayers() + ")"});
 		    	break;
 		    }
 	
@@ -149,7 +141,7 @@ public class GameListener implements Listener
 		
 		if (engine.contains(player))
 		{
-			BukkitMain.broadcastMessage("skywars-player-leave", new String[] {"%playername%", player.getName()});
+			BukkitMain.broadcastMessage("skywars-player-leave", new String[] {"%playerName%", player.getName()});
 		}
 	
 		PlayerData data = Main.getInstance().getPlayerManager().remove(player);
@@ -198,12 +190,12 @@ public class GameListener implements Listener
 	public void onPlayerInteract(PlayerInteractEvent event)
 	{
 		Player player = event.getPlayer();
-		
-		if (engine.getStage() == GameStage.PREGAME || !engine.contains(player))
-		{
-			event.setCancelled(true);
-			player.updateInventory();
-		}
+
+		if (cancelEvent(player))
+        {
+            event.setCancelled(true);
+            player.updateInventory();
+        }
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -241,54 +233,17 @@ public class GameListener implements Listener
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onHangingBreakByEntity(HangingBreakByEntityEvent event)
 	{
-		switch (engine.getStage()) 
-		{
-		    case INGAME:
-		    {
-		    	if (event.getRemover() instanceof Player)
-		    	{
-		    		Player remover = (Player) event.getRemover();
-		    		
-		    		if (!engine.contains(remover))
-		    		{
-		    			event.setCancelled(true);
-		    		}
-		    	}
-		    	
-		    	break;
-		    }
-		    
-		    default:
-		    {
-		    	event.setCancelled(true);
-		    	break;
-		    }
-		}
+	    if (event.getRemover() instanceof Player)
+        {
+            Player remover = (Player) event.getRemover();
+            event.setCancelled(cancelEvent(remover));
+        }
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onHangingPlace(HangingPlaceEvent event)
-	{		
-		switch (engine.getStage()) 
-		{
-		    case INGAME:
-		    {
-		    	Player player = event.getPlayer();
-		    	
-		    	if (!engine.contains(player))
-		    	{
-		    		event.setCancelled(true);
-		    	}
-		    	
-		    	break;
-		    }
-		    
-		    default:
-		    {
-		    	event.setCancelled(true);
-		    	break;
-		    }
-		}
+	{
+	    event.setCancelled(cancelEvent(event.getPlayer()));
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -326,29 +281,10 @@ public class GameListener implements Listener
 		}
 	}
 	
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(ignoreCancelled = true)
 	public void onPlayerPickupItem(PlayerPickupItemEvent event)
 	{
-		switch (engine.getStage()) 
-		{
-		    case INGAME:
-		    {
-		    	Player player = event.getPlayer();
-		    	
-		    	if (!engine.contains(player))
-		    	{
-		    		event.setCancelled(true);
-		    	}
-		    	
-		    	break;
-		    }
-		    
-		    default:
-		    {
-		    	event.setCancelled(true);
-		    	break;
-		    }
-		}
+	    event.setCancelled(cancelEvent(event.getPlayer()));
 	}
 	
 	@EventHandler(priority = EventPriority.LOWEST)
@@ -437,7 +373,7 @@ public class GameListener implements Listener
 				{
 					for (Player other : Bukkit.getOnlinePlayers())
 					{
-						ActionBarAPI.send(other, T.t(BattlePlayer.getLanguage(player.getUniqueId()), "skywars-players-remaining-actionbar", new String[] {"%size%", Integer.toString(size)}));					
+						ActionBarAPI.send(other, T.t(BattlePlayer.getLanguage(player.getUniqueId()), "skywars-players-remaining-actionbar", new String[] {"%playerCount%", Integer.toString(size)}));
 					}					
 				}
 			}
@@ -552,8 +488,8 @@ public class GameListener implements Listener
 			    	if (!engine.contains(damaged))
 			    	{
 			    		event.setCancelled(true);
-			    		
-			    		
+
+			    		// TODO: Fix arrow bug
 			    	}
 			    	else
 			    	{
@@ -770,82 +706,25 @@ public class GameListener implements Listener
 		event.setBuildable(true);
 	}
 	
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(ignoreCancelled = true)
 	public void onBlockPlace(BlockPlaceEvent event)
 	{
-		switch (engine.getStage())
-		{
-		    case INGAME:
-		    {
-		    	Player player = event.getPlayer();
-		    	
-		    	if (!engine.contains(player))
-		    	{
-		    		event.setCancelled(true);
-		    	}
-		    	
-		    	break;
-		    }
-		    
-		    default:
-		    {
-		    	event.setCancelled(true);
-		    	break;
-		    }
-		}
+	    event.setCancelled(cancelEvent(event.getPlayer()));
 	}
 	
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	@EventHandler(ignoreCancelled = true)
 	public void onBlockBreak(BlockBreakEvent event)
 	{
-		switch (engine.getStage())
-		{
-		    case INGAME:
-		    {
-		    	Player player = event.getPlayer();
-		    	
-		    	if (!engine.contains(player))
-		    	{
-		    		event.setCancelled(true);
-		    	}
-		    	
-		    	break;
-		    }
-		    
-		    default:
-		    {
-		    	event.setCancelled(true);
-		    	break;
-		    }
-		}
+		event.setCancelled(cancelEvent(event.getPlayer()));
 	}
 	
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	@EventHandler(ignoreCancelled = true)
 	public void onBlockIgnite(BlockIgniteEvent event)
 	{
-		switch (engine.getStage())
-		{
-		    case INGAME:
-		    {
-		    	Player player = event.getPlayer();
-		    	
-		    	if (!engine.contains(player))
-		    	{
-		    		event.setCancelled(true);
-		    	}
-		    	
-		    	break;
-		    }
-		    
-		    default:
-		    {
-		    	event.setCancelled(true);
-		    	break;
-		    }
-		}
+	    event.setCancelled(cancelEvent(event.getPlayer()));
 	}
 	
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	@EventHandler(ignoreCancelled = true)
 	public void onBlockBurn(BlockBurnEvent event)
 	{
 		if (engine.getStage() != GameStage.INGAME)
@@ -854,7 +733,7 @@ public class GameListener implements Listener
 		}
 	}
 	
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	@EventHandler(ignoreCancelled = true)
 	public void onBlockFade(BlockFadeEvent event)
 	{
 		if (engine.getStage() != GameStage.INGAME)
@@ -868,7 +747,7 @@ public class GameListener implements Listener
 		}
 	}
 
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	@EventHandler(ignoreCancelled = true)
 	public void onWeatherChange(WeatherChangeEvent event) 
 	{
 		if (event.toWeatherState()) 
@@ -876,8 +755,28 @@ public class GameListener implements Listener
 			event.setCancelled(true);
 		}
 	}
+
+	@EventHandler(ignoreCancelled = true)
+    public void onEntityTarget(EntityTargetEvent event)
+    {
+        if (event.getTarget() instanceof Player)
+        {
+            Player target = (Player) event.getTarget();
+            event.setCancelled(cancelEvent(target));
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onEntityTargetLivingEntity(EntityTargetLivingEntityEvent event)
+    {
+        if (event.getTarget() instanceof Player)
+        {
+            Player target = (Player) event.getTarget();
+            event.setCancelled(cancelEvent(target));
+        }
+    }
 	
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	@EventHandler(ignoreCancelled = true)
 	public void onCreatureSpawn(CreatureSpawnEvent event) 
 	{		
 		if (event.getSpawnReason() != SpawnReason.CUSTOM)
@@ -886,9 +785,14 @@ public class GameListener implements Listener
 		}
 	}
 	
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	@EventHandler(ignoreCancelled = true)
 	public void onPlayerAchievement(PlayerAchievementAwardedEvent event)
 	{
 		event.setCancelled(true);
 	}
+
+	private boolean cancelEvent(Player player)
+    {
+        return engine.getStage() != GameStage.INGAME || !engine.contains(player);
+    }
 }

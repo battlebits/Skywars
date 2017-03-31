@@ -1,7 +1,7 @@
 package br.com.battlebits.skywars.game.kits;
 
-import java.util.HashSet;
-
+import br.com.battlebits.skywars.Main;
+import br.com.battlebits.skywars.data.PlayerData;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
@@ -13,20 +13,28 @@ import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @Getter
 @Setter
 public class Kit implements Listener 
 {	
 	private String name;	
 	private ItemStack icon;
+    private int price;
 
-	private final HashSet<Player> players = new HashSet<>();
-	private final HashSet<ItemStack> items = new HashSet<>();
-	private static final HashSet<Kit> KITS = new HashSet<>();
+	private final Set<Player> players = new HashSet<>();
+	private final Set<ItemStack> items = new HashSet<>();
+
+	@Getter
+	private static final List<Kit> kits = new ArrayList<>();
 	
 	public Kit()  
 	{
-		KITS.add(this);
+		kits.add(this);
 	}
 	
 	public void add(Player player)
@@ -121,7 +129,18 @@ public class Kit implements Listener
 				
 		items.add(CraftItemStack.asBukkitCopy(nmsStack));
 	}
-	
+
+	public boolean hasKit(Player player)
+    {
+        PlayerData pd = Main.getInstance().getPlayerManager().get(player);
+        return (pd != null && pd.hasItem("Kit", this.name));
+    }
+
+	public boolean canBuy(Player player)
+    {
+        return false;
+    }
+
 	public static boolean isItem(Kit kit, ItemStack item)
     {
         return isItem(kit, item, null, (short) 0);
@@ -176,7 +195,7 @@ public class Kit implements Listener
 
     public static Kit getKit(Player player)
     {
-        for (Kit kit : KITS)
+        for (Kit kit : kits)
         {
             if (kit.contains(player))
             {
@@ -184,12 +203,12 @@ public class Kit implements Listener
             }
         }
 
-        return getByName("Default");
+        return getByName("Padrao");
     }
 
     public static Kit getByName(String name)
     {
-        for (Kit kit : KITS)
+        for (Kit kit : kits)
         {
             if (kit.getName().equalsIgnoreCase(name))
             {
@@ -199,10 +218,10 @@ public class Kit implements Listener
 
         return null;
     }
-    
+
     @Override
-    public String toString() 
+    public boolean equals(Object obj)
     {
-    	return name;
+        return (obj instanceof Kit) && ((Kit) obj).getName().equals(this.name);
     }
 }

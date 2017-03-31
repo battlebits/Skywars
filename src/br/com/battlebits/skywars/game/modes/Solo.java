@@ -65,10 +65,11 @@ public class Solo extends Engine
 		applyRefill("player-2", "player-2");
 		applyRefill("player-3", "player-3");
 
-		setStage(GameStage.PREPARING);
-		getSchedule().setTime(10);
-		
-		setStarted(System.currentTimeMillis());
+        setStage(GameStage.PREPARING);
+        getSchedule().setTime(10);
+        getMap().getLobby().undo();
+
+        setStarted(System.currentTimeMillis());
 		BukkitMain.getInstance().setTagControl(false);
 	}
 	
@@ -154,4 +155,16 @@ public class Solo extends Engine
 	{
 		return playerMap.keySet();
 	}
+
+    @Override
+    public int getPlayerCount()
+    {
+        return playerMap.size();
+    }
+
+    @Override
+    public int getTeamCount()
+    {
+        return -1;
+    }
 }

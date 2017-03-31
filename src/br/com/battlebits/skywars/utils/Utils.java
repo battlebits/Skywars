@@ -3,6 +3,7 @@ package br.com.battlebits.skywars.utils;
 import java.lang.reflect.Field;
 import java.util.Random;
 
+import br.com.battlebits.skywars.menu.KitInventory;
 import org.bson.Document;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -19,8 +20,7 @@ import br.com.battlebits.commons.api.item.ActionItemStack;
 import br.com.battlebits.commons.api.item.ActionItemStack.InteractHandler;
 import br.com.battlebits.skywars.Main;
 import br.com.battlebits.skywars.game.Engine;
-import br.com.battlebits.skywars.menu.kit.KitMenu;
-import br.com.battlebits.skywars.menu.spectator.SpectatorMenu;
+import br.com.battlebits.skywars.menu.SpecInventory;
 import br.com.battlebits.commons.api.item.ItemBuilder;
 
 public class Utils 
@@ -52,8 +52,8 @@ public class Utils
 			@Override
 			public boolean onInteract(Player player, ItemStack item, Action action) 
 			{
-				KitMenu menu = new KitMenu();
-				menu.open(player);
+                KitInventory kitInventory = new KitInventory(player);
+                kitInventory.open(player);
 				return false;
 			}
 		}).getItemStack());
@@ -85,7 +85,7 @@ public class Utils
 				int pid = engine.getIsland(player);
 				int size = engine.getPlayers().size();
                 int rows = (size <= 9) ? 1 : Math.round(size / 9);
-				SpectatorMenu menu = new SpectatorMenu(pid, rows);
+				SpecInventory menu = new SpecInventory(pid, rows);
 				menu.open(player);
 				return false;
 			}

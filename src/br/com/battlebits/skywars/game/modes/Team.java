@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -27,6 +26,9 @@ import br.com.battlebits.skywars.game.GameStage;
 import br.com.battlebits.skywars.game.GameType;
 import br.com.battlebits.skywars.game.task.CageTask;
 import br.com.battlebits.skywars.utils.Utils;
+
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.counting;
 
 public class Team extends Engine
 {
@@ -92,9 +94,10 @@ public class Team extends Engine
 		applyRefill("player-1", "player-1");
 		applyRefill("player-2", "player-2");
 		applyRefill("player-3", "player-3");
-	
-		setStage(GameStage.PREPARING);
-		getSchedule().setTime(10);
+
+        setStage(GameStage.PREPARING);
+        getSchedule().setTime(10);
+        getMap().getLobby().undo();
 
 		setStarted(System.currentTimeMillis());
 		BukkitMain.getInstance().setTagControl(false);
@@ -169,9 +172,7 @@ public class Team extends Engine
 	@Override
 	public void checkCount()
 	{
-		Map<Integer, Long> result = playerMap.values().stream().collect(Collectors.groupingBy(v -> v, Collectors.counting()));
-
-		switch (result.size())
+		switch (getTeamCount())
         {
             case 0:
             {
@@ -187,13 +188,25 @@ public class Team extends Engine
         }
 	}
 
-	@Override
-	public Set<Player> getPlayers()
-	{
-		return playerMap.keySet();
-	}
-	
-	@Override
+    @Override
+    public int getTeamCount()
+    {
+        return playerMap.values().stream().collect(groupingBy(v -> v, counting())).size();
+    }
+
+    @Override
+    public int getPlayerCount()
+    {
+        return playerMap.size();
+    }
+
+    @Override
+    public Set<Player> getPlayers()
+    {
+        return playerMap.keySet();
+    }
+
+    @Override
 	public boolean contains(Player player)
 	{
 		return playerMap.containsKey(player);

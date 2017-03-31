@@ -1,4 +1,4 @@
-package br.com.battlebits.skywars.menu.spectator;
+package br.com.battlebits.skywars.menu;
 
 import java.util.Arrays;
 
@@ -17,11 +17,11 @@ import br.com.battlebits.commons.core.translate.T;
 import br.com.battlebits.skywars.Main;
 import br.com.battlebits.skywars.game.Engine;
 
-public class SpectatorMenu extends MenuInventory
+public class SpecInventory extends MenuInventory
 {
 	private int pid;
 	
-	public SpectatorMenu(int pid, int rows) 
+	public SpecInventory(int pid, int rows)
 	{
 		super("Teleportador", rows);
 
@@ -41,7 +41,7 @@ public class SpectatorMenu extends MenuInventory
 		super.clear();
 		
 		Engine engine = Main.getInstance().getEngine();
-		
+
 		for (Player player : engine.getPlayers()) 
 		{
 			addItem(new MenuItem(createSkull(engine, player), new MenuClickHandler()

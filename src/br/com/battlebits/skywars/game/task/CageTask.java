@@ -72,7 +72,7 @@ public class CageTask
 		{
 			if (player != null && player.isOnline())
 			{
-				player.teleport(location.add(0D, 1.5D, 0D));
+				player.teleport(location.clone().add(0D, 1.5D, 0D));
 			}
 		}
 		

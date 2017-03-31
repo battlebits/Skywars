@@ -65,6 +65,10 @@ public abstract class Engine {
 
 	public abstract int getIsland(Player player);
 
+    public abstract int getTeamCount();
+
+    public abstract int getPlayerCount();
+
 	public abstract Set<Player> getPlayers();
 
 	public void addCage(CageTask cageTask)

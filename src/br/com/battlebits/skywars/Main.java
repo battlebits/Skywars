@@ -12,10 +12,10 @@ import java.util.List;
 
 import br.com.battlebits.commons.util.ClassGetter;
 import br.com.battlebits.skywars.game.kits.Kit;
+import br.com.battlebits.skywars.game.listener.ChatListener;
 import br.com.battlebits.skywars.game.listener.UpdateListener;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.gson.JsonElement;
@@ -37,19 +37,16 @@ import net.md_5.bungee.api.ChatColor;
 
 public class Main extends JavaPlugin {
 
+    @Getter
+    private Engine engine;
 	@Getter
-	private Engine engine;
-
-	@Getter
-	private PlayerManager playerManager;
-
+    private PlayerManager playerManager;
 	@Getter
 	private MongoBackend mongoBackend;
-
 	@Getter
 	private static Main instance;
 
-	@Override
+    @Override
 	public void onLoad() {
 		try {
 			instance = this;
@@ -61,10 +58,11 @@ public class Main extends JavaPlugin {
 			this.mongoBackend = new MongoBackend(mongodb);
 			this.mongoBackend.startConnection();
 
-			boolean insane = config.get("insane").getAsBoolean();
+            String dir = config.get("dir").getAsString();
             String type = config.get("type").getAsString();
-            List<File> files = getMaps(type, insane);
+			boolean insane = config.get("insane").getAsBoolean();
 
+            List<File> files = getMaps(dir);
 			if (files != null && !files.isEmpty()) {
 			    if ((engine = GameType.getByName(type)) != null) {
 			        File file = files.get(Utils.RANDOM.nextInt(files.size()));
@@ -97,10 +95,9 @@ public class Main extends JavaPlugin {
                 if (Bukkit.getSpawnRadius() > 0)
                     Bukkit.setSpawnRadius(0);
 
-                // TODO: Spawn lobby
-
                 getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-                getServer().getScheduler().runTaskTimer(this, new GameSchedule(engine), 20L, 20L);
+                getServer().getScheduler().runTaskTimer(this, new GameSchedule(engine), 1L, 20L);
+                getServer().getPluginManager().registerEvents(new ChatListener(engine), this);
                 getServer().getPluginManager().registerEvents(new GameListener(engine), this);
                 getServer().getPluginManager().registerEvents(new UpdateListener(engine), this);
 
@@ -178,11 +175,8 @@ public class Main extends JavaPlugin {
 		}
 	}
 
-	private List<File> getMaps(String directory, boolean insane) {
-		directory = directory.toLowerCase();
-		directory += (insane ? "_insane" : "");
-
-		File folder = new File("../BSW-Maps/" + directory);
+	private List<File> getMaps(String directory) {
+		File folder = new File(directory);
 		if (folder.exists() && folder.isDirectory()) {
 			List<File> files = new ArrayList<>();
 			for (File file : folder.listFiles()) {
@@ -192,7 +186,6 @@ public class Main extends JavaPlugin {
 			}
 			return files;
 		}
-
 		return null;
 	}
 }
