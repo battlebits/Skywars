@@ -15,27 +15,22 @@ import java.util.Iterator;
  *
  * @author Luãn Pereira.
  */
-public class ChatListener implements Listener
-{
+public class ChatListener implements Listener {
     private Engine engine;
 
-    public ChatListener(Engine engine)
-    {
+    public ChatListener(Engine engine) {
         this.engine = engine;
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onAsyncPlayerChat(AsyncPlayerChatEvent event)
-    {
+    public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
 
-        if (!engine.contains(player))
-        {
+        if (!engine.contains(player)) {
             Iterator<Player> iterator = event.getRecipients().iterator();
             event.setFormat("§7[SPECTATOR] " + player.getDisplayName() + " §7» §r%2$s");
 
-            while (iterator.hasNext())
-            {
+            while (iterator.hasNext()) {
                 Player target = iterator.next();
                 if (engine.contains(target))
                     iterator.remove();

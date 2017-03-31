@@ -10,10 +10,8 @@ import org.bukkit.inventory.ItemStack;
  *
  * @author Luãn Pereira.
  */
-public class Archer extends Kit
-{
-    public Archer()
-    {
+public class Archer extends Kit {
+    public Archer() {
         setName("Archer");
         setIcon(new ItemStack(Material.BOW));
     }

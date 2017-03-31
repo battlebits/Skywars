@@ -31,123 +31,108 @@ import lombok.Setter;
 @Getter
 @Setter
 public abstract class Engine {
-	
-	@Setter(AccessLevel.PRIVATE)
-	private GameType type;
-	private GameStage stage = GameStage.PREGAME;
-	private GameSchedule schedule;
-	
-	private EngineMap map;
-	private JsonObject items;
-	
-	private boolean insane;
-	private long started;
-	
-	private HashSet<CageTask> cages = new HashSet<>();
-	private Map<Player, Integer> killsMap = new HashMap<>();
-	
-	public Engine(GameType type) 
-	{
-		this.type = type;
-	}
 
-	public abstract void start();
+    @Setter(AccessLevel.PRIVATE)
+    private GameType type;
+    private GameStage stage = GameStage.PREGAME;
+    private GameSchedule schedule;
 
-	public abstract void end();
+    private EngineMap map;
+    private JsonObject items;
 
-	public abstract void checkCount();
+    private boolean insane;
+    private long started;
 
-	public abstract boolean contains(Player player);
+    private HashSet<CageTask> cages = new HashSet<>();
+    private Map<Player, Integer> killsMap = new HashMap<>();
 
-	public abstract void removePlayer(Player player);
+    public Engine(GameType type) {
+        this.type = type;
+    }
 
-	public abstract void addPlayer(Player player);
+    public abstract void start();
 
-	public abstract int getIsland(Player player);
+    public abstract void end();
+
+    public abstract void checkCount();
+
+    public abstract boolean contains(Player player);
+
+    public abstract void removePlayer(Player player);
+
+    public abstract void addPlayer(Player player);
+
+    public abstract int getIsland(Player player);
 
     public abstract int getTeamCount();
 
     public abstract int getPlayerCount();
 
-	public abstract Set<Player> getPlayers();
+    public abstract Set<Player> getPlayers();
 
-	public void addCage(CageTask cageTask)
-	{
-		cages.add(cageTask);
-	}
-	
-	public void addKill(Player player)
-	{
-		killsMap.put(player, killsMap.getOrDefault(player, 0) + 1);
-	}
-	
-	public int getKills(Player player)
-	{
-		return killsMap.getOrDefault(player, 0);
-	}
-	
-	public void applyRefill(String target, String preset)
-	{
-		if (map.containsChests(target) && items.has(preset))
-		{
-			for (Block block : map.getChests(target))
-			{
-				try
-				{
-					block.getChunk().load(true);
-					
-					if (block.getState() instanceof Chest)
-					{						
-						Chest chest = (Chest) block.getState();
-						
-						((CraftChest) chest).getTileEntity().a("");
-						Inventory inventory = chest.getInventory();
-						inventory.clear();
+    public void addCage(CageTask cageTask) {
+        cages.add(cageTask);
+    }
 
-						JsonObject presets = items.getAsJsonObject(preset);
-						List<Map.Entry<String, JsonElement>> entries = Lists.newArrayList(presets.entrySet());
-						Map.Entry<String, JsonElement> entry = entries.get(Utils.RANDOM.nextInt(entries.size()));
-						Iterator<JsonElement> iterator = ((JsonArray) entry.getValue()).iterator();
-						
-						while (iterator.hasNext())
-						{
-							JsonObject item = (JsonObject) iterator.next();
-							
-							Material material = Material.valueOf(item.get("type").getAsString());
-							int amount = item.has("amount") ? item.get("amount").getAsInt() : 1;
-							short data = item.has("data") ? item.get("data").getAsShort() : 0;
-							
-							ItemBuilder builder = new ItemBuilder().type(material).amount(amount).durability(data);
-							
-							if (item.has("enchantments"))
-							{
-								JsonObject enchantments = item.getAsJsonObject("enchantments");
-								
-								for (Map.Entry<String, JsonElement> enchEntry : enchantments.entrySet())
-								{
-									Enchantment enchantment = Enchantment.getByName(enchEntry.getKey());
-									builder.enchantment(enchantment, enchEntry.getValue().getAsInt());
-								}
-							}
-	
-							int slot = Utils.RANDOM.nextInt(27);
-							
-							while (inventory.getItem(slot) != null)
-							{
-								slot = Utils.RANDOM.nextInt(27);
-							}
-							
-							inventory.setItem(slot, builder.build());
-						}
+    public void addKill(Player player) {
+        killsMap.put(player, killsMap.getOrDefault(player, 0) + 1);
+    }
 
-						chest.update();
-					}
-				}
-				catch (Exception e) 
-				{
-					Main.getInstance().logError("Erro ao aplicar refil no baú:", e);
-				}
-			}
-		}
-	}
+    public int getKills(Player player) {
+        return killsMap.getOrDefault(player, 0);
+    }
+
+    public void applyRefill(String target, String preset) {
+        if (map.containsChests(target) && items.has(preset)) {
+            for (Block block : map.getChests(target)) {
+                try {
+                    block.getChunk().load(true);
+
+                    if (block.getState() instanceof Chest) {
+                        Chest chest = (Chest) block.getState();
+
+                        ((CraftChest) chest).getTileEntity().a("");
+                        Inventory inventory = chest.getInventory();
+                        inventory.clear();
+
+                        JsonObject presets = items.getAsJsonObject(preset);
+                        List<Map.Entry<String, JsonElement>> entries = Lists.newArrayList(presets.entrySet());
+                        Map.Entry<String, JsonElement> entry = entries.get(Utils.RANDOM.nextInt(entries.size()));
+                        Iterator<JsonElement> iterator = ((JsonArray) entry.getValue()).iterator();
+
+                        while (iterator.hasNext()) {
+                            JsonObject item = (JsonObject) iterator.next();
+
+                            Material material = Material.valueOf(item.get("type").getAsString());
+                            int amount = item.has("amount") ? item.get("amount").getAsInt() : 1;
+                            short data = item.has("data") ? item.get("data").getAsShort() : 0;
+
+                            ItemBuilder builder = new ItemBuilder().type(material).amount(amount).durability(data);
+
+                            if (item.has("enchantments")) {
+                                JsonObject enchantments = item.getAsJsonObject("enchantments");
+
+                                for (Map.Entry<String, JsonElement> enchEntry : enchantments.entrySet()) {
+                                    Enchantment enchantment = Enchantment.getByName(enchEntry.getKey());
+                                    builder.enchantment(enchantment, enchEntry.getValue().getAsInt());
+                                }
+                            }
+
+                            int slot = Utils.RANDOM.nextInt(27);
+
+                            while (inventory.getItem(slot) != null) {
+                                slot = Utils.RANDOM.nextInt(27);
+                            }
+
+                            inventory.setItem(slot, builder.build());
+                        }
+
+                        chest.update();
+                    }
+                } catch (Exception e) {
+                    Main.getInstance().logError("Erro ao aplicar refil no baú:", e);
+                }
+            }
+        }
+    }
 }

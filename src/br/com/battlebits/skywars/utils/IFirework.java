@@ -13,11 +13,11 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutEntityStatus;
 import net.minecraft.server.v1_8_R3.World;
 
 public class IFirework extends EntityFireworks {
-	
+
     private Player[] players;
 
     public IFirework(World world, Player... players) {
-        super(world);        
+        super(world);
         this.a(0.25F, 0.25F);
         this.players = players;
     }

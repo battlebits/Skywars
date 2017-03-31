@@ -31,54 +31,44 @@ import com.google.gson.JsonParser;
 import br.com.battlebits.skywars.Main;
 import lombok.Getter;
 
-public class EngineMap 
-{
-	@Getter
-	private String name;
-	@Getter
-	private BO3Object lobby;
-	private File file, folder;
-	private Map<String, Location> spawns = new HashMap<>();
-	private Map<String, List<Block>> chests = new HashMap<>();
-	private Map<String, JsonElement> resources = new HashMap<>();
+public class EngineMap {
+    @Getter
+    private String name;
+    @Getter
+    private BO3Object lobby;
+    private File file, folder;
+    private Map<String, Location> spawns = new HashMap<>();
+    private Map<String, List<Block>> chests = new HashMap<>();
+    private Map<String, JsonElement> resources = new HashMap<>();
 
-	public EngineMap(File file, File folder) throws Exception
-	{
-		this.file = file;
-		this.folder = folder;
-		this.name = file.getName()
-				.replace("_", " ")
-				.replaceFirst(".dat", "");
+    public EngineMap(File file, File folder) throws Exception {
+        this.file = file;
+        this.folder = folder;
+        this.name = file.getName()
+                .replace("_", " ")
+                .replaceFirst(".dat", "");
         extractFiles();
     }
 
-	public void extractFiles() throws Exception
-    {
+    public void extractFiles() throws Exception {
         FileUtils.deleteDirectory(folder);
         if (!folder.exists()) folder.mkdirs();
 
-        try (FileInputStream fis = new FileInputStream(file))
-        {
-            try (ZipInputStream zis = new ZipInputStream(fis))
-            {
+        try (FileInputStream fis = new FileInputStream(file)) {
+            try (ZipInputStream zis = new ZipInputStream(fis)) {
                 ZipEntry ze = zis.getNextEntry();
 
-                while (ze != null)
-                {
+                while (ze != null) {
                     String path = folder.getAbsolutePath() + File.separator + ze.getName();
 
-                    if (!ze.isDirectory())
-                    {
-                        try (FileOutputStream fos = new FileOutputStream(path))
-                        {
+                    if (!ze.isDirectory()) {
+                        try (FileOutputStream fos = new FileOutputStream(path)) {
                             int len;
                             byte[] chunk = new byte[4096];
                             while ((len = zis.read(chunk)) > 0)
                                 fos.write(chunk, 0, len);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         File dir = new File(path);
                         if (!dir.exists()) dir.mkdir();
                     }
@@ -90,8 +80,7 @@ public class EngineMap
         }
     }
 
-	public void startup(int perIsland) throws Exception
-    {
+    public void startup(int perIsland) throws Exception {
         resources.put("chests", readJson("chests.json"));
         resources.put("spawns", readJson("spawns.json"));
 
@@ -106,8 +95,7 @@ public class EngineMap
         field.set(handle, maxPlayers);
     }
 
-    public void postWorld() throws Exception
-    {
+    public void postWorld() throws Exception {
         World world = Bukkit.getWorlds().get(0);
         world.setGameRuleValue("doDaylightCycle", "false");
         world.setGameRuleValue("showDeathMessages", "false");
@@ -120,8 +108,7 @@ public class EngineMap
                 entity.remove();
 
         JsonObject spawns = (JsonObject) resources.get("spawns");
-        for (Map.Entry<String, JsonElement> entry : spawns.entrySet())
-        {
+        for (Map.Entry<String, JsonElement> entry : spawns.entrySet()) {
             JsonObject spawn = (JsonObject) entry.getValue();
             double x = spawn.get("x").getAsDouble();
             double y = spawn.get("y").getAsDouble();
@@ -132,15 +119,13 @@ public class EngineMap
         }
 
         JsonObject chests = (JsonObject) resources.get("chests");
-        for (Map.Entry<String, JsonElement> entry : chests.entrySet())
-        {
+        for (Map.Entry<String, JsonElement> entry : chests.entrySet()) {
             List<Block> blocks = this.chests.computeIfAbsent(entry.getKey(), v -> new ArrayList<>());
 
             JsonArray array = (JsonArray) entry.getValue();
             Iterator<JsonElement> iterator = array.iterator();
 
-            while (iterator.hasNext())
-            {
+            while (iterator.hasNext()) {
                 JsonObject chest = (JsonObject) iterator.next();
                 int x = chest.get("x").getAsInt();
                 int y = chest.get("y").getAsInt();
@@ -153,30 +138,25 @@ public class EngineMap
         lobby.paste(getSpawn("lobby").clone().subtract(0D, 2D, 0D));
     }
 
-	private JsonElement readJson(String name) throws IOException 
-	{
-		File file = new File(folder, name);
+    private JsonElement readJson(String name) throws IOException {
+        File file = new File(folder, name);
 
-		Main.getInstance().logInfo("Lendo o arquivo " + ChatColor.YELLOW + "\"" + file.getName() + "\" " + ChatColor.AQUA + "...");
+        Main.getInstance().logInfo("Lendo o arquivo " + ChatColor.YELLOW + "\"" + file.getName() + "\" " + ChatColor.AQUA + "...");
 
-		try (FileReader reader = new FileReader(file))
-		{
-			return new JsonParser().parse(reader);
-		}
-	}
+        try (FileReader reader = new FileReader(file)) {
+            return new JsonParser().parse(reader);
+        }
+    }
 
-	public boolean containsChests(String name)
-	{
-		return chests.containsKey(name);
-	}
+    public boolean containsChests(String name) {
+        return chests.containsKey(name);
+    }
 
-	public List<Block> getChests(String name)
-	{
-		return chests.get(name);
-	}
+    public List<Block> getChests(String name) {
+        return chests.get(name);
+    }
 
-    public Location getSpawn(String name)
-    {
+    public Location getSpawn(String name) {
         return spawns.get(name);
     }
 }

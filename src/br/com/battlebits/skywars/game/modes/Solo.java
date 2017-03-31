@@ -24,147 +24,124 @@ import br.com.battlebits.skywars.game.GameType;
 import br.com.battlebits.skywars.game.task.CageTask;
 import br.com.battlebits.skywars.utils.Utils;
 
-public class Solo extends Engine
-{
-	private Map<Player, Integer> playerMap = new HashMap<>();
-	
-	public Solo()
-	{
-		super(GameType.SOLO);
-	}
-	
-	@Override
-	public void start()
-	{
-		Set<Player> players = new HashSet<>(playerMap.keySet());
-		Iterator<Player> iterator = players.iterator();
-		
-		for (int i = 1; iterator.hasNext(); i++)
-		{
-			Player player = iterator.next();
-			Utils.clearInventory(player);
-			
-			if (i > Bukkit.getMaxPlayers())
-			{
-				Utils.addSpectatorItems(player);
-				player.setGameMode(GameMode.ADVENTURE);
-				player.setAllowFlight(true);
-				player.setFlying(true);
-				playerMap.remove(player);
-			}
-			else
-			{
-				playerMap.put(player, i);
-				addCage(new CageTask(this, getMap().getSpawn("is-" + i), player));
-			}
-		}
+public class Solo extends Engine {
+    private Map<Player, Integer> playerMap = new HashMap<>();
 
-		applyRefill("feast", "feast");
-		applyRefill("subfeast", "subfeast");
-		applyRefill("player-1", "player-1");
-		applyRefill("player-2", "player-2");
-		applyRefill("player-3", "player-3");
+    public Solo() {
+        super(GameType.SOLO);
+    }
+
+    @Override
+    public void start() {
+        Set<Player> players = new HashSet<>(playerMap.keySet());
+        Iterator<Player> iterator = players.iterator();
+
+        for (int i = 1; iterator.hasNext(); i++) {
+            Player player = iterator.next();
+            Utils.clearInventory(player);
+
+            if (i > Bukkit.getMaxPlayers()) {
+                Utils.addSpectatorItems(player);
+                player.setGameMode(GameMode.ADVENTURE);
+                player.setAllowFlight(true);
+                player.setFlying(true);
+                playerMap.remove(player);
+            } else {
+                playerMap.put(player, i);
+                addCage(new CageTask(this, getMap().getSpawn("is-" + i), player));
+            }
+        }
+
+        applyRefill("feast", "feast");
+        applyRefill("subfeast", "subfeast");
+        applyRefill("player-1", "player-1");
+        applyRefill("player-2", "player-2");
+        applyRefill("player-3", "player-3");
 
         setStage(GameStage.PREPARING);
         getSchedule().setTime(10);
         getMap().getLobby().undo();
 
         setStarted(System.currentTimeMillis());
-		BukkitMain.getInstance().setTagControl(false);
-	}
-	
-	@Override
-	public void end()
-	{
-		if (getStage() != GameStage.ENDING)
-		{
-			setStage(GameStage.ENDING);
-			
-			Player winner = Iterables.getFirst(playerMap.keySet(), null);
-			PlayerData winnerData = Main.getInstance().getPlayerManager().get(winner);
-			
-			if (winnerData != null)
-			{
-				winnerData.addWin();
-				winnerData.addTimePlayed();
-				winnerData.executeUpdate();
-			}
-	
-			winner.setAllowFlight(true);
-			winner.setFlying(true);
+        BukkitMain.getInstance().setTagControl(false);
+    }
 
-			Language language = BattlePlayer.getLanguage(winner.getUniqueId());
-			TitleAPI.setTitle(winner, T.t(language, "skywars-victory-title"), T.t(language, "skywars-victory-subtitle"), 10, 100, 10, true);
+    @Override
+    public void end() {
+        if (getStage() != GameStage.ENDING) {
+            setStage(GameStage.ENDING);
 
-			for (Player other : Bukkit.getOnlinePlayers())
-			{
-				if (!other.equals(winner))
-				{
-					language = BattlePlayer.getLanguage(winner.getUniqueId());
-					TitleAPI.setTitle(other, T.t(language, "skywars-lose-title"), T.t(language, "skywars-lose-subtitle"), 10, 100, 10, true);					
-				}
-			}
-		}
-	}
-	
-	@Override
-	public void checkCount()
-	{
-	    switch (playerMap.size())
-        {
-            case 0:
-            {
+            Player winner = Iterables.getFirst(playerMap.keySet(), null);
+            PlayerData winnerData = Main.getInstance().getPlayerManager().get(winner);
+
+            if (winnerData != null) {
+                winnerData.addWin();
+                winnerData.addTimePlayed();
+                winnerData.executeUpdate();
+            }
+
+            winner.setAllowFlight(true);
+            winner.setFlying(true);
+
+            Language language = BattlePlayer.getLanguage(winner.getUniqueId());
+            TitleAPI.setTitle(winner, T.t(language, "skywars-victory-title"), T.t(language, "skywars-victory-subtitle"), 10, 100, 10, true);
+
+            for (Player other : Bukkit.getOnlinePlayers()) {
+                if (!other.equals(winner)) {
+                    language = BattlePlayer.getLanguage(winner.getUniqueId());
+                    TitleAPI.setTitle(other, T.t(language, "skywars-lose-title"), T.t(language, "skywars-lose-subtitle"), 10, 100, 10, true);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void checkCount() {
+        switch (playerMap.size()) {
+            case 0: {
                 Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> Bukkit.shutdown(), 60L);
                 break;
             }
 
-            case 1:
-            {
+            case 1: {
                 end();
                 break;
             }
         }
-	}
-	
-	@Override
-	public boolean contains(Player player)
-	{
-		return playerMap.containsKey(player);
-	}
-	
-	@Override
-	public int getIsland(Player player)
-	{
-		return playerMap.getOrDefault(player, -1);
-	}
-	
-	@Override
-	public void addPlayer(Player player)
-	{
-		playerMap.put(player, -1);
-	}
-	
-	@Override
-	public void removePlayer(Player player)
-	{
-		playerMap.remove(player);
-	}
-
-	@Override
-	public Set<Player> getPlayers()
-	{
-		return playerMap.keySet();
-	}
+    }
 
     @Override
-    public int getPlayerCount()
-    {
+    public boolean contains(Player player) {
+        return playerMap.containsKey(player);
+    }
+
+    @Override
+    public int getIsland(Player player) {
+        return playerMap.getOrDefault(player, -1);
+    }
+
+    @Override
+    public void addPlayer(Player player) {
+        playerMap.put(player, -1);
+    }
+
+    @Override
+    public void removePlayer(Player player) {
+        playerMap.remove(player);
+    }
+
+    @Override
+    public Set<Player> getPlayers() {
+        return playerMap.keySet();
+    }
+
+    @Override
+    public int getPlayerCount() {
         return playerMap.size();
     }
 
     @Override
-    public int getTeamCount()
-    {
+    public int getTeamCount() {
         return -1;
     }
 }

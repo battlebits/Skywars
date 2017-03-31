@@ -39,55 +39,55 @@ public class Main extends JavaPlugin {
 
     @Getter
     private Engine engine;
-	@Getter
+    @Getter
     private PlayerManager playerManager;
-	@Getter
-	private MongoBackend mongoBackend;
-	@Getter
-	private static Main instance;
+    @Getter
+    private MongoBackend mongoBackend;
+    @Getter
+    private static Main instance;
 
     @Override
-	public void onLoad() {
-		try {
-			instance = this;
+    public void onLoad() {
+        try {
+            instance = this;
 
             JsonObject items = (JsonObject) readJson("items.json");
             JsonObject config = (JsonObject) readJson("config.json");
             JsonObject mongodb = config.getAsJsonObject("mongodb");
 
-			this.mongoBackend = new MongoBackend(mongodb);
-			this.mongoBackend.startConnection();
+            this.mongoBackend = new MongoBackend(mongodb);
+            this.mongoBackend.startConnection();
 
             String dir = config.get("dir").getAsString();
             String type = config.get("type").getAsString();
-			boolean insane = config.get("insane").getAsBoolean();
+            boolean insane = config.get("insane").getAsBoolean();
 
             List<File> files = getMaps(dir);
-			if (files != null && !files.isEmpty()) {
-			    if ((engine = GameType.getByName(type)) != null) {
-			        File file = files.get(Utils.RANDOM.nextInt(files.size()));
-			        EngineMap engineMap = new EngineMap(file, new File("world"));
+            if (files != null && !files.isEmpty()) {
+                if ((engine = GameType.getByName(type)) != null) {
+                    File file = files.get(Utils.RANDOM.nextInt(files.size()));
+                    EngineMap engineMap = new EngineMap(file, new File("world"));
                     engineMap.startup(engine.getType().getSizePerIsland());
                     engine.setMap(engineMap);
                     engine.setInsane(insane);
                     engine.setItems(items);
                 } else {
-			        logWarn("Modo \"" + type + "\" não encontrado!");
-			        getServer().shutdown();
+                    logWarn("Modo \"" + type + "\" não encontrado!");
+                    getServer().shutdown();
                 }
             } else {
                 logWarn("Nenhum mapa foi encontrado!");
                 getServer().shutdown();
             }
-		} catch (Exception e) {
-			logError("Erro ao carregar:", e);
-			getServer().shutdown();
-		}
-	}
+        } catch (Exception e) {
+            logError("Erro ao carregar:", e);
+            getServer().shutdown();
+        }
+    }
 
-	@Override
-	public void onEnable() {
-	    if (engine != null) {
+    @Override
+    public void onEnable() {
+        if (engine != null) {
             try {
                 engine.getMap().postWorld();
                 playerManager = new PlayerManager();
@@ -115,77 +115,77 @@ public class Main extends JavaPlugin {
                 logError("Erro ao habilitar:", e);
             }
         }
-	}
+    }
 
-	@Override
-	public void onDisable() {
-		HandlerList.unregisterAll(this);
-		if (mongoBackend != null) {
+    @Override
+    public void onDisable() {
+        HandlerList.unregisterAll(this);
+        if (mongoBackend != null) {
             mongoBackend.closeConnection();
         }
-	}
+    }
 
-	/* Plugin Logger */
-	public void logInfo(String info) {
-		getServer().getConsoleSender().sendMessage(ChatColor.GOLD + "[SkyWars] " + ChatColor.AQUA + "[INFO] " + info);
-	}
+    /* Plugin Logger */
+    public void logInfo(String info) {
+        getServer().getConsoleSender().sendMessage(ChatColor.GOLD + "[SkyWars] " + ChatColor.AQUA + "[INFO] " + info);
+    }
 
-	public void logWarn(String warn) {
-		getServer().getConsoleSender().sendMessage(ChatColor.GOLD + "[SkyWars] " + ChatColor.YELLOW + "[WARN] " + warn);
-	}
+    public void logWarn(String warn) {
+        getServer().getConsoleSender().sendMessage(ChatColor.GOLD + "[SkyWars] " + ChatColor.YELLOW + "[WARN] " + warn);
+    }
 
-	public void logError(String error) {
-		getServer().getConsoleSender().sendMessage(ChatColor.GOLD + "[SkyWars] " + ChatColor.RED + "[ERROR] " + error);
-	}
+    public void logError(String error) {
+        getServer().getConsoleSender().sendMessage(ChatColor.GOLD + "[SkyWars] " + ChatColor.RED + "[ERROR] " + error);
+    }
 
-	public void logError(Exception e) {
-		logError(null, e);
-	}
+    public void logError(Exception e) {
+        logError(null, e);
+    }
 
-	public void logError(String header, Exception e) {
-		StringWriter writer = new StringWriter();
+    public void logError(String header, Exception e) {
+        StringWriter writer = new StringWriter();
 
-		if (header != null) {
-			writer.write(header);
-			writer.write("\n");
-		}
+        if (header != null) {
+            writer.write(header);
+            writer.write("\n");
+        }
 
-		e.printStackTrace(new PrintWriter(writer));
-		logError(writer.toString());
-	}
+        e.printStackTrace(new PrintWriter(writer));
+        logError(writer.toString());
+    }
 
-	private JsonElement readJson(String name) throws IOException {
-		File file = new File(getDataFolder(), name);
+    private JsonElement readJson(String name) throws IOException {
+        File file = new File(getDataFolder(), name);
 
-		logInfo("Lendo o arquivo " + ChatColor.YELLOW + "\"" + file.getName() + "\" " + ChatColor.AQUA + "...");
+        logInfo("Lendo o arquivo " + ChatColor.YELLOW + "\"" + file.getName() + "\" " + ChatColor.AQUA + "...");
 
-		if (!file.exists()) {
-			File parent = file.getParentFile();
+        if (!file.exists()) {
+            File parent = file.getParentFile();
 
-			if (parent != null)
-				parent.mkdirs();
+            if (parent != null)
+                parent.mkdirs();
 
-			try (InputStream in = getResource(name)) {
-				Files.copy(in, file.toPath());
-			}
-		}
+            try (InputStream in = getResource(name)) {
+                Files.copy(in, file.toPath());
+            }
+        }
 
-		try (FileReader reader = new FileReader(file)) {
-			return new JsonParser().parse(reader);
-		}
-	}
+        try (FileReader reader = new FileReader(file)) {
+            return new JsonParser().parse(reader);
+        }
+    }
 
-	private List<File> getMaps(String directory) {
-		File folder = new File(directory);
-		if (folder.exists() && folder.isDirectory()) {
-			List<File> files = new ArrayList<>();
-			for (File file : folder.listFiles()) {
-				if (file.isFile() && file.getName().endsWith(".dat")) {
-					files.add(file);
-				}
-			}
-			return files;
-		}
-		return null;
-	}
+    private List<File> getMaps(String directory) {
+        File folder = new File(directory);
+        if (folder.exists() && folder.isDirectory()) {
+            List<File> files = new ArrayList<>();
+            for (File file : folder.listFiles()) {
+                if (file.isFile() && file.getName().endsWith(".dat")) {
+                    files.add(file);
+                }
+            }
+            return files;
+        }
+        return null;
+    }
 }

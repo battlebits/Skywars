@@ -25,39 +25,32 @@ import java.util.Map;
  *
  * @author Luãn Pereira.
  */
-public class UpdateListener implements Listener
-{
+public class UpdateListener implements Listener {
     private Engine engine;
     private AnimatedString bossAnimated;
     private AnimatedString titleAnimated;
 
-    public UpdateListener(Engine engine)
-    {
+    public UpdateListener(Engine engine) {
         this.engine = engine;
         this.bossAnimated = new AnimatedString("BATTLEBITS.COM.BR", "§6§l", "§e§l", "§7§l", 0);
         this.titleAnimated = new AnimatedString("SKYWARS", "§6§l", "§e§l", "§7§l", 0);
     }
 
     @EventHandler
-    public void onUpdate(UpdateEvent event)
-    {
-        switch (event.getType())
-        {
-            case TICK:
-            {
+    public void onUpdate(UpdateEvent event) {
+        switch (event.getType()) {
+            case TICK: {
                 if (event.getCurrentTick() % 2 > 0)
                     break;
 
                 String nextBoss = bossAnimated.next();
                 String nextTitle = titleAnimated.next();
 
-                for (Player player : Bukkit.getOnlinePlayers())
-                {
+                for (Player player : Bukkit.getOnlinePlayers()) {
                     BossBarAPI.setBar(player, nextBoss, 100F);
                     PlayerData playerData = Main.getInstance().getPlayerManager().get(player);
 
-                    if (playerData != null)
-                    {
+                    if (playerData != null) {
                         BattleBoard bboard = playerData.getBattleBoard();
                         bboard.setDisplayName(nextTitle);
                     }
@@ -66,22 +59,17 @@ public class UpdateListener implements Listener
                 break;
             }
 
-            case SECOND:
-            {
+            case SECOND: {
                 Map<Integer, String> rows = new HashMap<>();
 
-                for (Player player : Bukkit.getOnlinePlayers())
-                {
+                for (Player player : Bukkit.getOnlinePlayers()) {
                     PlayerData playerData = Main.getInstance().getPlayerManager().get(player);
 
-                    if (playerData != null)
-                    {
-                        BattleBoard bboard = playerData.getBattleBoard();
+                    if (playerData != null) {
+                        BattleBoard board = playerData.getBattleBoard();
 
-                        switch (engine.getStage())
-                        {
-                            case PREGAME:
-                            {
+                        switch (engine.getStage()) {
+                            case PREGAME: {
                                 int count = engine.getPlayers().size();
                                 rows.put(15 - rows.size(), " ");
 
@@ -100,31 +88,27 @@ public class UpdateListener implements Listener
                                 break;
                             }
 
-                            case PREPARING:
-                            {
+                            case PREPARING: {
                                 rows.put(15 - rows.size(), " ");
                                 rows.put(15 - rows.size(), "Abrindo em: §a" + time(engine.getSchedule().getTime()));
                                 rows.put(15 - rows.size(), "Jogadores: §a" + engine.getPlayers().size() + "/" + Bukkit.getMaxPlayers());
                                 break;
                             }
 
-                            default:
-                            {
+                            default: {
                                 rows.put(15 - rows.size(), " ");
 
                                 int time = engine.getSchedule().getTime();
-                                Objective belowName = bboard.registerBelowName("§c\u2764");
-                                Objective playerList = bboard.registerPlayerList();
+                                Objective belowName = board.registerBelowName("§c\u2764");
+                                Objective playerList = board.registerPlayerList();
 
-                                for (Player target : Bukkit.getOnlinePlayers())
-                                {
+                                for (Player target : Bukkit.getOnlinePlayers()) {
                                     int score = !engine.contains(target) ? 0 : Math.max(1, (int) target.getHealth());
                                     belowName.getScore(target.getName()).setScore(score);
                                     playerList.getScore(target.getName()).setScore(score);
                                 }
 
-                                if (time < GameSchedule.FINAL)
-                                {
+                                if (time < GameSchedule.FINAL) {
                                     rows.put(15 - rows.size(), "Próximo evento:");
 
                                     if (time < GameSchedule.REFIL_2)
@@ -154,7 +138,7 @@ public class UpdateListener implements Listener
 
                         rows.put(15 - rows.size(), " ");
                         rows.put(15 - rows.size(), "§ebattlebits.com.br");
-                        bboard.setRows(rows);
+                        board.setRows(rows);
                         rows.clear();
 
                         NameTag nameTag = playerData.getNameTag();
@@ -168,8 +152,7 @@ public class UpdateListener implements Listener
         }
     }
 
-    private String time(int time)
-    {
+    private String time(int time) {
         return time / 60 + ":" + (time % 60 < 10 ? "0" : "") + time % 60;
     }
 }

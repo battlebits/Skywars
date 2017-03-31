@@ -20,185 +20,152 @@ import java.util.Set;
 
 @Getter
 @Setter
-public class Kit implements Listener 
-{	
-	private String name;	
-	private ItemStack icon;
+public class Kit implements Listener {
+    private String name;
+    private ItemStack icon;
     private int price;
 
-	private final Set<Player> players = new HashSet<>();
-	private final Set<ItemStack> items = new HashSet<>();
+    private final Set<Player> players = new HashSet<>();
+    private final Set<ItemStack> items = new HashSet<>();
 
-	@Getter
-	private static final List<Kit> kits = new ArrayList<>();
-	
-	public Kit()  
-	{
-		kits.add(this);
-	}
-	
-	public void add(Player player)
-	{
-		players.add(player);
-	}
+    @Getter
+    private static final List<Kit> kits = new ArrayList<>();
 
-	public void remove(Player player)
-	{
-		players.remove(player);
-	}
-	
-	public boolean contains(Player player)
-	{
-		return players.contains(player);
-	}
-	
-	public void applyItems(Player player)
-    {
+    public Kit() {
+        kits.add(this);
+    }
+
+    public void add(Player player) {
+        players.add(player);
+    }
+
+    public void remove(Player player) {
+        players.remove(player);
+    }
+
+    public boolean contains(Player player) {
+        return players.contains(player);
+    }
+
+    public void applyItems(Player player) {
         PlayerInventory inventory = player.getInventory();
 
-        for (ItemStack item : items)
-        {
+        for (ItemStack item : items) {
             String type = item.getType().name();
 
-            if (type.contains("_"))
-            {
+            if (type.contains("_")) {
                 String[] split = type.split("_");
 
-                switch (split[1])
-                {
-                    case "HELMET":
-                    {
+                switch (split[1]) {
+                    case "HELMET": {
                         inventory.setHelmet(item.clone());
                         break;
                     }
 
-                    case "CHESTPLATE":
-                    {
+                    case "CHESTPLATE": {
                         inventory.setChestplate(item.clone());
                         break;
                     }
 
-                    case "LEGGINGS":
-                    {
+                    case "LEGGINGS": {
                         inventory.setLeggings(item.clone());
                         break;
                     }
 
-                    case "BOOTS":
-                    {
+                    case "BOOTS": {
                         inventory.setBoots(item.clone());
                         break;
                     }
 
-                    default:
-                    {
+                    default: {
                         inventory.addItem(item.clone());
                         break;
                     }
                 }
-            }
-            else
-            {
+            } else {
                 inventory.addItem(item.clone());
             }
         }
 
         player.updateInventory();
     }
-	
-	public void addItem(ItemStack item, boolean undroppable)
-	{
-		net.minecraft.server.v1_8_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
-		
-		NBTTagCompound tag = null;
-		
-		if (!nmsStack.hasTag())
-		{
-			tag = new NBTTagCompound();
-			
-			nmsStack.setTag(tag);
-		}
-		
-		if (tag == null)
-		{
-			tag = nmsStack.getTag();
-		}
-		
-		tag.setString("Kit", this.name);
-		tag.setBoolean("Undroppable", undroppable);
-				
-		items.add(CraftItemStack.asBukkitCopy(nmsStack));
-	}
 
-	public boolean hasKit(Player player)
-    {
+    public void addItem(ItemStack item, boolean undroppable) {
+        net.minecraft.server.v1_8_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
+
+        NBTTagCompound tag = null;
+
+        if (!nmsStack.hasTag()) {
+            tag = new NBTTagCompound();
+
+            nmsStack.setTag(tag);
+        }
+
+        if (tag == null) {
+            tag = nmsStack.getTag();
+        }
+
+        tag.setString("Kit", this.name);
+        tag.setBoolean("Undroppable", undroppable);
+
+        items.add(CraftItemStack.asBukkitCopy(nmsStack));
+    }
+
+    public boolean hasKit(Player player) {
         PlayerData pd = Main.getInstance().getPlayerManager().get(player);
         return (pd != null && pd.hasItem("Kit", this.name));
     }
 
-	public boolean canBuy(Player player)
-    {
+    public boolean canBuy(Player player) {
         return false;
     }
 
-	public static boolean isItem(Kit kit, ItemStack item)
-    {
+    public static boolean isItem(Kit kit, ItemStack item) {
         return isItem(kit, item, null, (short) 0);
     }
 
-    public static boolean isItem(Kit kit, ItemStack item, Material material)
-    {
+    public static boolean isItem(Kit kit, ItemStack item, Material material) {
         return isItem(kit, item, material, (short) 0);
     }
 
-    public static boolean isItem(Kit kit, ItemStack item, Material material, short data)
-    {
+    public static boolean isItem(Kit kit, ItemStack item, Material material, short data) {
         boolean found = false;
 
-        if (item != null)
-        {
-        	NBTTagCompound tag = CraftItemStack.asNMSCopy(item).getTag();
-        	
-        	if (tag != null && tag.hasKey("Kit"))
-        	{
-        		String name = tag.getString("Kit");
-        		
-        		if (kit.getName().equals(name))
-        		{
-        			found = true;
-     
-        			if (material != null)
-        			{
-        				found = found && item.getType().equals(material);
-        			}
-        			
-        			if (data != 0)
-        			{
-        				found = found && item.getDurability() == data;
-        			}
-        		}
-        	}
+        if (item != null) {
+            NBTTagCompound tag = CraftItemStack.asNMSCopy(item).getTag();
+
+            if (tag != null && tag.hasKey("Kit")) {
+                String name = tag.getString("Kit");
+
+                if (kit.getName().equals(name)) {
+                    found = true;
+
+                    if (material != null) {
+                        found = found && item.getType().equals(material);
+                    }
+
+                    if (data != 0) {
+                        found = found && item.getDurability() == data;
+                    }
+                }
+            }
         }
 
         return found;
     }
-    
-    public static boolean isUndroppable(ItemStack item)
-    {
-    	NBTTagCompound tag = CraftItemStack.asNMSCopy(item).getTag();
-    	
-    	return tag != null 
-    			&& tag.hasKey("Kit")
-    			&& tag.hasKey("Undroppable") 
-    			&& tag.getBoolean("Undroppable");
+
+    public static boolean isUndroppable(ItemStack item) {
+        NBTTagCompound tag = CraftItemStack.asNMSCopy(item).getTag();
+
+        return tag != null
+                && tag.hasKey("Kit")
+                && tag.hasKey("Undroppable")
+                && tag.getBoolean("Undroppable");
     }
 
-    public static Kit getKit(Player player)
-    {
-        for (Kit kit : kits)
-        {
-            if (kit.contains(player))
-            {
+    public static Kit getKit(Player player) {
+        for (Kit kit : kits) {
+            if (kit.contains(player)) {
                 return kit;
             }
         }
@@ -206,12 +173,9 @@ public class Kit implements Listener
         return getByName("Padrao");
     }
 
-    public static Kit getByName(String name)
-    {
-        for (Kit kit : kits)
-        {
-            if (kit.getName().equalsIgnoreCase(name))
-            {
+    public static Kit getByName(String name) {
+        for (Kit kit : kits) {
+            if (kit.getName().equalsIgnoreCase(name)) {
                 return kit;
             }
         }
@@ -220,8 +184,7 @@ public class Kit implements Listener
     }
 
     @Override
-    public boolean equals(Object obj)
-    {
+    public boolean equals(Object obj) {
         return (obj instanceof Kit) && ((Kit) obj).getName().equals(this.name);
     }
 }

@@ -14,18 +14,15 @@ import org.bukkit.inventory.ItemStack;
  *
  * @author Luãn Pereira.
  */
-public class Fisherman extends Kit
-{
-    public Fisherman()
-    {
+public class Fisherman extends Kit {
+    public Fisherman() {
         setName("Fisherman");
         setIcon(new ItemStack(Material.FISHING_ROD));
         addItem(new ItemBuilder().type(Material.FISHING_ROD).amount(1).durability(10).name("%skywars-kit-fisherman-itemName%").build(), true);
     }
 
     @EventHandler
-    public void onPlayerFish(PlayerFishEvent event)
-    {
+    public void onPlayerFish(PlayerFishEvent event) {
         Player player = event.getPlayer();
 
         // TODO: puxar o jogador para sua localidade.
