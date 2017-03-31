@@ -88,12 +88,11 @@ public class GameListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
         event.setJoinMessage(null);
-
         Player player = event.getPlayer();
 
-        PlayerData playerData = Main.getInstance().getPlayerManager().get(player);
-        if (playerData != null)
-            playerData.onJoin(player);
+        PlayerData pd = Main.getInstance().getPlayerManager().get(player);
+        if (pd != null)
+            pd.onJoin(player);
 
         switch (engine.getStage()) {
             case PREGAME: {
@@ -125,14 +124,13 @@ public class GameListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
         event.setQuitMessage(null);
-
         Player player = event.getPlayer();
 
         if (engine.contains(player)) {
             BukkitMain.broadcastMessage("skywars-player-leave", new String[]{"%playerName%", player.getName()});
         }
 
-        PlayerData data = Main.getInstance().getPlayerManager().remove(player);
+        PlayerData pd = Main.getInstance().getPlayerManager().remove(player);
 
         switch (engine.getStage()) {
             case PREPARING: {
@@ -142,20 +140,18 @@ public class GameListener implements Listener {
             }
 
             case INGAME: {
-                if (data != null && engine.contains(player)) {
-                    Combat combat = data.getCombat();
-
+                if (pd != null && engine.contains(player)) {
+                    Combat combat = pd.getCombat();
                     if (combat != null && combat.isValid()) {
                         player.setHealth(0D);
                     } else {
-                        data.addTimePlayed();
-                        data.executeUpdate();
+                        pd.addTimePlayed();
+                        pd.executeUpdate();
                     }
                 }
 
                 engine.removePlayer(player);
                 engine.checkCount();
-
                 break;
             }
 
@@ -169,7 +165,6 @@ public class GameListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-
         if (cancelEvent(player)) {
             event.setCancelled(true);
             player.updateInventory();
@@ -181,17 +176,14 @@ public class GameListener implements Listener {
         switch (engine.getStage()) {
             case INGAME: {
                 Player player = event.getPlayer();
-
                 if (!engine.contains(player)) {
                     event.setCancelled(true);
-
                     if (event.getRightClicked() instanceof Player) {
                         player.setGameMode(GameMode.SPECTATOR);
                         player.setSpectatorTarget(event.getRightClicked());
                         player.setSneaking(false);
                     }
                 }
-
                 break;
             }
 
@@ -220,10 +212,8 @@ public class GameListener implements Listener {
         switch (engine.getStage()) {
             case INGAME: {
                 Player player = event.getPlayer();
-
                 if (engine.contains(player)) {
                     ItemStack item = event.getItemDrop().getItemStack();
-
                     if (Kit.isUndroppable(item)) {
                         event.setCancelled(true);
                         player.updateInventory();
@@ -231,7 +221,6 @@ public class GameListener implements Listener {
                 } else {
                     event.setCancelled(true);
                 }
-
                 break;
             }
 
@@ -277,12 +266,10 @@ public class GameListener implements Listener {
                     } else if (lastDamage.getCause() == DamageCause.PROJECTILE) {
                         if (lastDamage instanceof EntityDamageByEntityEvent) {
                             Entity damager = ((EntityDamageByEntityEvent) lastDamage).getDamager();
-
                             if (damager instanceof Arrow) {
                                 double y1 = damager.getLocation().getY();
                                 double y2 = player.getLocation().getY();
                                 boolean headshot = y1 - y2 > 1.35D;
-
                                 BukkitMain.broadcastMessage("skywars-death-by-arrow" + (headshot ? "-headshot" : ""), new String[]{"%playerName%", "%killerName%"}, new String[]{player.getName(), killer.getName()});
                             }
                         }
@@ -291,7 +278,6 @@ public class GameListener implements Listener {
                     }
 
                     PlayerData killerData = Main.getInstance().getPlayerManager().get(killer);
-
                     killerData.addKill();
                     killerData.executeUpdate();
                 } else if (lastDamage.getCause() == DamageCause.VOID) {
@@ -339,22 +325,18 @@ public class GameListener implements Listener {
         switch (engine.getStage()) {
             case PREGAME: {
                 event.setCancelled(true);
-
                 if (event.getEntity() instanceof Player) {
                     Player player = (Player) event.getEntity();
-
                     if (event.getCause() == DamageCause.VOID) {
                         player.teleport(engine.getMap().getSpawn("lobby"));
                     }
                 }
-
                 break;
             }
 
             case INGAME: {
                 if (event.getEntity() instanceof Player) {
                     Player player = (Player) event.getEntity();
-
                     if (!engine.contains(player)) {
                         event.setCancelled(true);
                     } else if (event.getCause() == DamageCause.FALL) {
@@ -365,7 +347,6 @@ public class GameListener implements Listener {
                         event.setDamage(100D);
                     }
                 }
-
                 break;
             }
 
@@ -379,7 +360,6 @@ public class GameListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
         Player player = event.getPlayer();
-
         if (event.isSneaking() && !engine.contains(player) && engine.getStage() != GameStage.PREGAME) {
             if (player.getGameMode() == GameMode.SPECTATOR) {
                 player.setSpectatorTarget(player);
@@ -394,7 +374,6 @@ public class GameListener implements Listener {
     public void onDamageByEntity(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player) {
             Player damaged = (Player) event.getEntity();
-
             switch (engine.getStage()) {
                 case INGAME: {
                     if (!engine.contains(damaged)) {
@@ -403,17 +382,14 @@ public class GameListener implements Listener {
                         // TODO: Fix arrow bug
                     } else {
                         Player damager = null;
-
                         boolean arrow = false;
 
                         if (event.getDamager() instanceof Player) {
                             damager = (Player) event.getDamager();
                         } else if (event.getDamager() instanceof Projectile) {
                             Projectile proj = (Projectile) event.getDamager();
-
                             if (proj.getShooter() instanceof Player) {
                                 damager = (Player) proj.getShooter();
-
                                 arrow = (proj instanceof Arrow);
                             }
                         }
@@ -426,77 +402,77 @@ public class GameListener implements Listener {
                                 if (pid > 0 && tid > 0 && pid != tid) {
                                     if (arrow) {
                                         double health;
-                                        double damage = 1D;
 
                                         if ((health = Math.round((damager.getHealth() - event.getFinalDamage()) * 100.0D)) / 100.0D > 0.0D) {
                                             damager.sendMessage(T.t(BattlePlayer.getLanguage(damager.getUniqueId()), "skywars-player-health-arrow-hit", new String[]{"%health%", Double.toString(health)}));
                                         }
-
-                                        ItemStack item = damager.getItemInHand();
-
-                                        if (item != null) {
-                                            switch (item.getType()) {
-                                                case WOOD_SWORD:
-                                                case GOLD_SWORD:
-                                                    damage = 3D;
-                                                    break;
-                                                case STONE_SWORD:
-                                                    damage = 4D;
-                                                    break;
-                                                case IRON_SWORD:
-                                                    damage = 5D;
-                                                    break;
-                                                case DIAMOND_SWORD:
-                                                    damage = 6D;
-                                                    break;
-                                                case WOOD_AXE:
-                                                case WOOD_HOE:
-                                                case WOOD_SPADE:
-                                                case WOOD_PICKAXE:
-                                                case GOLD_AXE:
-                                                case GOLD_HOE:
-                                                case GOLD_SPADE:
-                                                case GOLD_PICKAXE:
-                                                    damage = 2D;
-                                                    break;
-                                                case STONE_AXE:
-                                                case STONE_HOE:
-                                                case STONE_SPADE:
-                                                case STONE_PICKAXE:
-                                                    damage = 3D;
-                                                    break;
-                                                case IRON_AXE:
-                                                case IRON_HOE:
-                                                case IRON_SPADE:
-                                                case IRON_PICKAXE:
-                                                    damage = 4D;
-                                                    break;
-                                                case DIAMOND_AXE:
-                                                case DIAMOND_HOE:
-                                                case DIAMOND_SPADE:
-                                                case DIAMOND_PICKAXE:
-                                                    damage = 5D;
-                                                    break;
-                                                default:
-                                                    break;
-                                            }
-
-                                            if (item.containsEnchantment(Enchantment.DAMAGE_ALL)) {
-                                                damage += item.getEnchantmentLevel(Enchantment.DAMAGE_ALL);
-                                            }
-                                        }
-
-                                        if (!((Entity) damager).isOnGround() && damager.getVelocity().getY() < 0D) {
-                                            damage += 1D;
-                                        }
-
-                                        event.setDamage(damage);
-
-                                        PlayerManager manager = Main.getInstance().getPlayerManager();
-                                        Combat combat = manager.get(damaged).getCombat();
-                                        combat.setDamager(damager);
-                                        combat.setExpire(10000L);
                                     }
+
+                                    double damage = 1D;
+                                    ItemStack item = damager.getItemInHand();
+
+                                    if (item != null) {
+                                        switch (item.getType()) {
+                                            case WOOD_SWORD:
+                                            case GOLD_SWORD:
+                                                damage = 3D;
+                                                break;
+                                            case STONE_SWORD:
+                                                damage = 4D;
+                                                break;
+                                            case IRON_SWORD:
+                                                damage = 5D;
+                                                break;
+                                            case DIAMOND_SWORD:
+                                                damage = 6D;
+                                                break;
+                                            case WOOD_AXE:
+                                            case WOOD_HOE:
+                                            case WOOD_SPADE:
+                                            case WOOD_PICKAXE:
+                                            case GOLD_AXE:
+                                            case GOLD_HOE:
+                                            case GOLD_SPADE:
+                                            case GOLD_PICKAXE:
+                                                damage = 2D;
+                                                break;
+                                            case STONE_AXE:
+                                            case STONE_HOE:
+                                            case STONE_SPADE:
+                                            case STONE_PICKAXE:
+                                                damage = 3D;
+                                                break;
+                                            case IRON_AXE:
+                                            case IRON_HOE:
+                                            case IRON_SPADE:
+                                            case IRON_PICKAXE:
+                                                damage = 4D;
+                                                break;
+                                            case DIAMOND_AXE:
+                                            case DIAMOND_HOE:
+                                            case DIAMOND_SPADE:
+                                            case DIAMOND_PICKAXE:
+                                                damage = 5D;
+                                                break;
+                                            default:
+                                                break;
+                                        }
+
+                                        if (item.containsEnchantment(Enchantment.DAMAGE_ALL)) {
+                                            damage += item.getEnchantmentLevel(Enchantment.DAMAGE_ALL);
+                                        }
+                                    }
+
+                                    if (!((Entity) damager).isOnGround() && damager.getVelocity().getY() < 0D) {
+                                        damage += 1D;
+                                    }
+
+                                    event.setDamage(damage);
+
+                                    PlayerManager manager = Main.getInstance().getPlayerManager();
+                                    Combat combat = manager.get(damaged).getCombat();
+                                    combat.setDamager(damager);
+                                    combat.setExpire(10000L);
                                 } else {
                                     event.setCancelled(true);
                                 }
@@ -508,7 +484,6 @@ public class GameListener implements Listener {
                             }
                         }
                     }
-
                     break;
                 }
 
@@ -537,7 +512,6 @@ public class GameListener implements Listener {
                         event.setCancelled(true);
                         player.setFoodLevel(20);
                     }
-
                     break;
                 }
 
@@ -557,13 +531,11 @@ public class GameListener implements Listener {
                 for (LivingEntity entity : event.getAffectedEntities()) {
                     if (entity instanceof Player) {
                         Player player = (Player) entity;
-
                         if (!engine.contains(player)) {
                             event.setIntensity(entity, 0D);
                         }
                     }
                 }
-
                 break;
             }
 

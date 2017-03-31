@@ -42,7 +42,6 @@ public class PlayerData {
     public PlayerData(UUID uuid, String name) {
         this.uuid = uuid;
         this.name = name;
-        this.combat = new Combat();
         this.items = new JsonArray();
     }
 
@@ -73,6 +72,7 @@ public class PlayerData {
     }
 
     public void onJoin(Player player) {
+        combat = new Combat();
         nameTag = new NameTag(player);
         battleBoard = new BattleBoard(player);
 
