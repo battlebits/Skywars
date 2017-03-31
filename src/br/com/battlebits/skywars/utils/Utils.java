@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.Random;
 
 import br.com.battlebits.skywars.menu.KitInventory;
+import br.com.battlebits.skywars.menu.SpectatorMenu;
 import org.bson.Document;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -20,7 +21,6 @@ import br.com.battlebits.commons.api.item.ActionItemStack;
 import br.com.battlebits.commons.api.item.ActionItemStack.InteractHandler;
 import br.com.battlebits.skywars.Main;
 import br.com.battlebits.skywars.game.Engine;
-import br.com.battlebits.skywars.menu.SpecInventory;
 import br.com.battlebits.commons.api.item.ItemBuilder;
 
 public class Utils {
@@ -74,7 +74,7 @@ public class Utils {
                 int pid = engine.getIsland(player);
                 int size = engine.getPlayers().size();
                 int rows = (size <= 9) ? 1 : Math.round(size / 9);
-                SpecInventory menu = new SpecInventory(pid, rows);
+                SpectatorMenu menu = new SpectatorMenu(pid, rows);
                 menu.open(player);
                 return false;
             }

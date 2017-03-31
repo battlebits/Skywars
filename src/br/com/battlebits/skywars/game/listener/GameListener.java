@@ -403,7 +403,7 @@ public class GameListener implements Listener {
                                     if (arrow) {
                                         double health;
 
-                                        if ((health = Math.round((damager.getHealth() - event.getFinalDamage()) * 100.0D)) / 100.0D > 0.0D) {
+                                        if ((health = Math.round((damager.getHealth() - event.getFinalDamage()) * 100.0D)) / 100.0D > 0D) {
                                             damager.sendMessage(T.t(BattlePlayer.getLanguage(damager.getUniqueId()), "skywars-player-health-arrow-hit", new String[]{"%health%", Double.toString(health)}));
                                         }
                                     }

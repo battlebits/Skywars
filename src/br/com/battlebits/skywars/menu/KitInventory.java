@@ -107,7 +107,7 @@ public class KitInventory extends MenuInventory {
                 int slot = 18;
 
                 for (Kit kit : Kit.getKits()) {
-                    if (kit.getPrice() > 0 && kit.canBuy(player) && kit.hasKit(player)) {
+                    if (kit.getPrice() > 0 && kit.canBuy(player) && !kit.hasKit(player)) {
                         setItem(slot++, new MenuItem(ItemBuilder.fromStack(kit.getIcon()).name("§b§l" + kit.getName()).lore(Arrays.asList("§7Preço: §e" + kit.getPrice(), " ", "§7Sem descrição")).hideAttributes().build(), new MenuClickHandler() {
                             @Override
                             public void onClick(Player player, Inventory inv, ClickType type, ItemStack item, int slot) {
