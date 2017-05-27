@@ -1,5 +1,5 @@
 name: SkyWars
-main: br.com.battlebits.skywars.Main
+main: br.com.battlebits.skywars.bukkit.Server
 version: 1.0.1
 depend: [Commons]
 author: Luan Pereira
